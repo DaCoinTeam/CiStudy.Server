@@ -23,6 +23,7 @@ module.exports = {
 			"error",
 			"tab"
 		],
+		"no-mixed-spaces-and-tabs": "off",
 		"linebreak-style": "off",
 		"quotes": [
 			"error",

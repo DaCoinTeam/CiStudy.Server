@@ -1,7 +1,7 @@
 import { Request } from "express"
 import { PaymentService } from "./payment.service"
 import { Controller, NotFoundException, Post } from "@nestjs/common"
-import { ApiBody, ApiTags } from "@nestjs/swagger"
+import { ApiTags } from "@nestjs/swagger"
 
 @ApiTags("Payment")
 @Controller("api/payment")
@@ -16,7 +16,7 @@ export class PaymentController {
 		try{
 			await this.paymentService.processVNPaySandbox(req)
 		} catch(err: unknown){
-			throw new NotFoundException(err)
+			throw new NotFoundException(err.toString())
 		}
 	}
 }

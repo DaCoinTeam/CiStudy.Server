@@ -12,7 +12,7 @@
     "baseUrl": "./",
     "paths": {
       "@config": ["src/config"],
-      "@database/*": ["src/database/*"],
+      "@database": ["src/database"],
       "@apptypes/*" : ["src/types/*"],
       "@utils/*": ["src/utils/*"],
       "@routes/*": ["src/routes/*"],

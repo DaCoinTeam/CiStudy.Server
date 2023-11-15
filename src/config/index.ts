@@ -1,3 +1,4 @@
 import paymentConfig from "./payment.config"
 import appConfig from "./app.config"
-export {paymentConfig, appConfig}
+import databaseConfig from "./database.config"
+export {paymentConfig, appConfig, databaseConfig}
