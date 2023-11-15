@@ -1,7 +1,7 @@
 import { TokensMySQLService } from "@database"
 import { Injectable, NotFoundException } from "@nestjs/common"
 import { Address } from "web3"
-import { PostRequestBodyApi } from "./swagger"
+import { PostRequestBodyApi } from "./properties"
 
 @Injectable()
 export class TokenService {

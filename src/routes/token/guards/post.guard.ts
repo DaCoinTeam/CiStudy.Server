@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common"
 import { Observable } from "rxjs"
-import { PostRequestBodyApi } from "../swagger"
+import { PostRequestBodyApi } from "../properties"
 
 @Injectable()
 export default class PostGuard implements CanActivate {

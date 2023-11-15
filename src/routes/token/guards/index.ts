@@ -1,2 +1,7 @@
+import GetGuard from "./get.guard"
 import PostGuard from "./post.guard"
-export {PostGuard}
+
+export {
+	GetGuard, 
+	PostGuard
+}
