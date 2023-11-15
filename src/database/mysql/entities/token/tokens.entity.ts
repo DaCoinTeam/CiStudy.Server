@@ -4,8 +4,8 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 export default class TokensEntity {
   @PrimaryGeneratedColumn("uuid")
   	tokenId: string
-    
-  @Column({ length: 100 })
+
+  @Column({ length: 200 })
   	tokenImageUrl: string
 
   @Column("int")
