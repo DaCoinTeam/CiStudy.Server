@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
 import { TokenService } from "./token.service"
 import { TokensEntity } from "@database"
-import { PostRequestBodyApi } from "./properties"
+import { GetRequestQueryApi, PostRequestBodyApi } from "./properties"
 import { GetGuard, PostGuard } from "./guards"
 
 @ApiTags("Token")
@@ -15,10 +15,9 @@ export class TokenController {
     @UseGuards(GetGuard)
     @Get()
 	async handleGetTokenByAddressAndChainId(
-        @Query("tokenAddress") tokenAddress : string, 
-        @Query("chainId") chainId : number
+        @Query() query : GetRequestQueryApi
 	): Promise<TokensEntity> {
-		return await this.tokenService.processGetTokenByAddressAndChainId(tokenAddress, chainId)
+		return await this.tokenService.processGetTokenByAddressAndChainId(query.tokenAddress, query.chainId)
 	}
 
     @UseGuards(PostGuard)
