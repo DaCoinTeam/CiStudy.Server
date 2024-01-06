@@ -15,7 +15,7 @@ export default class UserEntity {
   	email: string
 
   @Column({ type: "varchar", length: 20, default: null })
-  	password: number
+  	password: string
 
   @Column({ type: "varchar", length: 200, default: null })
   	avatarUrl: string

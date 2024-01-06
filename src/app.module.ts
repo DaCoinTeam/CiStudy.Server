@@ -1,9 +1,8 @@
 import { Module } from "@nestjs/common"
 import { appConfig, paymentConfig } from "@config"
 import { ConfigModule } from "@nestjs/config"
-import { PaymentModule } from "@routes/payment/payment.module"
-import { TokensMySQLModule } from "@database"
-import { TokenModule } from "@routes/token/token.module"
+import { MySQLModule } from "@database"
+import { UserModule } from "@routes/user"
 
 @Module({
 	imports: [
@@ -14,11 +13,10 @@ import { TokenModule } from "@routes/token/token.module"
 			]}),
 
 		//controllers
-		PaymentModule,
-		TokenModule,
+		UserModule,
 
 		//mysql
-		TokensMySQLModule
+		MySQLModule
 	],
 	controllers: [],
 	providers: [],

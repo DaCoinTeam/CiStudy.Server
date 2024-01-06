@@ -1,6 +1,11 @@
-import UserMySQLModule from "./user.module"
-import UserMySQLService from "./user.service"
-import UserEntity from "./user.entity"
-import userProviders from "./user.providers"
+import UserMySqlModule from "./user.module"
+import UserMySqlService from "./user.service"
+import UserMySqlEntity from "./user.entity"
+import UserMySqlProviders from "./user.providers"
 
-export {UserMySQLModule, UserMySQLService, UserEntity, userProviders}
+export {
+	UserMySqlModule,
+	UserMySqlService,
+	UserMySqlEntity,
+	UserMySqlProviders,
+}

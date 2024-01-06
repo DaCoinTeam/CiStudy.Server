@@ -1,21 +1,30 @@
 
-import { Injectable, Inject } from "@nestjs/common"
+import { Injectable, Inject, NotFoundException } from "@nestjs/common"
 import { Repository } from "typeorm"
 import UserEntity from "./user.entity"
 import { USER_REPOSITORY } from "../../mysql.constant"
 
 @Injectable()
-export default class TokensService {
+export default class UserMySqlService {
 	constructor(
     @Inject(USER_REPOSITORY)
     private userRepository: Repository<UserEntity>,
 	) {}
 
 	
-	async create(): Promise<UserEntity> {
-		const user = this.userRepository.create()
-		return await this.userRepository.save(user)
+	async create(user: Partial<UserEntity>): Promise<UserEntity> {
+		const created = this.userRepository.create(user)
+		return await this.userRepository.save(created)
 	}
+
+	async findByEmail(email: string): Promise<UserEntity> {
+		const user = await this.userRepository.findOneBy({
+			email
+		})
+		if (!user) throw new NotFoundException("User not found")
+		return user
+	}
+
 
 	// async findByAddressAndChainId(tokenAddress: Address, chainId: number): Promise<TokensEntity|null> {
 	// 	return this.tokensRepository.findOneBy(	
