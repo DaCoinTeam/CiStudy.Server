@@ -26,6 +26,13 @@ export default class UserMySqlService {
 		return user
 	}
 
+	async hasEmailExisted(email: string): Promise<boolean> {
+		const user = await this.userRepository.findOneBy({
+			email
+		})
+		return user !== null
+	}
+
 
 	// async findByAddressAndChainId(tokenAddress: Address, chainId: number): Promise<TokensEntity|null> {
 	// 	return this.tokensRepository.findOneBy(	

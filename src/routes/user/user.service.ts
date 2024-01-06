@@ -2,8 +2,7 @@ import { UserMySqlService, UserMySqlEntity } from "@database"
 import {
 	BadRequestException,
 	ConflictException,
-	Injectable,
-	NotFoundException,
+	Injectable
 } from "@nestjs/common"
 import { SignInRequestBody, SignUpRequestBody } from "./bodies"
 import { Sha256Service } from "@routes/shared/index"
@@ -23,14 +22,9 @@ export default class UserService {
 	}
 
 	async signUp(body: SignUpRequestBody) {
-		try {
-			const found = await this.UserMySqlService.findByEmail(body.email)
-			console.log(found)
-			throw new ConflictException(`User with email ${found.email} has existed`)
-		} catch (ex) {
-			if (ex instanceof NotFoundException) {
-				return await this.UserMySqlService.create(body)
-			}
-		}
+		const found = await this.UserMySqlService.hasEmailExisted(body.email)
+		if (found)
+			throw new ConflictException(`User with email ${body.email} has existed`)
+		return await this.UserMySqlService.create(body)
 	}
 }
