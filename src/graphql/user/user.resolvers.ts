@@ -37,6 +37,7 @@ export default class UserResolvers {
   			`User with email ${args.email} has been existed.`,
   		)
   	const created = await this.userMySqlService.create(args)
+  	created.password = this.sha256Service.createHash(created.password)
   	pubSub.publish("userCreated", { userCreated: created })
   	return created
   }
