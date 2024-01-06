@@ -28,6 +28,6 @@ export default class SignUpRequestBody {
   	lastName: string
 
   @IsDateString()
-  @ApiProperty({ example: "2002/03/18", description: "Birthdate" })
+  @ApiProperty({ example: "2002-03-18", description: "Birthdate" })
   	birthdate: Date
 }
