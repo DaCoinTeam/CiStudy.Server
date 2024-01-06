@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UseGuards, UseInterceptors } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
 import { UserMySqlEntity } from "@database"
-import { SignInRequestBody, SignUpRequestBody } from "./bodies"
+import { SignInDto, SignUpDto } from "./dtos"
 import UserService from "./user.service"
 import { SignInGuard, SignUpGuard } from "./guards"
 import { SignInInterceptor, SignUpInterceptor } from "./interceptors"
@@ -17,7 +17,7 @@ export default class UserController {
     @UseInterceptors(SignInInterceptor)
     @Post("sign-in")
 	async signIn(
-        @Body() body: SignInRequestBody
+        @Body() body: SignInDto
 	): Promise<UserMySqlEntity> {
 		return await this.userService.signIn(body)
 	}
@@ -26,7 +26,7 @@ export default class UserController {
     @UseInterceptors(SignUpInterceptor)
     @Post("sign-up")
     async signUp(
-        @Body() body: SignUpRequestBody
+        @Body() body: SignUpDto
     ): Promise<UserMySqlEntity> {
     	return await this.userService.signUp(body)
     }

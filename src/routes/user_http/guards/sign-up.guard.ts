@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common"
 import { Observable } from "rxjs"
-import { SignUpRequestBody } from "../bodies"
+import { SignUpDto } from "../dtos"
 
 @Injectable()
 export default class SignUpGuard implements CanActivate {
@@ -8,13 +8,13 @@ export default class SignUpGuard implements CanActivate {
 		context: ExecutionContext,
 	): boolean | Promise<boolean> | Observable<boolean> {
 		const request = context.switchToHttp().getRequest()
-		const body : unknown | SignUpRequestBody = request.body
+		const body : unknown | SignUpDto = request.body
 
 		return this.isValid(body)
 	}
 
-	private isValid(body: unknown): body is SignUpRequestBody {
-		const bodyCasted = body as SignUpRequestBody
+	private isValid(body: unknown): body is SignUpDto {
+		const bodyCasted = body as SignUpDto
 		return (
 			bodyCasted.email !== undefined &&
             bodyCasted.password !== undefined &&

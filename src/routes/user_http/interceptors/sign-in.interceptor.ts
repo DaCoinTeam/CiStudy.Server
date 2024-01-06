@@ -1,11 +1,11 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler, HttpException, HttpStatus } from "@nestjs/common"
 import { Observable } from "rxjs"
-import { SignUpRequestBody } from "../bodies"
+import { SignInDto } from "../dtos"
 
 @Injectable()
-export default class SignUpInterceptor implements NestInterceptor {
+export default class SignInInterceptor implements NestInterceptor {
 	intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-		const data = context.switchToHttp().getRequest().body as SignUpRequestBody
+		const data = context.switchToHttp().getRequest().body as SignInDto
 
 		return next.handle()
 	}

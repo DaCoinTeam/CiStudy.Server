@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 import appConfig from "./config/app.config"
 import { ValidationPipe } from "@nestjs/common"
 
+
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
 	app.useGlobalPipes(new ValidationPipe())
@@ -20,6 +21,6 @@ async function bootstrap() {
 		swaggerOptions: { defaultModelsExpandDepth: -1 }
 	})
   
-	await app.listen(appConfig().port || 3001)
+	await app.listen(appConfig().port || 3003)
 }
 bootstrap()

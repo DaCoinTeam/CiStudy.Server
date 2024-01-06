@@ -8,7 +8,7 @@ const mysqlProviders = [
 		useFactory: async () => {
 			const dataSource = new DataSource({
 				type: "mysql",
-				host: "192.168.1.80",
+				host: "26.78.227.119",
 				port: 3306,
 				username: databaseConfig().mysql.username,
 				password: databaseConfig().mysql.password,

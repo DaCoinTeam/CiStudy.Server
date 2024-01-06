@@ -6,7 +6,7 @@ import {
 	IsStrongPassword,
 } from "class-validator"
 
-export default class SignUpRequestBody {
+export default class SignUpDto {
   @IsEmail()
   @ApiProperty({ example: "starci@gmail.com", description: "Email" })
   	email: string
@@ -14,10 +14,6 @@ export default class SignUpRequestBody {
   @IsStrongPassword()
   @ApiProperty({ example: "Cuong123_A", description: "Password" })
   	password: string
-
-  @IsNotEmpty()
-  @ApiProperty({ example: "Cuong123_A", description: "Password" })
-  	confirm: string
 
   @IsNotEmpty()
   @ApiProperty({ example: "Nguyen Van Tu", description: "First Name" })

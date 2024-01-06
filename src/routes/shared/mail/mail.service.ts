@@ -18,9 +18,12 @@ export default class MailService {
 
 	private transporter = createTransport({
 		service: "gmail",
+		host: "smtp.gmail.com",
+		port: 4651,
+		secure: true,
 		auth: {
 			user: mailConfig().mailPass,
-			pass: mailConfig().mailUser,
+			pass: mailConfig().mailUser
 		},
 	})
 
@@ -44,9 +47,9 @@ export default class MailService {
 
 	async sendMail(email: string) {
 		try {
-			this.transporter.sendMail(this.mailOptions(email))
+			await this.transporter.sendMail(this.mailOptions(email))
 		} catch (ex) {
-			console.error(ex)
+			console.log(ex)
 			throw new InternalServerErrorException(
 				"Unable to deliver email due to a temporary server issue. We apologize for the inconvenience. Please try again later.",
 			)
