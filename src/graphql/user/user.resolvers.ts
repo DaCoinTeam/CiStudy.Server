@@ -21,7 +21,7 @@ export default class UserResolvers {
 	) {}
 
   @Query("signIn")
-	async post(@Args("input") args: SignInDto): Promise<User> {
+	async signIn(@Args("input") args: SignInDto): Promise<User> {
 		const found = await this.userMySqlService.findByEmail(args.email)
 		if (!found) throw new NotFoundException("User not found.")
 		if (!this.sha256Service.verifyHash(args.password, found.password))
