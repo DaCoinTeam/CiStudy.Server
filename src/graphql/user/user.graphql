@@ -1,0 +1,50 @@
+scalar Date
+
+enum UserRole {
+  User
+  Moderator
+  Administrator
+}
+
+type User {
+  userId: ID!
+  email: String
+  password: String
+  avatarUrl: String
+  phoneNumber: String
+  balance: Float!
+  role: UserRole!
+  walletId: ID
+  firstName: String
+  lastName: String
+  birthday: Date
+  verified: Boolean!
+}
+
+type Query {
+  users: [User!]!
+  signIn(input: SignInInput!): User!
+}
+
+input SignInInput {
+  email: String!
+  password: String!
+}
+
+
+input SignUpInput {
+  email: String!
+  password: String!
+  firstName: String!
+  lastName: String!
+  birthday: Date!
+}
+
+type Mutation {
+  signUp(input: SignUpInput!): User!
+}
+
+
+type Subscription {
+  userCreated: User
+}

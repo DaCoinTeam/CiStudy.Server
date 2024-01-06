@@ -17,6 +17,8 @@
       "@utils/*": ["src/utils/*"],
       "@routes/*": ["src/routes/*"],
       "@decorators/*": ["src/decorators/*"],
+      "@shared" : ["src/shared"],
+      "@graphql": ["src/graphql"]
     },
     "incremental": true,
     "skipLibCheck": true,

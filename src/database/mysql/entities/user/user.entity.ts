@@ -1,9 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 
 export enum UserRole {
-  User = "user",
-  Moderator = "moderator",
-  Administrator = "administrator",
+  User = "User",
+  Moderator = "Moderator",
+  Administrator = "Administrator",
 }
 
 @Entity("user")
@@ -51,7 +51,7 @@ export default class UserEntity {
   	lastName: string
 
   @Column({ type: "date", default: null })
-  	birthdate: Date
+  	birthday: Date
 
   @Column({ type: "boolean", default: false })
   	verified: boolean
