@@ -22,7 +22,7 @@ export default class UserMySqlService {
 		const user = await this.userRepository.findOneBy({
 			email
 		})
-		if (!user) throw new NotFoundException("User not found")
+		if (!user) throw new NotFoundException("User not found.")
 		return user
 	}
 

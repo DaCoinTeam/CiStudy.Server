@@ -52,4 +52,7 @@ export default class UserEntity {
 
   @Column({ type: "date", default: null })
   	birthdate: Date
+
+  @Column({ type: "boolean", default: false })
+  	verified: boolean
 }
