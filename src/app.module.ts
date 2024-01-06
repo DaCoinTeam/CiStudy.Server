@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common"
 import { appConfig, paymentConfig } from "@config"
 import { ConfigModule } from "@nestjs/config"
-import { MySQLModule } from "@database"
+import { UserMySqlModule } from "@database"
 import { UserModule } from "@routes/user"
 
 @Module({
@@ -16,7 +16,7 @@ import { UserModule } from "@routes/user"
 		UserModule,
 
 		//mysql
-		MySQLModule
+		UserMySqlModule
 	],
 	controllers: [],
 	providers: [],

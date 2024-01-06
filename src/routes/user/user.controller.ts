@@ -13,7 +13,7 @@ export default class UserController {
 	) { }
 
     @UseGuards(SignInGuard)
-    @Post()
+    @Post("sign-in")
 	async signIn(
         @Body() body: SignInRequestBody
 	): Promise<UserMySqlEntity> {
@@ -21,7 +21,7 @@ export default class UserController {
 	}
 
     @UseGuards(SignUpGuard)
-    @Post()
+    @Post("sign-up")
     async signUp(
         @Body() body: SignUpRequestBody
     ): Promise<UserMySqlEntity> {

@@ -27,7 +27,7 @@ export default class UserEntity {
   	type: "decimal",
   	precision: 10,
   	scale: 5,
-  	default: 0
+  	default: 0,
   })
   	balance: number
 
@@ -43,4 +43,13 @@ export default class UserEntity {
   	default: null,
   })
   	walletId: string
+
+  @Column({ type: "varchar", length: 50, default: null })
+  	firstName: string
+
+  @Column({ type: "varchar", length: 50, default: null })
+  	lastName: string
+
+  @Column({ type: "date", default: null })
+  	birthdate: Date
 }

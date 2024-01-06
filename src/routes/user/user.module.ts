@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common"
-import { UserMySqlService, UserMySqlProviders } from "@database"
+import { UserMySqlService, mysqlProviders, userMySqlProviders } from "@database"
 import UserService from "./user.service"
 import UserController from "./user.controller"
 import { Sha256Service } from "@routes/shared"
@@ -12,7 +12,8 @@ import { Sha256Service } from "@routes/shared"
 		Sha256Service,
 
 		//mysql
-		...UserMySqlProviders,
+		...mysqlProviders,
+		...userMySqlProviders,
 		UserMySqlService,
 	],
 })

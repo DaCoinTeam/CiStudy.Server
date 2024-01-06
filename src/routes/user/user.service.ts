@@ -25,6 +25,7 @@ export default class UserService {
 	async signUp(body: SignUpRequestBody) {
 		try {
 			const found = await this.UserMySqlService.findByEmail(body.email)
+			console.log(found)
 			throw new ConflictException(`User with email ${found.email} has existed`)
 		} catch (ex) {
 			if (ex instanceof NotFoundException) {

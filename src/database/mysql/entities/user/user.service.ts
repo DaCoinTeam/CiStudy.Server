@@ -14,6 +14,7 @@ export default class UserMySqlService {
 	
 	async create(user: Partial<UserEntity>): Promise<UserEntity> {
 		const created = this.userRepository.create(user)
+		console.log(created)
 		return await this.userRepository.save(created)
 	}
 
