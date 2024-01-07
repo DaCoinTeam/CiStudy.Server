@@ -14,7 +14,7 @@
       "@config": ["src/config"],
       "@database": ["src/database"],
       "@apptypes/*" : ["src/types/*"],
-      "@utils/*": ["src/utils/*"],
+      "@utils": ["src/utils"],
       "@restful": ["src/restful"],
       "@decorators/*": ["src/decorators/*"],
       "@shared" : ["src/shared"],

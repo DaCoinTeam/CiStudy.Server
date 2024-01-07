@@ -18,6 +18,14 @@ export default class UserMySqlService {
 		return await this.userRepository.save(created)
 	}
 
+	async findByExternalId(externalId: string): Promise<UserEntity> {
+		const user = await this.userRepository.findOneBy({
+			externalId
+		})
+		if (!user) throw new NotFoundException("User not found.")
+		return user
+	}
+
 	async findByEmail(email: string): Promise<UserEntity> {
 		const user = await this.userRepository.findOneBy({
 			email

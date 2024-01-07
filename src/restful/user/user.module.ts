@@ -4,6 +4,7 @@ import UserService from "./user.service"
 import UserController from "./user.controller"
 import { MailerService, Sha256Service } from "@shared"
 import { JwtService } from "@nestjs/jwt"
+import { FirebaseService } from "@3rd"
 
 @Module({
 	imports: [],
@@ -13,6 +14,7 @@ import { JwtService } from "@nestjs/jwt"
 		Sha256Service,
 		MailerService,
 		JwtService,
+		FirebaseService,
 
 		//mysql
 		...mysqlProviders,

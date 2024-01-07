@@ -6,6 +6,12 @@ export enum UserRole {
   Administrator = "Administrator",
 }
 
+export enum UserKind {
+  Local = "Local",
+  Google = "Google",
+  Facebook = "Facebook",
+}
+
 @Entity("user")
 export default class UserEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -55,4 +61,10 @@ export default class UserEntity {
 
   @Column({ type: "boolean", default: false })
   	verified: boolean
+
+  @Column({ type: "enum", enum: UserKind, default: UserKind.Local })
+  	kind: UserKind
+
+  @Column({ type: "varchar", length: 128, default: null })
+  	externalId: string
 }

@@ -6,6 +6,12 @@ enum UserRole {
   Administrator
 }
 
+enum UserKind {
+  Local
+  Google
+  Facebook
+}
+
 type User {
   userId: ID!
   email: String
@@ -19,6 +25,8 @@ type User {
   lastName: String
   birthday: Date
   verified: Boolean!
+  kind: UserKind!
+  externalId: String
 }
 
 type Query {

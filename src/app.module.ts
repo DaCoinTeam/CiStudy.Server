@@ -8,7 +8,6 @@ import { join } from "path"
 import { UserGraphQLModule } from "@graphql"
 import { UserRestfulModule } from "@restful"
 import FirebaseService from "./3rd/firebase"
-import { JwtService } from "@nestjs/jwt"
 
 @Module({
 	imports: [
@@ -32,10 +31,7 @@ import { JwtService } from "@nestjs/jwt"
 		UserRestfulModule,
 		
 		//mysql
-		MySQLModule,
-
-		//3rd
-		FirebaseService
+		MySQLModule
 	],
 	controllers: [],
 	providers: [],

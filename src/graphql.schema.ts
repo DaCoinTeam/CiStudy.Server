@@ -14,6 +14,12 @@ export enum UserRole {
     Administrator = "Administrator"
 }
 
+export enum UserKind {
+    Local = "Local",
+    Google = "Google",
+    Facebook = "Facebook"
+}
+
 export class SignInInput {
     email: string;
     password: string;
@@ -40,6 +46,8 @@ export class User {
     lastName?: Nullable<string>;
     birthday?: Nullable<Date>;
     verified: boolean;
+    kind: UserKind;
+    externalId?: Nullable<string>;
 }
 
 export abstract class IQuery {

@@ -19,7 +19,7 @@ export default class FirebaseService {
 		this.auth = firebase.auth(app)
 	}
 
-	async verifyGoogleToken(tokenId: string) : Promise<DecodedIdToken> {
-		return await this.auth.verifyIdToken(tokenId)
+	async verifyGoogleAccessToken(token: string) : Promise<DecodedIdToken> {
+		return await this.auth.verifyIdToken(token)
 	}
 }
