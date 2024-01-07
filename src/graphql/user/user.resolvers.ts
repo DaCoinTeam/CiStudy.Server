@@ -28,23 +28,4 @@ export default class UserResolvers {
 			throw new UnauthorizedException("Invalid credentials.")
 		return found
 	}
-
-  @Mutation("signUp")
-  async signUp(@Args("input") args: SignUpDto): Promise<User> {
-  	const found = await this.userMySqlService.hasEmailExisted(args.email)
-  	if (found)
-  		throw new ConflictException(
-  			`User with email ${args.email} has been existed.`,
-  		)
-  	args.password = this.sha256Service.createHash(args.password)
-
-  	const created = await this.userMySqlService.create(args)
-  	pubSub.publish("userCreated", { userCreated: created })
-  	return created
-  }
-
-  @Subscription("userCreated")
-  userCreated() {
-  	return pubSub.asyncIterator("userCreated")
-  }
 }

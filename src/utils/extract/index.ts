@@ -1,11 +1,8 @@
-import { Headers } from "@nestjs/common"
-
-const extractTokenFromHeader = (headers: Headers) => {
-	const authorization = headers.get("authorization")
+const extractTokenFromAuthorization = (authorization: string) => {
 	return authorization.split(" ")[1]
 }
 const extractUtils = {
-	extractTokenFromHeader: extractTokenFromHeader,
+	extractTokenFromAuthorization,
 }
 
 export default extractUtils

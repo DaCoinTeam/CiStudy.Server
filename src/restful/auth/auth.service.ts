@@ -20,7 +20,8 @@ export default class AuthService {
 	}
 
 	async signUp(params: SignUpDto) : Promise<UserMySqlEntity> {
-		const found = await this.userMySqlService.hasEmailExisted(params.email)
+
+		const found = await this.userMySqlService.findByEmail(params.email)
 		if (found)
 			throw new ConflictException(`User with email ${params.email} has existed.`)
 		params.password = this.sha256Service.createHash(params.password)
@@ -31,16 +32,15 @@ export default class AuthService {
 	async verifyGoogleAccessToken(token: string) : Promise<UserMySqlEntity> {
 		const decoded = await this.firebaseService.verifyGoogleAccessToken(token)
 		if (!decoded) throw new UnauthorizedException("Invalid Google access token.")
-		const found = this.userMySqlService.findByExternalId(decoded.uid)
-		if (!found) {
-			return await this.userMySqlService.create({
-				externalId: decoded.uid,
-				email: decoded.email,
-				avatarUrl: decoded.picture,
-				phoneNumber: decoded.phone_number,
-				kind: UserKind.Google
-			})
-		} 
-		return found
+		
+		const found = await this.userMySqlService.findByExternalId(decoded.uid)
+		if (found) return found
+		return await this.userMySqlService.create({
+			externalId: decoded.uid,
+			email: decoded.email,
+			avatarUrl: decoded.picture,
+			phoneNumber: decoded.phone_number,
+			kind: UserKind.Google
+		})	
 	}
 }

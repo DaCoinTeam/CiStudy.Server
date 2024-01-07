@@ -1,5 +1,4 @@
-
-import { Injectable, Inject, NotFoundException } from "@nestjs/common"
+import { Injectable, Inject } from "@nestjs/common"
 import { Repository } from "typeorm"
 import UserEntity from "./user.entity"
 import { USER_REPOSITORY } from "../../mysql.constant"
@@ -11,39 +10,26 @@ export default class UserMySqlService {
     private userRepository: Repository<UserEntity>,
 	) {}
 
-	
 	async create(user: Partial<UserEntity>): Promise<UserEntity> {
 		const created = this.userRepository.create(user)
 		console.log(created)
 		return await this.userRepository.save(created)
 	}
 
-	async findByExternalId(externalId: string): Promise<UserEntity> {
-		const user = await this.userRepository.findOneBy({
-			externalId
+	async findByExternalId(externalId: string): Promise<UserEntity | null> {
+		return await this.userRepository.findOneBy({
+			externalId,
 		})
-		if (!user) throw new NotFoundException("User not found.")
-		return user
 	}
 
-	async findByEmail(email: string): Promise<UserEntity> {
-		const user = await this.userRepository.findOneBy({
-			email
+	async findByEmail(email: string): Promise<UserEntity | null> {
+		return await this.userRepository.findOneBy({
+			email,
 		})
-		if (!user) throw new NotFoundException("User not found.")
-		return user
 	}
-
-	async hasEmailExisted(email: string): Promise<boolean> {
-		const user = await this.userRepository.findOneBy({
-			email
-		})
-		return user !== null
-	}
-
 
 	// async findByAddressAndChainId(tokenAddress: Address, chainId: number): Promise<TokensEntity|null> {
-	// 	return this.tokensRepository.findOneBy(	
+	// 	return this.tokensRepository.findOneBy(
 	// 		{
 	// 			tokenAddress: tokenAddress,
 	// 			chainId: chainId
@@ -53,7 +39,7 @@ export default class UserMySqlService {
 	// async create(entity: Partial<TokensEntity>): Promise<TokensEntity|null> {
 	// 	const tokenAddress = entity.tokenAddress
 	// 	const chainId = entity.chainId
-		
+
 	// 	if (
 	// 		tokenAddress == undefined
 	// 		|| chainId == undefined

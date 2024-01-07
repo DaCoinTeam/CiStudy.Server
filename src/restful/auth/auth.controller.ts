@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Get,
 	Headers,
 	Post,
 	UseGuards,
@@ -26,11 +27,11 @@ export default class AuthController {
 		return await this.userService.signUp(body)
 	}
 
-  @Post("verify-google-access-token")
+  @Get("verify-google-access-token")
   async verifyGoogleAccessToken(
-    @Headers() headers: Headers,
+    @Headers("authorization") authorization: string,
   ): Promise<UserMySqlEntity> {
-  	const accessToken = utils.extract.extractTokenFromHeader(headers)
+  	const accessToken = utils.extract.extractTokenFromAuthorization(authorization)
   	return await this.userService.verifyGoogleAccessToken(accessToken)
   }
 }
