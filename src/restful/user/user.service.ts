@@ -11,7 +11,8 @@ export default class UserService {
 	constructor(
     private readonly userMySqlService: UserMySqlService,
     private readonly sha256Service: Sha256Service,
-	private readonly mailerService: MailerService
+	private readonly mailerService: MailerService,
+	private readonly firebaseService: FirebaseS
 	) {
 	}
 
@@ -24,15 +25,15 @@ export default class UserService {
 		return await this.userMySqlService.create(params)
 	}
 
-	// async verifyGoogleAccessToken(token: string) {
-	// 	getAuth()
-	// 		.verifyIdToken(idToken)
-	// 		.then((decodedToken) => {
-	// 			const uid = decodedToken.uid
-	// 			// ...
-	// 		})
-	// 		.catch((error) => {
-	// 			// Handle error
-	// 		})
-	// }
+	async verifyGoogleAccessToken(token: string) {
+		getAuth()
+			.verifyIdToken(token)
+			.then((decodedToken) => {
+				const uid = decodedToken.uid
+				// ...
+			})
+			.catch((error) => {
+				// Handle error
+			})
+	}
 }

@@ -1,2 +1,4 @@
 export * from "./hash"
-export * from "./mailer"
+
+import MailerService from "./mailer"
+export { MailerService }
