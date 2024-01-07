@@ -15,7 +15,7 @@
       "@database": ["src/database"],
       "@apptypes/*" : ["src/types/*"],
       "@utils/*": ["src/utils/*"],
-      "@routes/*": ["src/routes/*"],
+      "@restful": ["src/restful"],
       "@decorators/*": ["src/decorators/*"],
       "@shared" : ["src/shared"],
       "@graphql": ["src/graphql"]

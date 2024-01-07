@@ -6,7 +6,7 @@ import { GraphQLModule } from "@nestjs/graphql"
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
 import { UserGraphQLModule } from "@graphql"
-
+import { UserRestfulModule } from "@restful"
 
 @Module({
 	imports: [
@@ -17,23 +17,22 @@ import { UserGraphQLModule } from "@graphql"
 			definitions: {
 				path: join(process.cwd(), "src/graphql.schema.ts"),
 				outputAs: "class",
-			  },
-		  }),
+			},
+		}),
 		ConfigModule.forRoot({
-			load: [
-				paymentConfig,
-				appConfig
-			]}),
+			load: [paymentConfig, appConfig],
+		}),
 
 		//graphql
 		UserGraphQLModule,
-	
+
+		//restful
+		UserRestfulModule,
+		
 		//mysql
-		MySQLModule
+		MySQLModule,
 	],
 	controllers: [],
 	providers: [],
 })
-
 export class AppModule {}
-
