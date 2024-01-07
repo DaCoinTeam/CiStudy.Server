@@ -6,7 +6,7 @@ import { GraphQLModule } from "@nestjs/graphql"
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
 import { UserGraphQLModule } from "@graphql"
-import { UserRestfulModule } from "@restful"
+import { AuthRestfulModule } from "@restful"
 
 @Module({
 	imports: [
@@ -27,7 +27,7 @@ import { UserRestfulModule } from "@restful"
 		UserGraphQLModule,
 
 		//restful
-		UserRestfulModule,
+		AuthRestfulModule,
 		
 		//mysql
 		MySQLModule
