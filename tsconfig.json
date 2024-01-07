@@ -18,7 +18,8 @@
       "@restful": ["src/restful"],
       "@decorators/*": ["src/decorators/*"],
       "@shared" : ["src/shared"],
-      "@graphql": ["src/graphql"]
+      "@graphql": ["src/graphql"],
+      "@3rd": ["src/3rd"]
     },
     "incremental": true,
     "skipLibCheck": true,

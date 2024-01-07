@@ -7,6 +7,8 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
 import { UserGraphQLModule } from "@graphql"
 import { UserRestfulModule } from "@restful"
+import FirebaseService from "./3rd/firebase/firebase.service"
+import { JwtService } from "@nestjs/jwt"
 
 @Module({
 	imports: [
@@ -31,6 +33,9 @@ import { UserRestfulModule } from "@restful"
 		
 		//mysql
 		MySQLModule,
+
+		//3rd
+		FirebaseService
 	],
 	controllers: [],
 	providers: [],

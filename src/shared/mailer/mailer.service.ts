@@ -1,4 +1,4 @@
-import { appConfig, jwtConfig, mailConfig } from "@config"
+import { appConfig, jwtConfig, thirdPartyConfig } from "@config"
 import { Injectable } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 import { createTransport } from "nodemailer"
@@ -19,8 +19,8 @@ export default class MailerService {
 	private transporter = createTransport({
 		service: "gmail",
 		auth: {
-			user: mailConfig().mailUser,
-			pass: mailConfig().mailPass,
+			user: thirdPartyConfig().mailer.user,
+			pass: thirdPartyConfig().mailer.pass,
 		},
 	})
 
@@ -28,7 +28,7 @@ export default class MailerService {
 		const serverUrl = appConfig().serverUrl
 		const token = this.generateVerifyToken(email)
 		return {
-			from: mailConfig().mailPass,
+			from: thirdPartyConfig().mailer.user,
 			to: email,
 			subject: "REGISTRATION CONFIRMATION - CISTUDY",
 			html: `
