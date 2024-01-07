@@ -9,14 +9,14 @@ import {
 import { ApiTags } from "@nestjs/swagger"
 import { UserMySqlEntity } from "@database"
 import { SignUpDto } from "./dto"
-import UserService from "./user.service"
+import UserService from "./auth.service"
 import { SignUpGuard } from "./guards"
 import { SignUpInterceptor } from "./interceptors"
 import utils from "@utils"
 
-@ApiTags("User")
-@Controller("api/user")
-export default class UserController {
+@ApiTags("Auth")
+@Controller("api/auth")
+export default class AuthController {
 	constructor(private readonly userService: UserService) {}
 
   @UseGuards(SignUpGuard)

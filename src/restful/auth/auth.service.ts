@@ -10,7 +10,7 @@ import { MailerService, Sha256Service } from "@shared"
 import { FirebaseService } from "@3rd"
 
 @Injectable()
-export default class UserService {
+export default class AuthService {
 	constructor(
     private readonly userMySqlService: UserMySqlService,
     private readonly sha256Service: Sha256Service,

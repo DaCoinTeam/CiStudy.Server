@@ -1,16 +1,16 @@
 import { Module } from "@nestjs/common"
 import { UserMySqlService, mysqlProviders, userMySqlProviders } from "@database"
-import UserService from "./user.service"
-import UserController from "./user.controller"
+import AuthService from "./auth.service"
+import AuthController from "./auth.controller"
 import { MailerService, Sha256Service } from "@shared"
 import { JwtService } from "@nestjs/jwt"
 import { FirebaseService } from "@3rd"
 
 @Module({
 	imports: [],
-	controllers: [UserController],
+	controllers: [AuthController],
 	providers: [
-		UserService,
+		AuthService,
 		Sha256Service,
 		MailerService,
 		JwtService,
@@ -22,4 +22,4 @@ import { FirebaseService } from "@3rd"
 		UserMySqlService,
 	],
 })
-export default class UserRestfulModule {}
+export default class AuthModule {}
