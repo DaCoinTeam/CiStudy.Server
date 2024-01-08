@@ -14,8 +14,8 @@ import {
 } from "@nestjs/common"
 import { SignInDto } from "./dto"
 import { FirebaseService } from "@3rd"
-import { JwtAuthGuard } from "../guard"
-import { User } from "../decorators/user.decorator"
+import { JwtAuthGuard } from "../shared/guard"
+import { User } from "../shared"
 import { UserDto } from "@shared"
 
 const pubSub = new PubSub()
