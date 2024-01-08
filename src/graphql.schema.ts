@@ -25,10 +25,6 @@ export class SignInInput {
     password: string;
 }
 
-export class VerifyGoogleAccessTokenInput {
-    token: string;
-}
-
 export class User {
     userId: string;
     email?: Nullable<string>;
@@ -53,7 +49,7 @@ export abstract class IQuery {
 }
 
 export abstract class IMutation {
-    abstract verifyGoogleAccessToken(input: VerifyGoogleAccessTokenInput): User | Promise<User>;
+    abstract verifyGoogleAccessToken(input: string): User | Promise<User>;
 }
 
 export abstract class ISubscription {

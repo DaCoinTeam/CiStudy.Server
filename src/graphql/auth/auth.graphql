@@ -39,15 +39,9 @@ input SignInInput {
   password: String!
 }
 
-
-input VerifyGoogleAccessTokenInput {
-  token: String!
-}
-
 type Mutation {
-  verifyGoogleAccessToken(input: VerifyGoogleAccessTokenInput!): User!
+  verifyGoogleAccessToken(input: String!): User!
 }
-
 
 type Subscription {
   userCreated: User
