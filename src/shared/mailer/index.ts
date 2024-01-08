@@ -25,7 +25,7 @@ export default class MailerService {
 	})
 
 	private mailOptions = (email: string) => {
-		const serverUrl = appConfig().serverUrl
+		const appUrl = appConfig().appUrl
 		const token = this.generateVerifyToken(email)
 		return {
 			from: thirdPartyConfig().mailer.user,
@@ -34,7 +34,7 @@ export default class MailerService {
 			html: `
 			<p>Dear ${email},</p>
 			<p>To complete your registration, please click on the confirmation link below:</p>
-			<a href="${serverUrl}auth/verify-email?email=${email}&token=${token}">Here</a>
+			<a href="${appUrl}auth/verify-email?email=${email}&token=${token}">Here</a>
 			<p>If you did not sign up for CiStudy, you can ignore this email.</p>
 			<p>Best regards,</p>
 			<p>Tu Cuong</p>

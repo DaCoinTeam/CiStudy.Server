@@ -25,12 +25,8 @@ export class SignInInput {
     password: string;
 }
 
-export class SignUpInput {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    birthday: Date;
+export class VerifyGoogleAccessTokenInput {
+    token: string;
 }
 
 export class User {
@@ -57,7 +53,7 @@ export abstract class IQuery {
 }
 
 export abstract class IMutation {
-    abstract signUp(input: SignUpInput): User | Promise<User>;
+    abstract verifyGoogleAccessToken(input: VerifyGoogleAccessTokenInput): User | Promise<User>;
 }
 
 export abstract class ISubscription {

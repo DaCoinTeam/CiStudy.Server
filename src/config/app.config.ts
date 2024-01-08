@@ -1,7 +1,6 @@
 export default () => {
-	const port = process.env.PORT
 	return {
-		port,
-		serverUrl: `http://localhost:${port}/api/`
+		port :  process.env.PORT,
+		appUrl: process.env.APP_URL
 	}
 }

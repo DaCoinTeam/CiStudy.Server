@@ -14,7 +14,6 @@ import { FirebaseService } from "@3rd"
 		Sha256Service,
 		MailerService,
 		JwtService,
-		FirebaseService,
 
 		//mysql
 		...mysqlProviders,

@@ -1,16 +1,18 @@
 import { Module } from "@nestjs/common"
-import UserResolvers from "./user.resolvers"
+import UserResolvers from "./auth.resolvers"
 import { Sha256Service } from "@shared"
 import {
 	UserMySqlService,
 	mysqlProviders,
 	userMySqlProviders,
 } from "@database"
+import { FirebaseService } from "@3rd"
 
 @Module({
 	providers: [
 		UserResolvers,
 		Sha256Service,
+		FirebaseService,
 
 		//mysql
 		...mysqlProviders,
@@ -19,4 +21,4 @@ import {
 	],
 	imports: [],
 })
-export default class UserGraphQLModule {}
+export default class AuthGraphQLModule {}

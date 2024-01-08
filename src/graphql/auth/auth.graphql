@@ -40,16 +40,12 @@ input SignInInput {
 }
 
 
-input SignUpInput {
-  email: String!
-  password: String!
-  firstName: String!
-  lastName: String!
-  birthday: Date!
+input VerifyGoogleAccessTokenInput {
+  token: String!
 }
 
 type Mutation {
-  signUp(input: SignUpInput!): User!
+  verifyGoogleAccessToken(input: VerifyGoogleAccessTokenInput!): User!
 }
 
 
