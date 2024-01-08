@@ -6,7 +6,6 @@ import {
 	UseInterceptors,
 } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
-import { UserMySqlEntity } from "@database"
 import { SignUpDto } from "./dto"
 import UserService from "./auth.service"
 import { SignUpGuard } from "./guards"
@@ -20,7 +19,7 @@ export default class AuthController {
   @UseGuards(SignUpGuard)
   @UseInterceptors(SignUpInterceptor)
   @Post("sign-up")
-	async signUp(@Body() body: SignUpDto): Promise<UserMySqlEntity> {
+	async signUp(@Body() body: SignUpDto): Promise<string> {
 		return await this.userService.signUp(body)
 	}
 }

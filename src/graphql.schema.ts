@@ -42,10 +42,20 @@ export class User {
     externalId?: Nullable<string>;
 }
 
+export class Tokens {
+    accessToken: string;
+    refreshToken: string;
+}
+
+export class SignInResponse {
+    user: User;
+    tokens: Tokens;
+}
+
 export abstract class IQuery {
     abstract users(): User[] | Promise<User[]>;
 
-    abstract signIn(input: SignInInput): User | Promise<User>;
+    abstract signIn(input: SignInInput): SignInResponse | Promise<SignInResponse>;
 }
 
 export abstract class IMutation {

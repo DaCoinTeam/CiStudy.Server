@@ -16,6 +16,13 @@ export default class UserService {
 		return await this.userRepository.save(created)
 	}
 
+	async findByUserId(userId: string): Promise<UserEntity | null> {
+		return await this.userRepository.findOneBy({
+			userId,
+		})
+	}
+
+
 	async findByExternalId(externalId: string): Promise<UserEntity | null> {
 		return await this.userRepository.findOneBy({
 			externalId,

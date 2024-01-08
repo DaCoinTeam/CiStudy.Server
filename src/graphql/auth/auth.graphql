@@ -29,9 +29,19 @@ type User {
   externalId: String
 }
 
+type Tokens{
+  accessToken: String!,
+  refreshToken: String!
+}
+
+type SignInResponse {
+  user: User!,
+  tokens: Tokens!
+}
+
 type Query {
   users: [User!]!
-  signIn(input: SignInInput!): User!
+  signIn(input: SignInInput!): SignInResponse!
 }
 
 input SignInInput {
