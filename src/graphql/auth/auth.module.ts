@@ -8,7 +8,7 @@ import {
 } from "@database"
 import { FirebaseService } from "@3rd"
 import { JwtService } from "@nestjs/jwt"
-import { JwtStrategy } from "@shared"
+import { JwtStrategy } from "../shared"
 
 @Module({
 	providers: [

@@ -1,9 +1,11 @@
 import { PassportStrategy } from "@nestjs/passport"
 import { ExtractJwt, Strategy } from "passport-jwt"
 import { jwtConfig } from "@config"
-import { BadRequestException, Injectable } from "@nestjs/common"
+import { AuthenticationError } from "apollo-server-core"
 import { UserMySqlService } from "@database"
 import { UserMySqlEntity } from "@database"
+import { Payload } from "@shared"
+import { Injectable } from "@nestjs/common"
 
 @Injectable()
 export default class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,13 +20,8 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
 	async validate(payload: Payload): Promise<UserMySqlEntity> {
 		const user = await this.userMySqlService.findByUserId(payload.userId)
 		if (!user) {
-			throw new BadRequestException("User not found.")
+			throw new AuthenticationError("User not found.")
 		}
 		return user
 	}
-}
-
-export interface Payload {
-  userId: string;
-  [key: string]: unknown;
 }
