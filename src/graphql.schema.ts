@@ -47,7 +47,7 @@ export class Tokens {
     refreshToken: string;
 }
 
-export class SignInResponse {
+export class Response {
     user: User;
     tokens: Tokens;
 }
@@ -55,7 +55,9 @@ export class SignInResponse {
 export abstract class IQuery {
     abstract users(): User[] | Promise<User[]>;
 
-    abstract signIn(input: SignInInput): SignInResponse | Promise<SignInResponse>;
+    abstract init(): Response | Promise<Response>;
+
+    abstract signIn(input: SignInInput): Response | Promise<Response>;
 }
 
 export abstract class IMutation {

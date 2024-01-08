@@ -34,14 +34,15 @@ type Tokens{
   refreshToken: String!
 }
 
-type SignInResponse {
+type Response {
   user: User!,
   tokens: Tokens!
 }
 
 type Query {
   users: [User!]!
-  signIn(input: SignInInput!): SignInResponse!
+  init: Response!
+  signIn(input: SignInInput!): Response!
 }
 
 input SignInInput {

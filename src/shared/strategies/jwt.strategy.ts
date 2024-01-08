@@ -24,7 +24,7 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
 	}
 }
 
-interface Payload {
+export interface Payload {
   userId: string;
   [key: string]: unknown;
 }

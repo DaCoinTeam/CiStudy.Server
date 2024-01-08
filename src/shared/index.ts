@@ -1,3 +1,4 @@
 export * from "./services"
-export * from "./guards"
+export * from "../restful/guards"
 export * from "./strategies"
+export * from "./dtos"
