@@ -4,7 +4,7 @@ import UserEntity from "./user.entity"
 import { USER_REPOSITORY } from "../../mysql.constant"
 
 @Injectable()
-export default class UserMySqlService {
+export default class UserService {
 	constructor(
     @Inject(USER_REPOSITORY)
     private userRepository: Repository<UserEntity>,

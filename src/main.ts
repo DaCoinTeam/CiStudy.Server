@@ -7,8 +7,10 @@ import { ValidationPipe } from "@nestjs/common"
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
+	// thêm validation
 	app.useGlobalPipes(new ValidationPipe())
 
+	//swagger
 	const config = new DocumentBuilder()
 		.setTitle("CiSwap Server")
 		.setDescription(
@@ -23,7 +25,10 @@ async function bootstrap() {
 		swaggerOptions: { defaultModelsExpandDepth: -1 },
 	})
 
+	//cho phép cors
 	app.enableCors()
+
+	// lắng nghe ở port nào
 	await app.listen(appConfig().port || 3001)
 }
 bootstrap()
