@@ -1,5 +1,5 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql"
-import { UserKind, UserMySqlEntity, UserMySqlService } from "@database"
+import { UserKind, UserMySqlService } from "@database"
 
 import { PubSub } from "graphql-subscriptions"
 import {
@@ -31,7 +31,7 @@ export default class AuthResolvers {
   @Query("signIn")
 	async signIn(
     @Args("input") args: SignInDto,
-	): Promise<TokenizedResponse<UserMySqlEntity>> {
+	): Promise<TokenizedResponse<UserDto>> {
 		const found = await this.userMySqlService.findByEmail(args.email)
 		if (!found) throw new ApolloError("User not found.")
 		if (!this.sha256Service.verifyHash(args.password, found.password))
@@ -50,7 +50,7 @@ export default class AuthResolvers {
   @Mutation("verifyGoogleAccessToken")
   async verifyGoogleAccessToken(
     @Args("input") token: string,
-  ): Promise<TokenizedResponse<UserMySqlEntity>> {
+  ): Promise<TokenizedResponse<UserDto>> {
   	const decoded = await this.firebaseService.verifyGoogleAccessToken(token)
   	if (!decoded)
   		throw new AuthenticationError("Invalid Google access token.")

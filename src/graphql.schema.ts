@@ -48,7 +48,7 @@ export class Tokens {
 }
 
 export class Response {
-    user: User;
+    data: User;
     tokens: Tokens;
 }
 
@@ -61,7 +61,7 @@ export abstract class IQuery {
 }
 
 export abstract class IMutation {
-    abstract verifyGoogleAccessToken(input: string): User | Promise<User>;
+    abstract verifyGoogleAccessToken(input: string): Response | Promise<Response>;
 }
 
 export abstract class ISubscription {

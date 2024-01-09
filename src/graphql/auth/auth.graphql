@@ -35,7 +35,7 @@ type Tokens{
 }
 
 type Response {
-  user: User!,
+  data: User!,
   tokens: Tokens!
 }
 
@@ -51,7 +51,7 @@ input SignInInput {
 }
 
 type Mutation {
-  verifyGoogleAccessToken(input: String!): User!
+  verifyGoogleAccessToken(input: String!): Response!
 }
 
 type Subscription {
