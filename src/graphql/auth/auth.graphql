@@ -29,14 +29,14 @@ type User {
   externalId: String
 }
 
-type Tokens{
+type AuthTokens{
   accessToken: String!,
   refreshToken: String!
 }
 
 type Response {
   data: User!,
-  tokens: Tokens!
+  tokens: AuthTokens!
 }
 
 type Query {

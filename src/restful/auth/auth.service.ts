@@ -1,11 +1,13 @@
 import { UserMySqlService } from "@database"
 import { ConflictException, Injectable } from "@nestjs/common"
-import { SignUpDto } from "./dto"
+import { SignUpRequestDto } from "./dto"
 import {
 	MailerService,
 	Sha256Service,
 	TokenGeneratorService,
 } from "src/shared/services"
+import { UserDto } from "@shared"
+import RefreshResponseDto from "./dto/refresh.dto"
 
 @Injectable()
 export default class AuthService {
@@ -16,7 +18,11 @@ export default class AuthService {
     private readonly tokenGeneratorService: TokenGeneratorService,
 	) {}
 
-	async signUp(params: SignUpDto): Promise<string> {
+	refresh(params: UserDto): RefreshResponseDto {
+		return this.tokenGeneratorService.generateAuthTokens(params)
+	}
+
+	async signUp(params: SignUpRequestDto): Promise<string> {
 		const found = await this.userMySqlService.findByEmail(params.email)
 		if (found)
 			throw new ConflictException(

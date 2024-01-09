@@ -42,14 +42,14 @@ export class User {
     externalId?: Nullable<string>;
 }
 
-export class Tokens {
+export class AuthTokens {
     accessToken: string;
     refreshToken: string;
 }
 
 export class Response {
     data: User;
-    tokens: Tokens;
+    tokens: AuthTokens;
 }
 
 export abstract class IQuery {

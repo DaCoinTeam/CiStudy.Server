@@ -22,31 +22,39 @@ export default class TokenGeneratorService {
 			secret: jwtConfig().secret,
 		})
 	}
-
-	generateTokenizedResponse<T extends object>(data: T): TokenizedResponse<T> {
+	generateAuthTokens<T extends object>(
+		data: T
+	) : AuthTokens {
 		const accessToken = this.generateToken<T>(data)
 		const refreshToken = this.generateToken<T>(data, TokenType.Refresh)
+		return {
+			accessToken,
+			refreshToken
+		}
+	}
+
+	generateTokenizedResponse<T extends object>(data: T): TokenizedResponse<T> {
+		const tokens = this.generateAuthTokens(data)
 
 		return {
 			data,
-			tokens: {
-				accessToken,
-				refreshToken,
-			},
+			tokens
 		}
 	}
 }
 
 export interface TokenizedResponse<T extends object> {
   data: T;
-  tokens: {
-    accessToken: string;
-    refreshToken: string;
-  };
+  tokens: AuthTokens
 }
 
 export enum TokenType {
   Access,
   Refresh,
   Verify,
+}
+
+export interface AuthTokens {
+	accessToken: string,
+	refreshToken: string
 }

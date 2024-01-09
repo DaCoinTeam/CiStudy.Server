@@ -8,9 +8,10 @@ import {
 	TokenizedResponse,
 } from "src/shared/services"
 import {
+	NotFoundException,
+	UnauthorizedException,
 	UseGuards
 } from "@nestjs/common"
-import { AuthenticationError, ApolloError } from "apollo-server-core"
 import { SignInDto } from "./dtos"
 import { FirebaseService } from "@3rd"
 import { JwtAuthGuard } from "../shared/guard"
@@ -33,9 +34,9 @@ export default class AuthResolvers {
     @Args("input") args: SignInDto,
 	): Promise<TokenizedResponse<UserDto>> {
 		const found = await this.userMySqlService.findByEmail(args.email)
-		if (!found) throw new ApolloError("User not found.")
+		if (!found) throw new NotFoundException("User not found.")
 		if (!this.sha256Service.verifyHash(args.password, found.password))
-			throw new AuthenticationError("Invalid credentials.")
+			throw new UnauthorizedException("Invalid credentials.")
 		return this.tokenGeneratorService.generateTokenizedResponse(found)
 	}
 
@@ -53,7 +54,7 @@ export default class AuthResolvers {
   ): Promise<TokenizedResponse<UserDto>> {
   	const decoded = await this.firebaseService.verifyGoogleAccessToken(token)
   	if (!decoded)
-  		throw new AuthenticationError("Invalid Google access token.")
+  		throw new UnauthorizedException("Invalid Google access token.")
 
   	const found = await this.userMySqlService.findByExternalId(decoded.uid)
   	if (found)
