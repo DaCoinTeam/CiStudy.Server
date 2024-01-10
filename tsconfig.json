@@ -19,7 +19,7 @@
       "@decorators/*": ["src/decorators/*"],
       "@shared" : ["src/shared"],
       "@graphql": ["src/graphql"],
-      "@3rd": ["src/3rd"],
+      "@global": ["src/global"],
     },
     "incremental": true,
     "skipLibCheck": true,

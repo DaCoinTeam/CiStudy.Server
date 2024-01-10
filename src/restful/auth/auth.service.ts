@@ -5,7 +5,7 @@ import {
 	MailerService,
 	Sha256Service,
 	TokenGeneratorService,
-} from "@shared"
+} from "@global"
 import { UserDto } from "@shared"
 import RefreshResponseDto from "./dto/refresh.dto"
 

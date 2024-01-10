@@ -6,14 +6,14 @@ import {
 	Sha256Service,
 	TokenGeneratorService,
 	TokenizedResponse,
-} from "@shared"
+	FirebaseService
+} from "@global"
 import {
 	NotFoundException,
 	UnauthorizedException,
 	UseGuards
 } from "@nestjs/common"
 import { SignInDto } from "./dtos"
-import { FirebaseService } from "@3rd"
 import { JwtAuthGuard } from "../shared/guard"
 import { User } from "../shared"
 import { UserDto } from "@shared"

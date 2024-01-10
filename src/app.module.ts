@@ -7,8 +7,12 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
 import { AuthGraphQLModule } from "@graphql"
 import { AuthRestfulModule } from "@restful"
-import { FirebaseModule } from "@3rd"
-import { MailerModule, Sha256Module, TokenGeneratorModule } from "./shared/modules"
+import {
+	FirebaseModule,
+	MailerModule,
+	Sha256Module,
+	TokenGeneratorModule,
+} from "@global"
 
 @Module({
 	imports: [
@@ -30,7 +34,7 @@ import { MailerModule, Sha256Module, TokenGeneratorModule } from "./shared/modul
 
 		//restful
 		AuthRestfulModule,
-		
+
 		//mysql
 		MySQLModule,
 
@@ -38,7 +42,7 @@ import { MailerModule, Sha256Module, TokenGeneratorModule } from "./shared/modul
 		FirebaseModule,
 		MailerModule,
 		TokenGeneratorModule,
-		Sha256Module
+		Sha256Module,
 	],
 	controllers: [],
 	providers: [],
