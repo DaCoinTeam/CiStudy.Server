@@ -6,7 +6,7 @@ import {
 	Sha256Service,
 	TokenGeneratorService,
 	TokenizedResponse,
-} from "src/shared/services"
+} from "@shared"
 import {
 	NotFoundException,
 	UnauthorizedException,

@@ -1,3 +1,1 @@
-import FirebaseService from "./firebase"
-
-export { FirebaseService }
+export * from "./firebase"
