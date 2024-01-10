@@ -8,10 +8,7 @@ import { join } from "path"
 import { AuthGraphQLModule } from "@graphql"
 import { AuthRestfulModule } from "@restful"
 import {
-	FirebaseModule,
-	MailerModule,
-	Sha256Module,
-	TokenGeneratorModule,
+	GlobalModule
 } from "@global"
 
 @Module({
@@ -39,10 +36,7 @@ import {
 		MySQLModule,
 
 		//global
-		FirebaseModule,
-		MailerModule,
-		TokenGeneratorModule,
-		Sha256Module,
+		GlobalModule
 	],
 	controllers: [],
 	providers: [],
