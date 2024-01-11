@@ -57,7 +57,7 @@ export default class UserEntity {
   	lastName: string
 
   @Column({ type: "date", default: null })
-  	birthday: Date
+  	birthdate: Date
 
   @Column({ type: "boolean", default: false })
   	verified: boolean

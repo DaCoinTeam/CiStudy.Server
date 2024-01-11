@@ -8,8 +8,8 @@ import { InternalServerErrorException } from "@nestjs/common"
 export default class MailerService {
 	constructor(private readonly jwtService: JwtService) {}
 
-	private generateVerifyToken(email: string): string {
-		const payload = { email }
+	private generateVerifyToken(userId: string): string {
+		const payload = { userId }
 		return this.jwtService.sign(payload, {
 			expiresIn: jwtConfig().verifyTokenExpiryTime,
 			secret: jwtConfig().secret,
@@ -24,9 +24,9 @@ export default class MailerService {
 		},
 	})
 
-	private mailOptions = (email: string) => {
+	private mailOptions = (userId: string, email: string) => {
 		const appUrl = appConfig().appUrl
-		const token = this.generateVerifyToken(email)
+		const token = this.generateVerifyToken(userId)
 		return {
 			from: thirdPartyConfig().mailer.user,
 			to: email,
@@ -34,7 +34,7 @@ export default class MailerService {
 			html: `
 			<p>Dear ${email},</p>
 			<p>To complete your registration, please click on the confirmation link below:</p>
-			<a href="${appUrl}auth/verify-email?email=${email}&token=${token}">Here</a>
+			<a href="${appUrl}/auth/verify-registration?&token=${token}">Here</a>
 			<p>If you did not sign up for CiStudy, you can ignore this email.</p>
 			<p>Best regards,</p>
 			<p>Tu Cuong</p>
@@ -42,9 +42,9 @@ export default class MailerService {
 		}
 	}
 
-	async sendMail(email: string) {
+	async sendMail(userId: string, email: string) {
 		try {
-			this.transporter.sendMail(this.mailOptions(email))
+			this.transporter.sendMail(this.mailOptions(userId, email))
 		} catch (ex) {
 			console.error(ex)
 			throw new InternalServerErrorException(
