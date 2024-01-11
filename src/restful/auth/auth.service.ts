@@ -34,7 +34,7 @@ export default class AuthService {
 		params.password = this.sha256Service.createHash(params.password)
 		const created = await this.userMySqlService.create(params)
 
-		this.mailerService.sendMail(created.userId, created.email)
+		this.mailerService.sendMail(created.userId, params.email)
 		return (
 			"Sign up successfully. An email has been sent to " +
       params.email +
