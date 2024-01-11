@@ -10,6 +10,7 @@ import { AuthRestfulModule } from "@restful"
 import {
 	GlobalModule
 } from "@global"
+// import { CoursesModule } from "./restful/courses/courses.module"
 
 @Module({
 	imports: [
@@ -35,6 +36,9 @@ import {
 		//mysql
 		MySQLModule,
 
+		// course
+		// CoursesModule,
+		
 		//global
 		GlobalModule
 	],
