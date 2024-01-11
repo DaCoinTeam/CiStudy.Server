@@ -3,14 +3,13 @@ import { Injectable } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 import { createTransport } from "nodemailer"
 import { InternalServerErrorException } from "@nestjs/common"
-import { UserDto } from "@shared"
 
 @Injectable()
 export default class MailerService {
 	constructor(private readonly jwtService: JwtService) {}
 
-	private generateVerifyToken(email: string): string {
-		const payload = { email }
+	private generateVerifyToken(userId: string, email: string): string {
+		const payload = { userId, email }
 		return this.jwtService.sign(payload, {
 			expiresIn: jwtConfig().verifyTokenExpiryTime,
 			secret: jwtConfig().secret,
@@ -25,15 +24,15 @@ export default class MailerService {
 		},
 	})
 
-	private mailOptions = (user: UserDto) => {
+	private mailOptions = (userId: string, email: string) => {
 		const appUrl = appConfig().appUrl
-		const token = this.generateVerifyToken(user.email)
+		const token = this.generateVerifyToken(userId, email)
 		return {
 			from: thirdPartyConfig().mailer.user,
-			to: user.email,
+			to: email,
 			subject: "REGISTRATION CONFIRMATION - CISTUDY",
 			html: `
-			<p>Dear ${user.email},</p>
+			<p>Dear ${email},</p>
 			<p>To complete your registration, please click on the confirmation link below:</p>
 			<a href="${appUrl}/auth/verify-registration?&token=${token}">Here</a>
 			<p>If you did not sign up for CiStudy, you can ignore this email.</p>
@@ -43,9 +42,9 @@ export default class MailerService {
 		}
 	}
 
-	async sendMail(user: UserDto) {
+	async sendMail(userId: string, email: string) {
 		try {
-			this.transporter.sendMail(this.mailOptions(user))
+			this.transporter.sendMail(this.mailOptions(userId, email))
 		} catch (ex) {
 			console.error(ex)
 			throw new InternalServerErrorException(
