@@ -8,8 +8,8 @@ import { InternalServerErrorException } from "@nestjs/common"
 export default class MailerService {
 	constructor(private readonly jwtService: JwtService) {}
 
-	private generateVerifyToken(userId: string, email: string): string {
-		const payload = { userId, email }
+	private generateVerifyToken(userId: string): string {
+		const payload = { userId }
 		return this.jwtService.sign(payload, {
 			expiresIn: jwtConfig().verifyTokenExpiryTime,
 			secret: jwtConfig().secret,
@@ -26,7 +26,7 @@ export default class MailerService {
 
 	private mailOptions = (userId: string, email: string) => {
 		const appUrl = appConfig().appUrl
-		const token = this.generateVerifyToken(userId, email)
+		const token = this.generateVerifyToken(userId)
 		return {
 			from: thirdPartyConfig().mailer.user,
 			to: email,
