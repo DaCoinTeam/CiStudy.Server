@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 import { createTransport } from "nodemailer"
 import { InternalServerErrorException } from "@nestjs/common"
+import { UserDto } from "@shared"
 
 @Injectable()
 export default class MailerService {
@@ -24,15 +25,15 @@ export default class MailerService {
 		},
 	})
 
-	private mailOptions = (email: string) => {
+	private mailOptions = (user: UserDto) => {
 		const appUrl = appConfig().appUrl
-		const token = this.generateVerifyToken(email)
+		const token = this.generateVerifyToken(user.email)
 		return {
 			from: thirdPartyConfig().mailer.user,
-			to: email,
+			to: user.email,
 			subject: "REGISTRATION CONFIRMATION - CISTUDY",
 			html: `
-			<p>Dear ${email},</p>
+			<p>Dear ${user.email},</p>
 			<p>To complete your registration, please click on the confirmation link below:</p>
 			<a href="${appUrl}/auth/verify-registration?&token=${token}">Here</a>
 			<p>If you did not sign up for CiStudy, you can ignore this email.</p>
@@ -42,9 +43,9 @@ export default class MailerService {
 		}
 	}
 
-	async sendMail(email: string) {
+	async sendMail(user: UserDto) {
 		try {
-			this.transporter.sendMail(this.mailOptions(email))
+			this.transporter.sendMail(this.mailOptions(user))
 		} catch (ex) {
 			console.error(ex)
 			throw new InternalServerErrorException(

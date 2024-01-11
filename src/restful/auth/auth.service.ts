@@ -4,7 +4,7 @@ import { SignUpRequestDto } from "./dto"
 import {
 	MailerService,
 	Sha256Service,
-	TokenGeneratorService
+	TokenGeneratorService,
 } from "@global"
 import { UserDto } from "@shared"
 import RefreshResponseDto from "./dto/refresh.dto"
@@ -32,9 +32,9 @@ export default class AuthService {
 				`User with email ${params.email} has existed.`,
 			)
 		params.password = this.sha256Service.createHash(params.password)
-		await this.userMySqlService.create(params)
+		const created = await this.userMySqlService.create(params)
 
-		this.mailerService.sendMail(params.email)
+		this.mailerService.sendMail(created)
 		return (
 			"Sign up successfully. An email has been sent to " +
       params.email +
