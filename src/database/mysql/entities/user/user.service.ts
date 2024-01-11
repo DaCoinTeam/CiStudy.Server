@@ -35,6 +35,13 @@ export default class UserService {
 		})
 	}
 
+	async update(user: Partial<UserEntity>): Promise<boolean> {
+		const userId = user.userId
+		if (!userId) return false
+		const result = await this.userRepository.update(userId, user)
+		return !!result.affected
+	}
+
 	// async findByAddressAndChainId(tokenAddress: Address, chainId: number): Promise<TokensEntity|null> {
 	// 	return this.tokensRepository.findOneBy(
 	// 		{

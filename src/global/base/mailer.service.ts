@@ -34,7 +34,7 @@ export default class MailerService {
 			html: `
 			<p>Dear ${email},</p>
 			<p>To complete your registration, please click on the confirmation link below:</p>
-			<a href="${appUrl}auth/verify-email?email=${email}&token=${token}">Here</a>
+			<a href="${appUrl}/auth/verify-registration?&token=${token}">Here</a>
 			<p>If you did not sign up for CiStudy, you can ignore this email.</p>
 			<p>Best regards,</p>
 			<p>Tu Cuong</p>

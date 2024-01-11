@@ -16,10 +16,6 @@ export default class SignUpRequestDto {
   	password: string
 
   @IsNotEmpty()
-  @ApiProperty({ example: "Cuong123_A", description: "Password" })
-  	confirm: string
-
-  @IsNotEmpty()
   @ApiProperty({ example: "Nguyen Van Tu", description: "First Name" })
   	firstName: string
 

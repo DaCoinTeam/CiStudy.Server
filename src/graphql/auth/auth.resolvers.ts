@@ -13,7 +13,7 @@ import {
 	UnauthorizedException,
 	UseGuards
 } from "@nestjs/common"
-import { SignInDto } from "./dtos"
+import { SignInRequestDto } from "./dtos"
 import { JwtAuthGuard } from "../shared/guard"
 import { User } from "../shared"
 import { UserDto } from "@shared"
@@ -31,7 +31,7 @@ export default class AuthResolvers {
 
   @Query("signIn")
 	async signIn(
-    @Args("input") args: SignInDto,
+    @Args("input") args: SignInRequestDto,
 	): Promise<TokenizedResponse<UserDto>> {
 		const found = await this.userMySqlService.findByEmail(args.email)
 		if (!found) throw new NotFoundException("User not found.")

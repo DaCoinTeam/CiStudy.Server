@@ -5,6 +5,7 @@ import {
 	Get,
 	UseGuards,
 	UseInterceptors,
+	Query,
 } from "@nestjs/common"
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger"
 import { RefreshResponseDto, SignUpRequestDto } from "./dto"
@@ -32,4 +33,9 @@ export default class AuthController {
   async refresh(@User() user: UserDto): Promise<RefreshResponseDto> {
   	return this.userService.refresh(user)
   }
+
+  @Get("verify-registration")
+	async verifyRegistration(@Query("token") token: string) : Promise<string> {
+		return this.userService.verifyRegistration(token)
+	}
 }

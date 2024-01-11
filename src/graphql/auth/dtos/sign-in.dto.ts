@@ -1,6 +1,6 @@
 import { IsEmail, IsStrongPassword, Length } from "class-validator"
 
-export default class SignInDto {
+export default class SignInRequestDto {
   @IsEmail()
   	email: string
   @IsStrongPassword()

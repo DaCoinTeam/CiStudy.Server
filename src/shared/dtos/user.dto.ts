@@ -21,7 +21,7 @@ export interface UserDto {
 	walletId?: string
 	firstName?: string
 	lastName?: string
-	birthday?: Date
+	birthdate?: Date
 	verified: boolean
 	kind: UserKind
 	externalId?: string
