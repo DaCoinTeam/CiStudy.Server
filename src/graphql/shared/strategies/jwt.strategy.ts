@@ -1,9 +1,8 @@
 import { PassportStrategy } from "@nestjs/passport"
 import { ExtractJwt, Strategy } from "passport-jwt"
 import { jwtConfig } from "@config"
-import { AuthenticationError } from "apollo-server-core"
 import { UserMySqlService } from "@database"
-import { Payload, UserDto } from "@shared"
+import { UserDto } from "@shared"
 import { Injectable } from "@nestjs/common"
 
 @Injectable()
@@ -16,11 +15,7 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
 		})
 	}
 
-	async validate(payload: Payload): Promise<UserDto> {
-		const user = await this.userMySqlService.findByUserId(payload.userId)
-		if (!user) {
-			throw new AuthenticationError("User not found.")
-		}
+	async validate(user: UserDto): Promise<UserDto> {
 		return user
 	}
 }
