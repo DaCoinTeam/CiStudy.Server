@@ -4,7 +4,7 @@ import CourseEntity from "./course.entity"
 import { Repository } from "typeorm"
 
 @Injectable()
-export default class CoursesService {
+export default class CourseService {
 	constructor(@InjectRepository(CourseEntity) private readonly courseRepository: Repository<CourseEntity>) {}
     
 	create(course: Partial<CourseEntity>): Promise<CourseEntity> {
@@ -12,10 +12,11 @@ export default class CoursesService {
 		return this.courseRepository.save(newCourse)
 	}
 
-	findById(id: string): Promise<CourseEntity> {
-		return this.courseRepository.findOneOrFail({ where:  {
-			courseId: id
-		} })
+	//trùng với db
+	findById(courseId: string): Promise<CourseEntity | null> {
+		return this.courseRepository.findOneBy({
+			courseId
+		})
 	}
 
 	findAll(): Promise<CourseEntity[]> {

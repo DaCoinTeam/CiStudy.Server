@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common"
-import CoursesService from "./course.service"
+import CourseService from "./course.service"
 import { TypeOrmModule } from "@nestjs/typeorm"
 import CourseEntity from "./course.entity"
 
 @Module({
 	imports: [TypeOrmModule.forFeature([CourseEntity])],
-	providers: [CoursesService],
-	exports: [CoursesService],
+	providers: [CourseService],
+	exports: [CourseService],
 })
 export default class CoursesModule {}

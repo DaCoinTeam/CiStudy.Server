@@ -1,3 +1,4 @@
+// verifiedStatus
 export enum VerifyStatus {
   Pending = "Pending",
   Approved = "Approved",
