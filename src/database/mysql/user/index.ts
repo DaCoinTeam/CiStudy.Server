@@ -1,6 +1,6 @@
-export * from './user.entity';
+export * from "./user.entity"
 
-import UserMySqlModule from './user.module';
-import UserMySqlService from './user.service';
+import UserMySqlModule from "./user.module"
+import UserMySqlService from "./user.service"
 
-export { UserMySqlModule, UserMySqlService };
+export { UserMySqlModule, UserMySqlService }

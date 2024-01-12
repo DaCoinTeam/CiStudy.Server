@@ -7,7 +7,7 @@ import {
 	TokenGeneratorService,
 } from "@global"
 import { UserDto } from "@shared"
-import RefreshResponseDto from "./dto/refresh.dto"
+import RefreshResponseDto from "./dto/response.dto"
 import { JwtService } from "@nestjs/jwt"
 import { jwtConfig } from "@config"
 import { UserMySqlService } from "@database"
