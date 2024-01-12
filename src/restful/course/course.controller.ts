@@ -1,5 +1,21 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common"
-import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from "@nestjs/swagger"
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Param,
+	ParseUUIDPipe,
+	Post,
+	UseGuards,
+} from "@nestjs/common"
+import {
+	ApiBadRequestResponse,
+	ApiBearerAuth,
+	ApiCreatedResponse,
+	ApiNotFoundResponse,
+	ApiOkResponse,
+	ApiTags,
+} from "@nestjs/swagger"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
 import { JwtAuthGuard, User } from "../shared"
 import { UserDto } from "@shared"
@@ -18,15 +34,22 @@ export default class CourseController {
 		return await this.courseService.create(user, body)
 	}
 
-	// @ApiOkResponse({ type: CreateRequestDto })
-	// @Get(":id")
-	// async getCourseById(@Param("id") id: string): Promise<CreateRequestDto> {
-	// 	return await this.courseService.findById(id)
-	// }
+  @ApiOkResponse({ type: CreateRequestDto })
+  @ApiNotFoundResponse()
+  @Get(":id")
+  async getById(@Param("id", ParseUUIDPipe) id: string): Promise<CreateRequestDto> {
+  	return await this.courseService.findById(id)
+  }
 
-	// @Get()
-	// @ApiOkResponse()
-	// async getAllCourse() {
-	// 	return await this.courseService.findAll()
-	// }
+  @Get()
+  @ApiOkResponse()
+  async getAll(): Promise<CreateReponseDto[]> {
+  	return await this.courseService.findAll()
+  }
+
+  @Delete(":id")
+  @ApiBadRequestResponse()
+  async delete(@Param("id", ParseUUIDPipe) id: string) {
+  	return await this.courseService.delete(id)
+  }
 }

@@ -20,6 +20,10 @@ export default class CourseService {
 	}
 
 	async findAll(): Promise<CourseEntity[]> {
-		return this.courseRepository.find()
+		return this.courseRepository.find({ where: { isDeleted: false } })
+	}
+
+	async delete(courseId: string) {
+		return this.courseRepository.update(courseId, { isDeleted: true })
 	}
 }

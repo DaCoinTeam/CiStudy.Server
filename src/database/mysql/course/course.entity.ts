@@ -12,6 +12,7 @@ import { MaterialEntity } from "../material"
 import { SectionEntity } from "../section"
 import { TopicEntity } from "../topic/topic.entity"
 import UserEntity from "../user/user.entity"
+import { Exclude, Expose } from "class-transformer"
 
 export enum VerifyStatus {
   Pending = "Pending",
@@ -50,6 +51,10 @@ export default class CourseEntity {
 
   @Column({ name: "creatorId" })
   	creatorId: string
+
+  @Expose()
+  @Column({default: false })
+  	isDeleted: boolean
 
 	// --- relations ---
 
