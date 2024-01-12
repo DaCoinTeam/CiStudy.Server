@@ -1,4 +1,4 @@
-import { UserMySqlService } from "@database"
+// import { UserMySqlService } from "@database"
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common"
 import { SignUpRequestDto } from "./dto"
 import {
@@ -10,6 +10,7 @@ import { UserDto } from "@shared"
 import RefreshResponseDto from "./dto/refresh.dto"
 import { JwtService } from "@nestjs/jwt"
 import { jwtConfig } from "@config"
+import { UserMySqlService } from "@database"
 
 @Injectable()
 export default class AuthService {

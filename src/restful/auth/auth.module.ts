@@ -1,18 +1,11 @@
-import { Module } from "@nestjs/common"
-import { UserMySqlService, mysqlProviders, userMySqlProviders } from "@database"
-import AuthService from "./auth.service"
-import AuthController from "./auth.controller"
+import { Module } from '@nestjs/common';
+import AuthService from './auth.service';
+import AuthController from './auth.controller';
+import { UserMySqlModule } from '@database';
 
 @Module({
-	imports: [],
-	controllers: [AuthController],
-	providers: [
-		AuthService,
-
-		//mysql
-		...mysqlProviders,
-		...userMySqlProviders,
-		UserMySqlService,
-	],
+  imports: [UserMySqlModule],
+  controllers: [AuthController],
+  providers: [AuthService],
 })
 export default class AuthModule {}
