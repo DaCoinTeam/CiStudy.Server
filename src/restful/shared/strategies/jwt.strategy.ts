@@ -3,8 +3,7 @@ import { ExtractJwt, Strategy } from "passport-jwt"
 import { jwtConfig } from "@config"
 import { BadRequestException, Injectable } from "@nestjs/common"
 import { UserMySqlService } from "@database"
-import { UserMySqlEntity } from "@database"
-import { Payload } from "@shared"
+import { Payload, UserDto } from "@shared"
 
 @Injectable()
 export default class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,7 +15,7 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
 		})
 	}
 
-	async validate(payload: Payload): Promise<UserMySqlEntity> {
+	async validate(payload: Payload): Promise<UserDto> {
 		const user = await this.userMySqlService.findByUserId(payload.userId)
 		if (!user) {
 			throw new BadRequestException("User not found.")

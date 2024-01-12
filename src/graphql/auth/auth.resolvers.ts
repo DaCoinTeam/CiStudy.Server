@@ -23,7 +23,7 @@ const pubSub = new PubSub()
 @Resolver("User")
 export default class AuthResolvers {
 	constructor(
-    private readonly userMySqlService: UserMySqlService,
+	private readonly userMySqlService: UserMySqlService,
     private readonly sha256Service: Sha256Service,
     private readonly firebaseService: FirebaseService,
     private readonly tokenGeneratorService: TokenGeneratorService,

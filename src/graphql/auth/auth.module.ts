@@ -1,26 +1,15 @@
-import { Module } from "@nestjs/common"
-import UserResolvers from "./auth.resolvers"
+import { Module } from '@nestjs/common';
+import UserResolvers from './auth.resolvers';
 
-import {
-	UserMySqlService,
-	mysqlProviders,
-	userMySqlProviders,
-} from "@database"
-
-import { JwtStrategy } from "../shared"
+import { JwtStrategy } from '../shared';
+import { UserMySqlModule } from '@database';
 
 @Module({
-	providers: [ 
-		UserResolvers,
-
-		//strategies
-		JwtStrategy,
-
-		//mysql
-		...mysqlProviders,
-		...userMySqlProviders,
-		UserMySqlService,
-	],
-	imports: [],
+  imports: [UserMySqlModule],
+  providers: [
+    UserResolvers,
+    //strategies
+    JwtStrategy,
+  ],
 })
 export default class AuthGraphQLModule {}
