@@ -5,7 +5,7 @@ import { GraphQLModule } from "@nestjs/graphql"
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
 import { AuthGraphQLModule } from "@graphql"
-import { AuthRestfulModule } from "@restful"
+import { AuthRestfulModule, CourseRestfulModule } from "@restful"
 import { GlobalModule } from "@global"
 import { TypeOrmModule } from "@nestjs/typeorm"
 
@@ -39,6 +39,7 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 
 		//restful
 		AuthRestfulModule,
+		CourseRestfulModule,
 
 		//global
 		GlobalModule

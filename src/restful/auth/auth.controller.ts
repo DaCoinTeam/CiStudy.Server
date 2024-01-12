@@ -7,7 +7,7 @@ import {
 	UseInterceptors,
 	Query,
 } from "@nestjs/common"
-import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from "@nestjs/swagger"
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger"
 import { RefreshResponseDto, SignUpRequestDto } from "./dto"
 import UserService from "./auth.service"
 import { SignUpGuard } from "./guards"
@@ -22,7 +22,6 @@ export default class AuthController {
 
   @UseGuards(SignUpGuard)
   @UseInterceptors(SignUpInterceptor)
-  @ApiCreatedResponse({ type: SignUpRequestDto })
   @Post("sign-up")
 	async signUp(@Body() body: SignUpRequestDto): Promise<string> {
 		return await this.userService.signUp(body)

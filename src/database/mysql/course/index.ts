@@ -1,6 +1,6 @@
 export * from "./course.entity"
 
-import courseMysqlSerive from "./courses.service"
-import courseMysqlModule from "./courses.module"
+import CourseMysqlService from "./course.service"
+import CourseMySqlModule from "./course.module"
 
-export { courseMysqlSerive, courseMysqlModule }
+export { CourseMysqlService, CourseMySqlModule }

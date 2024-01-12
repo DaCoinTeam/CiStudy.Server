@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm"
-import { CourseEntity } from "../course/course.entity"
 import { VideoEntity } from "../video/video.entity"
+import CourseEntity from "../course/course.entity"
 
 @Entity()
 export class SectionEntity {
@@ -10,9 +10,9 @@ export class SectionEntity {
   @Column({ name: "couseId" })
   	couseId: string
 
-  @ManyToOne(() => CourseEntity, (courseEntity) => courseEntity.sections)
-  @JoinColumn({ name: "couseId" })
-  	course: CourseEntity
+  // @ManyToOne(() => CourseEntity, (courseEntity) => courseEntity.sections)
+  // @JoinColumn({ name: "couseId" })
+  // 	course: CourseEntity
 
   @OneToMany(() => VideoEntity, (videoEntity) => videoEntity.section)
   	video: VideoEntity[]
