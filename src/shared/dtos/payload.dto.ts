@@ -1,5 +1,5 @@
-export interface Payload {
-    userId: string;
-    [key: string]: unknown;
-  }
-  
+import { UserDto } from "./user.dto"
+
+export type UserPayload = Partial<UserDto> & {
+  userId: string;
+};

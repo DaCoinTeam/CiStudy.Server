@@ -2,7 +2,7 @@ import { Body, Controller, Post, UseGuards } from "@nestjs/common"
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from "@nestjs/swagger"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
 import { JwtAuthGuard, User } from "../shared"
-import { UserDto } from "@shared"
+import { UserPayload } from "@shared"
 import CourseService from "./course.service"
 
 @ApiTags("Courses")
@@ -14,8 +14,8 @@ export default class CourseController {
   @ApiCreatedResponse({ type: CreateReponseDto })
   @UseGuards(JwtAuthGuard)
   @Post()
-	async create(@User() user: UserDto, @Body() body: CreateRequestDto) {
-		return await this.courseService.create(user.userId, body)
+	async create(@User() user: UserPayload, @Body() body: CreateRequestDto) {
+		return await this.courseService.create(user, body)
 	}
 
 	// @ApiOkResponse({ type: CreateRequestDto })

@@ -34,6 +34,9 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 			},
 		}),
 
+		//try place db
+		
+
 		//graphql
 		AuthGraphQLModule,
 

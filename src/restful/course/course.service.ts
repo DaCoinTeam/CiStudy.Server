@@ -1,16 +1,17 @@
 import { CourseMySqlService } from "@database"
 import { Injectable } from "@nestjs/common"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
+import { UserPayload } from "@shared"
 
 @Injectable()
 export default class CourseService {
 	constructor(private readonly courseMySqlService: CourseMySqlService) {}
 
 	async create(
-		userId: string,
-		params: CreateRequestDto,
+		user: UserPayload,
+		body: CreateRequestDto,
 	): Promise<CreateReponseDto> {
-		params.creatorId = userId
-		return this.courseMySqlService.create(params)
+		body.creatorId = user.userId
+		return this.courseMySqlService.create(body)
 	}
 }

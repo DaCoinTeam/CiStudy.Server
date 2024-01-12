@@ -7,19 +7,19 @@ import { Repository } from "typeorm"
 export default class CourseService {
 	constructor(@InjectRepository(CourseEntity) private readonly courseRepository: Repository<CourseEntity>) {}
     
-	create(course: Partial<CourseEntity>): Promise<CourseEntity> {
+	async create(course: Partial<CourseEntity>): Promise<CourseEntity> {
 		const newCourse = this.courseRepository.create(course)
 		return this.courseRepository.save(newCourse)
 	}
 
 	//trùng với db
-	findById(courseId: string): Promise<CourseEntity | null> {
+	async findById(courseId: string): Promise<CourseEntity | null> {
 		return this.courseRepository.findOneBy({
 			courseId
 		})
 	}
 
-	findAll(): Promise<CourseEntity[]> {
+	async findAll(): Promise<CourseEntity[]> {
 		return this.courseRepository.find()
 	}
 }
