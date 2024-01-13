@@ -1,0 +1,109 @@
+import { jwtConfig } from "@config"
+import { RefreshMySqlService } from "@database"
+import { Injectable, InternalServerErrorException } from "@nestjs/common"
+import { JwtService } from "@nestjs/jwt"
+
+@Injectable()
+export default class TokenManagerService {
+	constructor(
+    private readonly jwtService: JwtService,
+    private readonly refreshMySqlService: RefreshMySqlService,
+	) {}
+
+	async verifyToken<T extends object>(token: string): Promise<T | null> {
+		try {
+			return await this.jwtService.verifyAsync<T>(token)
+		} catch (ex) {
+			return null
+		}
+	}
+
+	async verifyRefreshToken<T extends object>(
+		clientId: string,
+		userId: string,
+		token: string,
+	): Promise<T | null> {
+		try {
+			const refreshToken = await this.refreshMySqlService.findByClientIdAndUserId(
+				clientId,
+				userId
+			)
+			if (refreshToken.token !== token || refreshToken.isDeleted) return null
+			return await this.jwtService.verifyAsync<T>(token)
+		} catch (ex) {
+			return null
+		}
+	}
+
+	private async generateToken<T extends object>(
+		data: T,
+		type: TokenType = TokenType.Access,
+	) {
+		const typeToExpiresIn: Record<TokenType, string> = {
+			[TokenType.Access]: jwtConfig().accessTokenExpiryTime,
+			[TokenType.Refresh]: jwtConfig().refreshTokenExpiryTime,
+			[TokenType.Verify]: jwtConfig().verifyTokenExpiryTime,
+		}
+		const expiresIn = typeToExpiresIn[type]
+
+		return await this.jwtService.signAsync({...data}, {
+			expiresIn,
+			secret: jwtConfig().secret,
+		})
+	}
+	async generateAuthTokens<T extends object>(data: T): Promise<AuthTokens> {
+		const accessToken = await this.generateToken<T>(data)
+		const refreshToken = await this.generateToken<T>(data, TokenType.Refresh)
+		return {
+			accessToken,
+			refreshToken,
+		}
+	}
+
+	async generateTokenizedResponse<T extends object>(
+		clientId: string,
+		userId: string,
+		data: T,
+	): Promise<TokenizedResponse<T>> {
+		const tokens = await this.generateAuthTokens(data)
+
+		const createOrUpdateResult = await this.refreshMySqlService.createOrUpdate({
+			clientId,
+			userId,
+			token: tokens.refreshToken,
+		})
+
+		if (!createOrUpdateResult) throw new InternalServerErrorException("Cannot createOrUpdate refresh token.")
+
+		return {
+			data,
+			tokens,
+		}
+	}
+
+	async generateTokenizedResponse1<T extends object>(
+		data: T,
+	): Promise<TokenizedResponse<T>> {
+		const tokens = await this.generateAuthTokens(data)
+		return {
+			data,
+			tokens,
+		}
+	}
+}
+
+export interface TokenizedResponse<T extends object> {
+  data: T;
+  tokens: AuthTokens;
+}
+
+export enum TokenType {
+  Access,
+  Refresh,
+  Verify,
+}
+
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}

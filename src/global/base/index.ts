@@ -1,10 +1,10 @@
 export * from "./mailer.service"
 export * from "./sha256.service"
-export * from "./token-generator.service"
+export * from "./token-manager.service"
 
 import MailerService from "./mailer.service"
 import Sha256Service from "./sha256.service"
-import TokenGeneratorService from "./token-generator.service"
+import TokenManagerService from "./token-manager.service"
 
-export { MailerService, Sha256Service, TokenGeneratorService }
+export { MailerService, Sha256Service, TokenManagerService }
 

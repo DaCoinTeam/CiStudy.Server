@@ -39,11 +39,11 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 
 		//graphql
 		AuthGraphQLModule,
-		CourseGraphQLModule,
+		//CourseGraphQLModule,
 
 		//restful
-		AuthRestfulModule,
-		CourseRestfulModule,
+		//AuthRestfulModule,
+		//CourseRestfulModule,
 
 		//global
 		GlobalModule

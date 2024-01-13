@@ -46,6 +46,7 @@ type Query {
 }
 
 input SignInInput {
+  clientId: String!
   email: String!
   password: String!
 }

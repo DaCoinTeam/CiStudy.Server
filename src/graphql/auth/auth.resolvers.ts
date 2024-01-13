@@ -4,16 +4,20 @@ import { UserKind, UserMySqlService } from "@database"
 import { PubSub } from "graphql-subscriptions"
 import {
 	Sha256Service,
-	TokenGeneratorService,
+	TokenManagerService,
 	TokenizedResponse,
-	FirebaseService
+	FirebaseService,
 } from "@global"
 import {
 	NotFoundException,
 	UnauthorizedException,
-	UseGuards
+	UseGuards,
 } from "@nestjs/common"
-import { SignInRequestDto } from "./dtos"
+import {
+	InitRequestDto,
+	SignInRequestDto,
+	VerifyGoogleAccessTokenRequestDto,
+} from "./dtos"
 import { JwtAuthGuard } from "../shared/guard"
 import { User } from "../shared"
 import { UserDto } from "@shared"
@@ -23,10 +27,10 @@ const pubSub = new PubSub()
 @Resolver("User")
 export default class AuthResolvers {
 	constructor(
-	private readonly userMySqlService: UserMySqlService,
+    private readonly userMySqlService: UserMySqlService,
     private readonly sha256Service: Sha256Service,
     private readonly firebaseService: FirebaseService,
-    private readonly tokenGeneratorService: TokenGeneratorService,
+    private readonly tokenManagerService: TokenManagerService,
 	) {}
 
   @Query("signIn")
@@ -37,38 +41,53 @@ export default class AuthResolvers {
 		if (!found) throw new NotFoundException("User not found.")
 		if (!this.sha256Service.verifyHash(args.password, found.password))
 			throw new UnauthorizedException("Invalid credentials.")
-		return this.tokenGeneratorService.generateTokenizedResponse(found)
-	} 
+		console.log(args)
+		return this.tokenManagerService.generateTokenizedResponse(
+			args.clientId,
+			found.userId,
+			found,
+		)
+	}
 
   @Query("init")
   @UseGuards(JwtAuthGuard)
   async init(
     @User() user: UserDto,
+    @Args("input") args: InitRequestDto,
   ): Promise<TokenizedResponse<UserDto>> {
-  	return this.tokenGeneratorService.generateTokenizedResponse(user)
+  	return this.tokenManagerService.generateTokenizedResponse(
+  		args.clientId,
+  		user.userId,
+  		user,
+  	)
   }
 
   @Mutation("verifyGoogleAccessToken")
   async verifyGoogleAccessToken(
-    @Args("input") token: string,
+    @Args("input") args: VerifyGoogleAccessTokenRequestDto,
   ): Promise<TokenizedResponse<UserDto>> {
-  	const decoded = await this.firebaseService.verifyGoogleAccessToken(token)
+  	const decoded = await this.firebaseService.verifyGoogleAccessToken(
+  		args.token,
+  	)
   	if (!decoded)
   		throw new UnauthorizedException("Invalid Google access token.")
 
-  	const found = await this.userMySqlService.findByExternalId(decoded.uid)
-  	if (found)
-  		return this.tokenGeneratorService.generateTokenizedResponse(found)
+  	let found = await this.userMySqlService.findByExternalId(decoded.uid)
+  	if (!found) {
+  		found = await this.userMySqlService.create({
+  			externalId: decoded.uid,
+  			email: decoded.email,
+  			avatarUrl: decoded.picture,
+  			phoneNumber: decoded.phone_number,
+  			kind: UserKind.Google,
+  		})
+  	}
 
-  	const created = await this.userMySqlService.create({
-  		externalId: decoded.uid,
-  		email: decoded.email,
-  		avatarUrl: decoded.picture,
-  		phoneNumber: decoded.phone_number,
-  		kind: UserKind.Google,
-  	})
-
-  	pubSub.publish("userCreated", created)
-  	return this.tokenGeneratorService.generateTokenizedResponse(created)
+  	pubSub.publish("userCreated", found)
+  	return this.tokenManagerService.generateTokenizedResponse(
+  		args.clientId,
+  		found.userId,
+  		found,
+  	)
   }
 }

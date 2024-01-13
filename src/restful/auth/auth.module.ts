@@ -4,7 +4,7 @@ import AuthController from "./auth.controller"
 import { UserMySqlModule } from "@database"
 
 @Module({
-	imports: [UserMySqlModule],
+	imports: [UserMySqlModule,],
 	controllers: [AuthController],
 	providers: [AuthService],
 })

@@ -1,6 +1,8 @@
-import { IsEmail, IsStrongPassword, Length } from "class-validator"
+import { IsEmail, IsStrongPassword, IsUUID, Length } from "class-validator"
 
 export default class SignInRequestDto {
+  @IsUUID()
+  	clientId: string
   @IsEmail()
   	email: string
   @IsStrongPassword()

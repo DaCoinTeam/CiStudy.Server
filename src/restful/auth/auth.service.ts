@@ -4,10 +4,10 @@ import { SignUpRequestDto } from "./dto"
 import {
 	MailerService,
 	Sha256Service,
-	TokenGeneratorService,
+	TokenManagerService,
 } from "@global"
 import { UserDto } from "@shared"
-import RefreshResponseDto from "./dto/response.dto"
+import RefreshResponseDto from "./dto/refresh/response.dto"
 import { JwtService } from "@nestjs/jwt"
 import { jwtConfig } from "@config"
 import { UserMySqlService } from "@database"
@@ -18,12 +18,12 @@ export default class AuthService {
     private readonly userMySqlService: UserMySqlService,
     private readonly sha256Service: Sha256Service,
     private readonly mailerService: MailerService,
-    private readonly tokenGeneratorService: TokenGeneratorService,
+    private readonly tokenManagerService: TokenManagerService,
 	private readonly jwtService: JwtService
 	) {}
 
-	refresh(params: UserDto): RefreshResponseDto {
-		return this.tokenGeneratorService.generateAuthTokens(params)
+	async refresh(params: UserDto): Promise<RefreshResponseDto> {
+		return await this.tokenManagerService.generateAuthTokens(params)
 	}
 
 	async signUp(params: SignUpRequestDto): Promise<string> {

@@ -1,4 +1,4 @@
-import SignUpRequestDto from "./sign-up.dto"
-import RefreshResponseDto from "./response.dto"
+import SignUpRequestDto from "./sign-up/request.dto"
+import RefreshResponseDto from "./refresh/response.dto"
 
 export { SignUpRequestDto, RefreshResponseDto }

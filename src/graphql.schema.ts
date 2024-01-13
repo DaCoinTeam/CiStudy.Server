@@ -27,6 +27,7 @@ export enum VerifyStatus {
 }
 
 export class SignInInput {
+    clientId: string;
     email: string;
     password: string;
 }

@@ -31,7 +31,7 @@ export default class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get("refresh")
   async refresh(@User() user: UserDto): Promise<RefreshResponseDto> {
-  	return this.userService.refresh(user)
+  	return await this.userService.refresh(user)
   }
 
   @Get("verify-registration")
