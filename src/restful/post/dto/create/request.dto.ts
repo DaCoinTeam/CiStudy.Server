@@ -2,6 +2,12 @@ import { ApiProperty } from "@nestjs/swagger"
 import { IsNotEmpty, IsUUID, MinLength } from "class-validator"
 
 export default class CreateRequestDto {
+    @IsUUID()
+    @ApiProperty({
+    	example: "1a469863-ceb1-421f-8f17-700d61a85253", description: "ClientId"
+    })
+    clientId: string
+
     @IsNotEmpty()
     @MinLength(20)
     @ApiProperty({
