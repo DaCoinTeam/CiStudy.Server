@@ -1,0 +1,28 @@
+type Query{
+    findById(input: ID!): FindByIdResponse!
+}
+
+enum VerifyStatus {
+  Pending,
+  Approved,
+  Rejected
+}
+
+type CourseIncludes {
+    time: Float
+}
+
+type FindByIdResponse {
+  	courseId: ID
+  	title: String
+  	thumbnailUrl: String
+  	description: String
+  	price: Float
+  	verifyStatus: VerifyStatus
+  	isDraft: Boolean
+  	creatorId: ID
+  	isDeleted: String
+  	previewVideoUrl: String
+  	targets: String
+  	includes: CourseIncludes
+}

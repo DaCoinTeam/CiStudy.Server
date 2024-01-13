@@ -19,16 +19,28 @@ export enum VerifyStatus {
   Rejected = "Rejected",
 }
 
+interface CourseIncludes {
+  time: number;
+}
+
 @Entity("course")
 export default class CourseEntity {
   @PrimaryGeneratedColumn("uuid")
   	courseId: string
 
-  @Column()
-  	thumbnail: string
-
-  @Column()
+  @Column({
+  	type: "varchar",
+  	length: 1000,
+  	default: null,
+  })
   	title: string
+
+  @Column({
+  	type: "varchar",
+  	length: 255,
+  	default: null,
+  })
+  	thumbnailUrl: string
 
   @Column()
   	description: string
@@ -36,20 +48,26 @@ export default class CourseEntity {
   @Column()
   	price: number
 
-  @Column({ type: "enum", enum: VerifyStatus, default: VerifyStatus.Pending })
+  @Column({ type: "enum", enum: VerifyStatus, default: null })
   	verifyStatus: VerifyStatus
 
   @Column({ default: true })
   	isDraft: boolean
 
-  @Column({ default: false })
-  	isPublished: boolean
-
-  @Column({ name: "studentId", nullable: true })
-  	studentId: string
-
   @Column({ name: "creatorId" })
   	creatorId: string
+
+  @Column()
+  	isDeleted: string
+
+  @Column()
+  	previewVideoUrl: string
+
+  @Column({ type: "json", default: null })
+  	targets: string[]
+
+  @Column({ type: "json", default: null })
+  	includes: CourseIncludes
 
 	// --- relations ---
 
@@ -76,17 +94,17 @@ export default class CourseEntity {
 	//   	sections: SectionEntity[]
 
 	// topic
-//   @ManyToMany(() => TopicEntity, (topicEntity) => topicEntity.courses)
-//   @JoinTable({
-//   	name: "course_topic_mapping",
-//   	joinColumn: {
-//   		name: "courseId",
-//   		referencedColumnName: "id",
-//   	},
-//   	inverseJoinColumn: {
-//   		name: "topicId",
-//   		referencedColumnName: "id",
-//   	},
-//   })
-//   	topics: TopicEntity[]
+	//   @ManyToMany(() => TopicEntity, (topicEntity) => topicEntity.courses)
+	//   @JoinTable({
+	//   	name: "course_topic_mapping",
+	//   	joinColumn: {
+	//   		name: "courseId",
+	//   		referencedColumnName: "id",
+	//   	},
+	//   	inverseJoinColumn: {
+	//   		name: "topicId",
+	//   		referencedColumnName: "id",
+	//   	},
+	//   })
+	//   	topics: TopicEntity[]
 }
