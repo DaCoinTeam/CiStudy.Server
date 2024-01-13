@@ -2,6 +2,7 @@ import { Global, Module } from "@nestjs/common"
 import { MailerService, Sha256Service, TokenGeneratorService } from "./base"
 import { FirebaseService } from "./3rd"
 import { JwtService } from "@nestjs/jwt"
+import { MetamaskService } from "./blockchain"
 
 @Global()
 @Module({
@@ -13,6 +14,9 @@ import { JwtService } from "@nestjs/jwt"
 		MailerService,
 		TokenGeneratorService,
 		JwtService,
+
+		//blockchain
+		MetamaskService
 	],
 	providers: [
 		//3rd
@@ -22,6 +26,9 @@ import { JwtService } from "@nestjs/jwt"
 		MailerService,
 		TokenGeneratorService,
 		JwtService,
+
+		//blockchian
+		MetamaskService
 	],
 })
 export default class GlobalModule {}

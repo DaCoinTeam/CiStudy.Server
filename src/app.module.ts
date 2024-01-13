@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common"
-import { appConfig, databaseConfig, paymentConfig } from "@config"
+import { appConfig, blockchainConfig, databaseConfig, paymentConfig } from "@config"
 import { ConfigModule } from "@nestjs/config"
 import { GraphQLModule } from "@nestjs/graphql"
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
@@ -12,7 +12,7 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 @Module({
 	imports: [
 		ConfigModule.forRoot({
-			load: [paymentConfig, appConfig, databaseConfig],
+			load: [paymentConfig, appConfig, databaseConfig, blockchainConfig],
 		}),
 		TypeOrmModule.forRoot({
 			type: "mysql",
@@ -35,7 +35,7 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		}),
 
 		//try place db
-		
+
 
 		//graphql
 		AuthGraphQLModule,
