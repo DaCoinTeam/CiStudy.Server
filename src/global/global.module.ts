@@ -3,6 +3,7 @@ import { MailerService, Sha256Service, TokenManagerService } from "./base"
 import { FirebaseService } from "./3rd"
 import { JwtService } from "@nestjs/jwt"
 import { RefreshMySqlModule } from "@database"
+import { MetamaskService } from "./blockchain"
 
 @Global()
 @Module({
