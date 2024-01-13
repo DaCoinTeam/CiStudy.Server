@@ -18,18 +18,18 @@ export default class TokenManagerService {
 		}
 	}
 
-	async verifyRefreshToken<T extends object>(
+	async validateAndVerifyRefreshToken<T extends object>(
 		clientId: string,
 		userId: string,
 		token: string,
 	): Promise<T | null> {
 		try {
-			const refreshToken = await this.refreshMySqlService.findByClientIdAndUserId(
+			const refresh = await this.refreshMySqlService.findByClientIdAndUserId(
 				clientId,
-				userId
+				userId,
 			)
-			if (refreshToken.token !== token || refreshToken.isDeleted) return null
-			return await this.jwtService.verifyAsync<T>(token)
+			if (refresh.token !== token || refresh.isDeleted) return null
+			return await this.verifyToken(token)
 		} catch (ex) {
 			return null
 		}
@@ -46,10 +46,13 @@ export default class TokenManagerService {
 		}
 		const expiresIn = typeToExpiresIn[type]
 
-		return await this.jwtService.signAsync({...data}, {
-			expiresIn,
-			secret: jwtConfig().secret,
-		})
+		return await this.jwtService.signAsync(
+			{ ...data },
+			{
+				expiresIn,
+				secret: jwtConfig().secret,
+			},
+		)
 	}
 	async generateAuthTokens<T extends object>(data: T): Promise<AuthTokens> {
 		const accessToken = await this.generateToken<T>(data)
@@ -73,18 +76,11 @@ export default class TokenManagerService {
 			token: tokens.refreshToken,
 		})
 
-		if (!createOrUpdateResult) throw new InternalServerErrorException("Cannot createOrUpdate refresh token.")
+		if (!createOrUpdateResult)
+			throw new InternalServerErrorException(
+				"Cannot create or update refresh token.",
+			)
 
-		return {
-			data,
-			tokens,
-		}
-	}
-
-	async generateTokenizedResponse1<T extends object>(
-		data: T,
-	): Promise<TokenizedResponse<T>> {
-		const tokens = await this.generateAuthTokens(data)
 		return {
 			data,
 			tokens,

@@ -32,6 +32,10 @@ export class SignInInput {
     password: string;
 }
 
+export class FindByCourseIdRequest {
+    courseId: string;
+}
+
 export class User {
     userId: string;
     email?: Nullable<string>;
@@ -66,7 +70,7 @@ export abstract class IQuery {
 
     abstract signIn(input: SignInInput): Response | Promise<Response>;
 
-    abstract findById(input: string): FindByIdResponse | Promise<FindByIdResponse>;
+    abstract findByCourseId(input: FindByCourseIdRequest): FindByCourseIdResponse | Promise<FindByCourseIdResponse>;
 }
 
 export abstract class IMutation {
@@ -81,7 +85,7 @@ export class CourseIncludes {
     time?: Nullable<number>;
 }
 
-export class FindByIdResponse {
+export class FindByCourseIdResponse {
     courseId?: Nullable<string>;
     title?: Nullable<string>;
     thumbnailUrl?: Nullable<string>;

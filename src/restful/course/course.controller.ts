@@ -34,22 +34,22 @@ export default class CourseController {
 		return await this.courseService.create(user, body)
 	}
 
-  @ApiOkResponse({ type: CreateRequestDto })
-  @ApiNotFoundResponse()
-  @Get(":id")
-  async getById(@Param("id", ParseUUIDPipe) id: string): Promise<CreateRequestDto> {
-  	return await this.courseService.findById(id)
-  }
+//   @ApiOkResponse({ type: CreateRequestDto })
+//   @ApiNotFoundResponse()
+//   @Get(":id")
+//   async getById(@Param("id", ParseUUIDPipe) id: string): Promise<CreateRequestDto> {
+//   	return await this.courseService.findById(id)
+//   }
 
-  @Get()
-  @ApiOkResponse()
-  async getAll(): Promise<CreateReponseDto[]> {
-  	return await this.courseService.findAll()
-  }
+//   @Get()
+//   @ApiOkResponse()
+//   async getAll(): Promise<CreateReponseDto[]> {
+//   	return await this.courseService.findAll()
+//   }
 
-  @Delete(":id")
-  @ApiBadRequestResponse()
-  async delete(@Param("id", ParseUUIDPipe) id: string) {
-  	return await this.courseService.delete(id)
-  }
+//   @Delete(":id")
+//   @ApiBadRequestResponse()
+//   async delete(@Param("id", ParseUUIDPipe) id: string) {
+//   	return await this.courseService.delete(id)
+//   }
 }

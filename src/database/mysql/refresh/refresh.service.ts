@@ -18,9 +18,8 @@ export default class RefreshService {
 	): Promise<boolean> {
 		try {
 			const created = this.refreshRepository.create(refresh)
-
+			
 			const { clientId, userId } = refresh 
-
 			const found = await this.refreshRepository.findOneBy({
 				clientId,
 				userId,
@@ -29,7 +28,7 @@ export default class RefreshService {
 			if (found) {
 				created.refreshTokenId = found.refreshTokenId
 			}
-			console.log(created)
+			
 			await this.refreshRepository.save(created)
 			return true
 		} catch (ex) {

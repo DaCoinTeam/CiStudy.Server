@@ -59,7 +59,7 @@ export default class CourseEntity {
   	creatorId: string
 
   @Column()
-  	isDeleted: string
+  	isDeleted: boolean
 
   @Column()
   	previewVideoUrl: string
