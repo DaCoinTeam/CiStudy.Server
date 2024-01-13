@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity("post")
 export default class PostEntity {
@@ -7,5 +7,11 @@ export default class PostEntity {
     
     @Column({ type: "varchar", length: 255})
     	title: string
+
+    @Column({ type: "uuid" })
+    	creatorId: string
+        
+    @Column({ type: "uuid"})
+    	courseId: string
 }
 

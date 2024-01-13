@@ -5,4 +5,8 @@ export default class CreateReponseDto {
     	postId: string
     @ApiProperty()
     	title: string
+    @ApiProperty()
+    	creatorId: string
+    @ApiProperty()
+    	courseId: string    
 }

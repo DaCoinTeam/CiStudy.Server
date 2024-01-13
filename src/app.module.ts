@@ -5,7 +5,7 @@ import { GraphQLModule } from "@nestjs/graphql"
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
 import { AuthGraphQLModule } from "@graphql"
-import { AuthRestfulModule, CourseRestfulModule } from "@restful"
+import { AuthRestfulModule, CourseRestfulModule, PostRestfulModule } from "@restful"
 import { GlobalModule } from "@global"
 import { TypeOrmModule } from "@nestjs/typeorm"
 
@@ -34,15 +34,13 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 			},
 		}),
 
-		//try place db
-
-
 		//graphql
 		AuthGraphQLModule,
 
 		//restful
 		AuthRestfulModule,
 		CourseRestfulModule,
+		PostRestfulModule,
 
 		//global
 		GlobalModule
