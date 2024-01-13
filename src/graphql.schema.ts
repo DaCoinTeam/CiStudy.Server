@@ -20,6 +20,12 @@ export enum UserKind {
     Facebook = "Facebook"
 }
 
+export enum VerifyStatus {
+    Pending = "Pending",
+    Approved = "Approved",
+    Rejected = "Rejected"
+}
+
 export class SignInInput {
     email: string;
     password: string;
@@ -58,6 +64,8 @@ export abstract class IQuery {
     abstract init(): Response | Promise<Response>;
 
     abstract signIn(input: SignInInput): Response | Promise<Response>;
+
+    abstract findById(input: string): FindByIdResponse | Promise<FindByIdResponse>;
 }
 
 export abstract class IMutation {
@@ -66,6 +74,25 @@ export abstract class IMutation {
 
 export abstract class ISubscription {
     abstract userCreated(): Nullable<User> | Promise<Nullable<User>>;
+}
+
+export class CourseIncludes {
+    time?: Nullable<number>;
+}
+
+export class FindByIdResponse {
+    courseId?: Nullable<string>;
+    title?: Nullable<string>;
+    thumbnailUrl?: Nullable<string>;
+    description?: Nullable<string>;
+    price?: Nullable<number>;
+    verifyStatus?: Nullable<VerifyStatus>;
+    isDraft?: Nullable<boolean>;
+    creatorId?: Nullable<string>;
+    isDeleted?: Nullable<string>;
+    previewVideoUrl?: Nullable<string>;
+    targets?: Nullable<string>;
+    includes?: Nullable<CourseIncludes>;
 }
 
 type Nullable<T> = T | null;

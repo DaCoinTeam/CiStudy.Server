@@ -38,7 +38,7 @@ export default class AuthResolvers {
 		if (!this.sha256Service.verifyHash(args.password, found.password))
 			throw new UnauthorizedException("Invalid credentials.")
 		return this.tokenGeneratorService.generateTokenizedResponse(found)
-	}
+	} 
 
   @Query("init")
   @UseGuards(JwtAuthGuard)

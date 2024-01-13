@@ -10,9 +10,10 @@ export default class CourseService {
 	async create(
 		user: UserDto,
 		body: CreateRequestDto,
-	): Promise<CreateReponseDto> {
-		body.creatorId = user.userId
-		return this.courseMySqlService.create(body)
+	): Promise<CreateReponseDto | null> {
+		// body.creatorId = user.userId
+		// return await this.courseMySqlService.create(body)
+		return null
 	}
 
 	async findById(courseId: string): Promise<CreateReponseDto> {
