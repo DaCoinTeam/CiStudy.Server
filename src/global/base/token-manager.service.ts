@@ -67,7 +67,7 @@ export default class TokenManagerService {
 		clientId: string,
 		userId: string,
 		data: T,
-		authTokensRequested : boolean = true
+		requestAuthTokens : boolean = true
 	): Promise<Response<T>> {
 		const tokens = await this.generateAuthTokens(data)
 
@@ -84,7 +84,7 @@ export default class TokenManagerService {
 
 		return {
 			data,
-			...authTokensRequested ? { tokens } : undefined
+			...requestAuthTokens ? { tokens } : undefined
 		}
 	}
 }
