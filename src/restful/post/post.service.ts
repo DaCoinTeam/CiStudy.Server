@@ -20,12 +20,11 @@ export default class PostService {
 			creatorId: user.userId,
 		}
 		const created = await this.postMySqlService.create(post)
-		return body.requestAuthTokens
-			? await this.tokenManagerService.generateResponse(
-				body.clientId,
-				user.userId,
-				created,
-			)
-			: await this.responseService.generateResponse(created)
+		return await this.tokenManagerService.generateResponse(
+			body.clientId,
+			user.userId,
+			created,
+			body.requestAuthTokens
+		)
 	}
 }
