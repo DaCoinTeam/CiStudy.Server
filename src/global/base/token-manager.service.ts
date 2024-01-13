@@ -63,11 +63,12 @@ export default class TokenManagerService {
 		}
 	}
 
-	async generateTokenizedResponse<T extends object>(
+	async generateResponse<T extends object>(
 		clientId: string,
 		userId: string,
 		data: T,
-	): Promise<TokenizedResponse<T>> {
+		hasAuthTokens : boolean = true
+	): Promise<Response<T>> {
 		const tokens = await this.generateAuthTokens(data)
 
 		const createOrUpdateResult = await this.refreshMySqlService.createOrUpdate({
@@ -83,14 +84,14 @@ export default class TokenManagerService {
 
 		return {
 			data,
-			tokens,
+			...hasAuthTokens ? { tokens } : undefined
 		}
 	}
 }
 
-export interface TokenizedResponse<T extends object> {
+export interface Response<T extends object> {
   data: T;
-  tokens: AuthTokens;
+  tokens?: AuthTokens;
 }
 
 export enum TokenType {

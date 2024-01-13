@@ -5,7 +5,7 @@ import { PubSub } from "graphql-subscriptions"
 import {
 	Sha256Service,
 	TokenManagerService,
-	TokenizedResponse,
+	Response,
 	FirebaseService,
 } from "@global"
 import {
@@ -36,13 +36,13 @@ export default class AuthResolvers {
   @Query("signIn")
 	async signIn(
     @Args("input") args: SignInRequestDto,
-	): Promise<TokenizedResponse<UserDto>> {
+	): Promise<Response<UserDto>> {
 		const found = await this.userMySqlService.findByEmail(args.email)
 		if (!found) throw new NotFoundException("User not found.")
 		if (!this.sha256Service.verifyHash(args.password, found.password))
 			throw new UnauthorizedException("Invalid credentials.")
 		console.log(args)
-		return this.tokenManagerService.generateTokenizedResponse(
+		return this.tokenManagerService.generateResponse(
 			args.clientId,
 			found.userId,
 			found,
@@ -54,8 +54,8 @@ export default class AuthResolvers {
   async init(
     @User() user: UserDto,
     @Args("input") args: InitRequestDto,
-  ): Promise<TokenizedResponse<UserDto>> {
-  	return this.tokenManagerService.generateTokenizedResponse(
+  ): Promise<Response<UserDto>> {
+  	return this.tokenManagerService.generateResponse(
   		args.clientId,
   		user.userId,
   		user,
@@ -65,7 +65,7 @@ export default class AuthResolvers {
   @Mutation("verifyGoogleAccessToken")
   async verifyGoogleAccessToken(
     @Args("input") args: VerifyGoogleAccessTokenRequestDto,
-  ): Promise<TokenizedResponse<UserDto>> {
+  ): Promise<Response<UserDto>> {
   	const decoded = await this.firebaseService.verifyGoogleAccessToken(
   		args.token,
   	)
@@ -84,7 +84,7 @@ export default class AuthResolvers {
   	}
 
   	pubSub.publish("userCreated", found)
-  	return this.tokenManagerService.generateTokenizedResponse(
+  	return this.tokenManagerService.generateResponse(
   		args.clientId,
   		found.userId,
   		found,

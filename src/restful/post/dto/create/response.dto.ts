@@ -5,8 +5,8 @@ export default class CreateReponseDto {
         creatorId: string
         courseId: string    
      } 	
-	tokens: {
+	tokens?: {
         accessToken: string,
         refreshToken: string
-     }
+    }
 }

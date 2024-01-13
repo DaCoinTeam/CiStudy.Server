@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common"
-import { MailerService, Sha256Service, TokenManagerService } from "./base"
+import { MailerService, ResponseService, Sha256Service, TokenManagerService } from "./base"
 import { FirebaseService } from "./3rd"
 import { JwtService } from "@nestjs/jwt"
 import { RefreshMySqlModule } from "@database"
@@ -18,6 +18,7 @@ import { MetamaskService } from "./blockchain"
 		MailerService,
 		TokenManagerService,
 		JwtService,
+		ResponseService,
 
 		//blockchain
 		MetamaskService
@@ -30,6 +31,7 @@ import { MetamaskService } from "./blockchain"
 		MailerService,
 		TokenManagerService,
 		JwtService,
+		ResponseService,
 
 		//blockchian
 		MetamaskService
