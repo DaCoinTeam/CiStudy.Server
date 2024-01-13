@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common"
-import { appConfig, databaseConfig, paymentConfig } from "@config"
+import { appConfig, blockchainConfig, databaseConfig, paymentConfig } from "@config"
 import { ConfigModule } from "@nestjs/config"
 import { GraphQLModule } from "@nestjs/graphql"
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
-import { AuthGraphQLModule, CourseGraphQLModule } from "@graphql"
+import { AuthGraphQLModule } from "@graphql"
 import { AuthRestfulModule, CourseRestfulModule } from "@restful"
 import { GlobalModule } from "@global"
 import { TypeOrmModule } from "@nestjs/typeorm"
@@ -12,7 +12,7 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 @Module({
 	imports: [
 		ConfigModule.forRoot({
-			load: [paymentConfig, appConfig, databaseConfig],
+			load: [paymentConfig, appConfig, databaseConfig, blockchainConfig],
 		}),
 		TypeOrmModule.forRoot({
 			type: "mysql",
@@ -34,16 +34,13 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 			},
 		}),
 
-		//try place db
-		
-
 		//graphql
 		AuthGraphQLModule,
 		CourseGraphQLModule,
 
 		//restful
-		//AuthRestfulModule,
-		//CourseRestfulModule,
+		AuthRestfulModule,
+		CourseRestfulModule,
 
 		//global
 		GlobalModule

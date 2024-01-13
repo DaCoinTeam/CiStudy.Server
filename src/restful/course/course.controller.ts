@@ -21,7 +21,7 @@ import { JwtAuthGuard, User } from "../shared"
 import { UserDto } from "@shared"
 import CourseService from "./course.service"
 
-@ApiTags("Courses")
+@ApiTags("Course")
 @Controller("api/course")
 export default class CourseController {
 	constructor(private readonly courseService: CourseService) {}

@@ -17,6 +17,9 @@ import { RefreshMySqlModule } from "@database"
 		MailerService,
 		TokenManagerService,
 		JwtService,
+
+		//blockchain
+		MetamaskService
 	],
 	providers: [
 		//3rd
@@ -26,6 +29,9 @@ import { RefreshMySqlModule } from "@database"
 		MailerService,
 		TokenManagerService,
 		JwtService,
+
+		//blockchian
+		MetamaskService
 	],
 })
 export default class GlobalModule {}
