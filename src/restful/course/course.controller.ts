@@ -109,6 +109,6 @@ export default class CourseController {
   @Delete(":id")
   @ApiBadRequestResponse()
   async delete(@Param("id", ParseUUIDPipe) id: string) {
-  	return await this.courseService.delete(id)
+  	// return await this.courseService.delete(id)
   }
 }

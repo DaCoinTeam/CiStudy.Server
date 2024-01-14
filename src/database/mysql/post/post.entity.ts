@@ -3,7 +3,7 @@ import { CourseEntity } from "../course"
 import { PostCommentEntity } from "../post_comment/post_comment.entity"
 import PostContentEntity from "../post_content/post_content.entity"
 
-@Entity("postes")
+@Entity("post")
 export default class PostEntity {
   @PrimaryGeneratedColumn("uuid")
   	postId: string
