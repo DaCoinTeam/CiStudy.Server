@@ -1,5 +1,4 @@
-import { Post } from "@nestjs/common"
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import UserEntity from "../user/user.entity"
 import PostEntity from "../post/post.entity"
 
