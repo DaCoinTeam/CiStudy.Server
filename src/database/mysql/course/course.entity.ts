@@ -44,7 +44,7 @@ export default class CourseEntity {
   })
   	thumbnailUrl: string
 
-  @Column()
+  @Column({ type: "varchar", length: 255 })
   	description: string
 
   @Column()
@@ -56,13 +56,13 @@ export default class CourseEntity {
   @Column({ default: true })
   	isDraft: boolean
 
-  @Column({ name: "creatorId" })
+  @Column({ name: "creatorId", type: "uuid", length: 36,  })
   	creatorId: string
 
   @Column({ default: false })
   	isDeleted: boolean
 
-  @Column()
+  @Column({ type: "varchar", length: 255 })
   	previewVideoUrl: string
 
   @Column({ type: "json", default: null })
@@ -72,8 +72,8 @@ export default class CourseEntity {
   	includes: CourseIncludes
 
 	// chiều thuận, đéo cần join => gen thêm để mày theo tác
-  @OneToMany(() => PostEntity, (post) => post.courseId)
-  	posts: PostEntity[]
+	//   @OneToMany(() => PostEntity, (postEntity) => postEntity.course)
+	//   	posts: PostEntity[]
 
 	// --- relations ---
 

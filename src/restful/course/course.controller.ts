@@ -15,6 +15,7 @@ import {
 	ApiBearerAuth,
 	ApiBody,
 	ApiConsumes,
+	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiTags,
@@ -24,6 +25,7 @@ import { AuthInterceptor, JwtAuthGuard, User } from "../shared"
 import { UserDto } from "@shared"
 import CourseService from "./course.service"
 import { FileInterceptor } from "@nestjs/platform-express"
+import { FirebaseService } from "@global"
 
 @ApiTags("Course")
 @Controller("api/course")
@@ -31,7 +33,7 @@ export default class CourseController {
 	constructor(private readonly courseService: CourseService) {}
 
   @ApiBearerAuth()
-  //   @ApiCreatedResponse({ type: CreateReponseDto })
+  @ApiCreatedResponse({ type: CreateReponseDto })
   @ApiConsumes("multipart/form-data")
   @ApiBody({
   	description: "Course File",
@@ -76,13 +78,16 @@ export default class CourseController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(AuthInterceptor)
   @Post()
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("thumbnailUrl"))
 	async create(
     @User() user: UserDto,
-    @UploadedFile() file,
+    @UploadedFile() file: Express.Multer.File,
     @Body() body: CreateRequestDto,
 	) {
 		console.log(file)
+		const newFireBaseService = new FirebaseService()
+		const url = await newFireBaseService.uploadFile(file.buffer)
+		console.log(url)
 		return await this.courseService.create(user, body)
 	}
 
@@ -95,15 +100,15 @@ export default class CourseController {
   	return await this.courseService.findById(id)
   }
 
-//   @Get()
-//   @ApiOkResponse()
-//   async getAll(): Promise<CreateReponseDto[]> {
-//   	return await this.courseService.findAll()
-//   }
+  @Get()
+  @ApiOkResponse()
+  async getAll(): Promise<CreateReponseDto[]> {
+  	return await this.courseService.findAll()
+  }
 
-//   @Delete(":id")
-//   @ApiBadRequestResponse()
-//   async delete(@Param("id", ParseUUIDPipe) id: string) {
-//   	return await this.courseService.delete(id)
-//   }
+  @Delete(":id")
+  @ApiBadRequestResponse()
+  async delete(@Param("id", ParseUUIDPipe) id: string) {
+  	return await this.courseService.delete(id)
+  }
 }
