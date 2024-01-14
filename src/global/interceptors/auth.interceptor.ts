@@ -21,9 +21,10 @@ implements NestInterceptor<T, Response<T>>
 		const request = context.switchToHttp().getRequest()
 		const query = request.query
 
-		const clientId = query.clientId as string
 		const user = request.user as UserDto
 		if (!user) return next.handle()
+
+		const clientId = query.clientId as string
 
 		const refresh = query.refresh === "true"
 
