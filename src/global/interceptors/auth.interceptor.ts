@@ -23,6 +23,7 @@ implements NestInterceptor<T, Response<T>>
 
 		const clientId = query.clientId as string
 		const user = request.user as UserDto
+		if (!user) return next.handle()
 
 		const isRefreshToken = query.isRefreshToken=== "true"
 
@@ -38,7 +39,7 @@ implements NestInterceptor<T, Response<T>>
 				return await this.tokenManagerService.generateResponse<T>(
 					user.userId,
 					data,
-					authTokensRequested,
+					isRefreshToken,
 					clientId,
 				)
 			}),
