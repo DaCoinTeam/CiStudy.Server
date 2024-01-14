@@ -22,10 +22,7 @@ implements NestInterceptor<T, Response<T>>
 		const query = request.query
 
 		const user = request.user as UserDto
-		if (!user) return next.handle()
-
 		const clientId = query.clientId as string
-
 		const refresh = query.refresh === "true"
 
 		if (refresh) {
