@@ -1,5 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import { CourseEntity } from "../course"
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity("post")
 export default class PostEntity {
@@ -9,10 +8,10 @@ export default class PostEntity {
   @Column({ type: "varchar", length: 500 })
   	title: string
 
-  @Column({ type: "uuid" })
+  @Column({ type: "uuid", length: 36 })
   	creatorId: string
 
-  @Column({ type: "uuid" })
+  @Column({ type: "uuid", length: 36  })
   	courseId: string
 
 	// @ManyToOne(() => CourseEntity, (courseEntity) => courseEntity.posts)

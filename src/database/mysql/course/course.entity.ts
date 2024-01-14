@@ -44,10 +44,10 @@ export default class CourseEntity {
   })
   	thumbnailUrl: string
 
-  @Column({ type: "varchar", length: 255 })
+  @Column({ type: "varchar", length: 1000 })
   	description: string
 
-  @Column()
+  @Column({ type: "float", default: 0})
   	price: number
 
   @Column({ type: "enum", enum: VerifyStatus, default: null })
@@ -56,7 +56,7 @@ export default class CourseEntity {
   @Column({ default: true })
   	isDraft: boolean
 
-  @Column({ name: "creatorId", type: "uuid", length: 36,  })
+  @Column({ type: "uuid", length: 36,  })
   	creatorId: string
 
   @Column({ default: false })
@@ -72,8 +72,8 @@ export default class CourseEntity {
   	includes: CourseIncludes
 
 	// chiều thuận, đéo cần join => gen thêm để mày theo tác
-	//   @OneToMany(() => PostEntity, (postEntity) => postEntity.course)
-	//   	posts: PostEntity[]
+	// @OneToMany(() => PostEntity, (post) => post.)
+	//    	posts: PostEntity[]
 
 	// --- relations ---
 
