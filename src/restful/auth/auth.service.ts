@@ -5,12 +5,25 @@ import {
 	NotFoundException,
 	UnauthorizedException,
 } from "@nestjs/common"
-import { SignUpRequestDto } from "./dto"
-import { MailerService, Sha256Service, TokenManagerService } from "@global"
-import { UserDto } from "@shared"
-import { JwtService } from "@nestjs/jwt"
-import { jwtConfig } from "@config"
+import {
+	InitResponseDto,
+	SignInRequestDto,
+	SignInResponseDto,
+	SignUpRequestDto,
+	SignUpResponseDto,
+	VerifyGoogleAccessTokenRequestDto,
+	VerifyGoogleAccessTokenResponseDto,
+	VerifyRegistrationRequestDto,
+} from "./dto"
+import {
+	FirebaseService,
+	MailerService,
+	Sha256Service,
+	TokenManagerService,
+} from "@global"
 import { UserMySqlService } from "@database"
+import { UserDto } from "@shared"
+import { UserKind } from "./dto/verify-google-access-token"
 
 @Injectable()
 export default class AuthService {
@@ -19,10 +32,10 @@ export default class AuthService {
     private readonly sha256Service: Sha256Service,
     private readonly mailerService: MailerService,
     private readonly tokenManagerService: TokenManagerService,
-    private readonly jwtService: JwtService,
+    private readonly firebaseService: FirebaseService,
 	) {}
 
-	async signUp(params: SignUpRequestDto): Promise<string> {
+	async signUp(params: SignUpRequestDto): Promise<SignUpResponseDto> {
 		const found = await this.userMySqlService.findByEmail(params.email)
 		if (found)
 			throw new ConflictException(
@@ -31,23 +44,46 @@ export default class AuthService {
 		params.password = this.sha256Service.createHash(params.password)
 		const created = await this.userMySqlService.create(params)
 
-		this.mailerService.sendMail(created.userId, params.email)
-		return (
-			"Sign up successfully. An email has been sent to " +
-      params.email +
-      " for verification."
-		)
+		await this.mailerService.sendMail(created.userId, params.email)
+		return created
 	}
 
-	async verifyRegistration(token: string): Promise<string> {
-		let decoded: UserDto
-		try {
-			decoded = this.jwtService.verify<UserDto>(token, {
-				secret: jwtConfig().secret,
+	async signIn(body: SignInRequestDto): Promise<SignInResponseDto> {
+		const found = await this.userMySqlService.findByEmail(body.email)
+		if (!found) throw new NotFoundException("User not found.")
+		if (!this.sha256Service.verifyHash(body.password, found.password))
+			throw new UnauthorizedException("Invalid credentials.")
+		return found
+	}
+
+	async init(user: UserDto): Promise<InitResponseDto> {
+		return user
+	}
+
+	async verifyGoogleAccessToken({
+		token,
+	}: VerifyGoogleAccessTokenRequestDto): Promise<VerifyGoogleAccessTokenResponseDto> {
+		const decoded = await this.firebaseService.verifyGoogleAccessToken(token)
+		if (!decoded)
+			throw new UnauthorizedException("Invalid Google access token.")
+
+		let found = await this.userMySqlService.findByExternalId(decoded.uid)
+		if (!found) {
+			found = await this.userMySqlService.create({
+				externalId: decoded.uid,
+				email: decoded.email,
+				avatarUrl: decoded.picture,
+				phoneNumber: decoded.phone_number,
+				kind: UserKind.Google,
 			})
-		} catch (ex) {
-			throw new UnauthorizedException("Invalid token.")
 		}
+		return found
+	}
+
+	async verifyRegistration({
+		token,
+	}: VerifyRegistrationRequestDto) {
+		const decoded = await this.tokenManagerService.verifyToken<UserDto>(token)
 		const userId = decoded.userId
 		if (!userId) throw new NotFoundException("User not found.")
 
@@ -57,7 +93,5 @@ export default class AuthService {
 		})
 
 		if (!updated) throw new NotFoundException("Cannot verify user.")
-
-		return "Verify user successfully."
 	}
 }

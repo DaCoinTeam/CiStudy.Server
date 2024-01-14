@@ -10,7 +10,7 @@ export enum UserKind {
     Facebook = "Facebook",
   }
   
-export default class SignUpResponseDto {
+export default class SignInResponseDto {
 	userId: string
 	email?: string
 	password?: string

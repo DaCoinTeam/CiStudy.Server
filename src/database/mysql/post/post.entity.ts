@@ -25,4 +25,7 @@ export default class PostEntity {
 
   @OneToMany( () => PostContentEntity, (postContent) => postContent.post)
   	postContents: PostContentEntity[]
+	// @ManyToOne(() => CourseEntity, (courseEntity) => courseEntity.posts)
+	// @JoinColumn({ name: "courseId" })
+	// 	course: CourseEntity
 }
