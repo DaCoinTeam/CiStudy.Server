@@ -5,8 +5,16 @@ import {
 	ManyToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm"
-import { ContentType } from "../post-comment-content"
-import { PostEntity } from "../post"
+
+import PostEntity from "../post/post.entity"
+
+export enum ContentType {
+  Text = "Text",
+  Video = "Video",
+  Code = "Code",
+  Image = "Image",
+  Label = "Label",
+}
 
 @Entity("post_content")
 export default class PostContentEntity {

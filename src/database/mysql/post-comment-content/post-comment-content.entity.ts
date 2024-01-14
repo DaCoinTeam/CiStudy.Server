@@ -5,7 +5,7 @@ import {
 	ManyToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm"
-import { PostCommentEntity } from "../post-comment"
+import PostCommentEntity from "../post-comment/post-comment.entity"
 
 export enum ContentType {
   Text = "Text",

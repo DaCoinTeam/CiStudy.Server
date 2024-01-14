@@ -6,7 +6,7 @@ import {
 	PrimaryGeneratedColumn,
 } from "typeorm"
 
-import { UserEntity } from "../user"
+import UserEntity from "../user/user.entity"
 
 @Entity("session")
 export default class SessionEntity {

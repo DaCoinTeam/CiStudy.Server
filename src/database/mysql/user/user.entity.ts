@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm"
-import { SessionEntity } from "../session"
+import SessionEntity from "../session/session.entity"
 
 export enum UserRole {
   User = "User",
