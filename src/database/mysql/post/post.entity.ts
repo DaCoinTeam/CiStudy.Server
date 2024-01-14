@@ -15,7 +15,7 @@ export default class PostEntity {
   @Column({ type: "uuid" })
   	courseId: string
 
-  @ManyToOne(() => CourseEntity, (course) => course.courseId)
-  @JoinColumn({ name: "courseId" })
-  	couse: CourseEntity
+	// @ManyToOne(() => CourseEntity, (courseEntity) => courseEntity.posts)
+	// @JoinColumn({ name: "courseId" })
+	// 	course: CourseEntity
 }

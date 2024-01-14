@@ -1,28 +1,41 @@
 import { ApiProperty } from "@nestjs/swagger"
+import { Expose } from "class-transformer"
 
 export enum VerifyStatus {
   Pending = "Pending",
   Approved = "Approved",
   Rejected = "Rejected",
 }
+interface CourseIncludes {
+  time: number;
+}
 
 export default class CreateReponseDto {
   @ApiProperty()
-  	data: {
-    courseId: string;
-    thumbnail: string;
-    title: string;
-    description: string;
-    price: number;
-    verifyStatus: VerifyStatus;
-    isDraft: boolean;
-    isPublished: boolean;
-    studentId: string;
-    creatorId: string;
-  }
+  	thumbnailUrl: string
+
   @ApiProperty()
-  	tokens: {
-    accessToken: string;
-    refreshToken: string;
-  }
+  	title: string
+
+  @ApiProperty()
+  	description: string
+
+  @ApiProperty()
+  	price: number
+  
+  @Expose()
+  @ApiProperty()
+  	verifyStatus: VerifyStatus
+
+  @ApiProperty()
+  	creatorId: string
+
+  @ApiProperty()
+  	previewVideoUrl: string
+
+  @ApiProperty()
+  	targets: string[]
+
+  @ApiProperty()
+  	includes: CourseIncludes
 }
