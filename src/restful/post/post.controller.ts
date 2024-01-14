@@ -15,7 +15,7 @@ export default class PostController {
   	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935"
   })
   @ApiQuery({
-  	name: "isRefreshToken",
+  	name: "refresh",
   	example: "true"
   })
   @ApiBearerAuth()
