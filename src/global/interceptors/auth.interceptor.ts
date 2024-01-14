@@ -25,7 +25,7 @@ implements NestInterceptor<T, Response<T>>
 		const user = request.user as UserDto
 		if (!user) return next.handle()
 
-		const isRefreshToken = query.isRefreshToken=== "true"
+		const isRefreshToken = query.isRefreshToken === "true"
 
 		if (isRefreshToken) {
 			await this.tokenManagerService.validateRefreshToken(
