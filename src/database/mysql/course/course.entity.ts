@@ -71,11 +71,8 @@ export default class CourseEntity {
   @Column({ type: "json", default: null })
   	includes: CourseIncludes
 
-	// chiều thuận, đéo cần join => gen thêm để mày theo tác
   @OneToMany(() => PostEntity, (post) => post.course)
-  posts: PostEntity[]
-	//   @OneToMany(() => PostEntity, (postEntity) => postEntity.course)
-	//   	posts: PostEntity[]
+  	posts: PostEntity[]
 
 	// --- relations ---
 
@@ -109,7 +106,7 @@ export default class CourseEntity {
 	//   		name: "courseId",
 	//   		referencedColumnName: "id",
 	//   	},
-	//   	inverseJoinColumn: {
+	//   	2inverseJoinColumn: {
 	//   		name: "topicId",
 	//   		referencedColumnName: "id",
 	//   	},

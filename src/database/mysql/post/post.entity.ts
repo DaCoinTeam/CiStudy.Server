@@ -1,7 +1,16 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import {
+	Column,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+	PrimaryGeneratedColumn,
+} from "typeorm"
 import { CourseEntity } from "../course"
+import { PostCommentEntity } from "../post-comment"
+import { PostContentEntity } from "../post-content"
 
-@Entity("postes")
+@Entity("post")
 export default class PostEntity {
   @PrimaryGeneratedColumn("uuid")
   	postId: string
@@ -16,14 +25,12 @@ export default class PostEntity {
   	courseId: string
 
   @ManyToOne(() => CourseEntity, (course) => course.posts)
-    course: CourseEntity
+  @JoinColumn({ name: "courseId" })
+  	course: CourseEntity
 
   @OneToMany(() => PostCommentEntity, (comment) => comment.post)
   	comments: PostCommentEntity[]
 
-  @OneToMany( () => PostContentEntity, (postContent) => postContent.post)
+  @OneToMany(() => PostContentEntity, (postContent) => postContent.post)
   	postContents: PostContentEntity[]
-	// @ManyToOne(() => CourseEntity, (courseEntity) => courseEntity.posts)
-	// @JoinColumn({ name: "courseId" })
-	// 	course: CourseEntity
 }

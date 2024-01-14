@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import PostEntity from "../post/post.entity"
-import PostCommentContentEntity from "../post_comment_content/post_comment_content.entity"
+import { PostCommentContentEntity } from "../post-comment-content"
 
 @Entity("post_comment")
-export class PostCommentEntity {
+export default class PostCommentEntity {
   @PrimaryGeneratedColumn("uuid")
   	postCommentId: string
 
@@ -19,10 +19,10 @@ export class PostCommentEntity {
     @Column({ type: "uuid", default: null, length: 36 })
     	fatherCommentId: string
 
-    @ManyToOne(() => PostEntity, (post) => post.comments)
+     @ManyToOne(() => PostEntity, (post) => post.comments)
     @JoinColumn({ name: "postId" })
     	post: PostEntity
 
-      @OneToMany( () => PostCommentContentEntity, (postCommentContent) => postCommentContent.postComment)
-      	postCommentContents: PostCommentContentEntity[]
+	 @OneToMany(() => PostCommentContentEntity, (postCommentContent) => postCommentContent.postComment)
+	 	postCommentContents: PostCommentContentEntity[]
 }
