@@ -1,19 +1,20 @@
 import {
 	Column,
 	Entity,
+	JoinColumn,
+	ManyToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm"
 
-@Entity("refresh")
-export default class RefreshEntity {
+import { UserEntity } from "../user"
+
+@Entity("session")
+export default class SessionEntity {
   @PrimaryGeneratedColumn("uuid")
-  	refreshTokenId: string
+  	sessionId: string
 
-  @Column({ type: "uuid" })
+  @Column({ type: "uuid", length:"36" })
   	userId: string
-
-  @Column({ type: "varchar", length: 1000 })
-  	token: string
 
   @Column({
   	type: "timestamp",
@@ -23,11 +24,14 @@ export default class RefreshEntity {
   	createdAt: Date
 
   @Column({ type: "boolean", default: false })
-  	isDeleted: boolean
+  	isDisabled: boolean
 
   @Column({
-  	type: "uuid",
+  	type: "uuid", length:"36"
   })
   	clientId: string
   
+  @ManyToOne(() => UserEntity, (user) => user.sessions)
+  @JoinColumn({ name: "userId" })
+  	user: UserEntity
 }

@@ -7,6 +7,7 @@ import {
 	ParseUUIDPipe,
 	Post,
 	UseGuards,
+	UseInterceptors,
 } from "@nestjs/common"
 import {
 	ApiBadRequestResponse,
@@ -17,7 +18,7 @@ import {
 	ApiTags,
 } from "@nestjs/swagger"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
-import { JwtAuthGuard, User } from "../shared"
+import { AuthInterceptor, JwtAuthGuard, User } from "../shared"
 import { UserDto } from "@shared"
 import CourseService from "./course.service"
 
@@ -29,6 +30,7 @@ export default class CourseController {
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: CreateReponseDto })
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(AuthInterceptor)
   @Post()
 	async create(@User() user: UserDto, @Body() body: CreateRequestDto) {
 		return await this.courseService.create(user, body)

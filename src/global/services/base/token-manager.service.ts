@@ -1,5 +1,5 @@
 import { jwtConfig } from "@config"
-import { RefreshMySqlService } from "@database"
+import { SessionMySqlService } from "@database"
 import {
 	Injectable,
 	InternalServerErrorException,
@@ -11,7 +11,7 @@ import { JsonWebTokenError, JwtService } from "@nestjs/jwt"
 export default class TokenManagerService {
 	constructor(
     private readonly jwtService: JwtService,
-    private readonly refreshMySqlService: RefreshMySqlService,
+    private readonly sessionMySqlService: SessionMySqlService,
 	) {}
 
 	// rất ít khi xài bởi vì guard lo hết rồi. làm thủ công thì cần
@@ -30,13 +30,13 @@ export default class TokenManagerService {
 		userId: string,
 		clientId: string,
 	): Promise<void> {
-		const refresh = await this.refreshMySqlService.findByUserIdAndClientId(
+		const refresh = await this.sessionMySqlService.findByUserIdAndClientId(
 			userId,
 			clientId,
 		)
 		console.log(refresh)
 		if (refresh === null) throw new UnauthorizedException("Refresh token not found.")
-		if (refresh.isDeleted)
+		if (refresh.isDisabled)
 			throw new UnauthorizedException("Invalid refresh token.")
 	}
 
@@ -71,10 +71,9 @@ export default class TokenManagerService {
 
 		if (clientId) {
 			const createOrUpdateResult =
-        await this.refreshMySqlService.createOrUpdate({
+        await this.sessionMySqlService.createOrUpdate({
         	clientId,
-        	userId,
-        	token: refreshToken,
+        	userId
         })
 
 			if (!createOrUpdateResult)

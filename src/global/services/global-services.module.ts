@@ -2,13 +2,13 @@ import { Global, Module } from "@nestjs/common"
 import { MailerService, ResponseService, Sha256Service, TokenManagerService } from "./base"
 import { FirebaseService } from "./3rd"
 import { JwtService } from "@nestjs/jwt"
-import { RefreshMySqlModule } from "@database"
+import { SessionMySqlModule } from "@database"
 import { MetamaskService } from "./blockchain"
 
 @Global()
 @Module({
 	imports: [
-		RefreshMySqlModule
+		SessionMySqlModule
 	],
 	exports: [
 		//3rd

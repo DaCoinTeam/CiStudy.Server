@@ -4,7 +4,7 @@ import {
 	ExecutionContext,
 	CallHandler,
 } from "@nestjs/common"
-import { Response, TokenManagerService } from "../services"
+import { Response, TokenManagerService } from "@global"
 import { Observable, mergeMap } from "rxjs"
 import { UserDto } from "@shared"
 

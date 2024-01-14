@@ -1,7 +1,7 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common"
+import { Body, Controller, Post, UseGuards, UseInterceptors } from "@nestjs/common"
 import { ApiBearerAuth, ApiCreatedResponse, ApiQuery, ApiTags } from "@nestjs/swagger"
 import { CreateRequestDto, CreateResponseDto } from "./dto"
-import { JwtAuthGuard, User } from "../shared"
+import { AuthInterceptor, JwtAuthGuard, User } from "../shared"
 import { UserDto } from "@shared"
 import PostService from "./post.service"
 
@@ -21,6 +21,7 @@ export default class PostController {
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: CreateResponseDto })
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(AuthInterceptor)
   @Post()
 	async create(
     @User() user: UserDto,
