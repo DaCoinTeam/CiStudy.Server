@@ -84,7 +84,7 @@ export default class TokenManagerService {
 	async generateResponse<T extends object>(
 		userId: string,
 		data: T,
-		authTokensRequested: boolean = true,
+		authTokensRequested: boolean,
 		clientId?: string,
 	): Promise<Response<T>> {
 		const tokens = await this.generateAuthTokens(userId, data, clientId)
