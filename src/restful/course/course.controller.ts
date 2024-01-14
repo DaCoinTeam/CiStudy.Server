@@ -20,12 +20,12 @@ import {
 	ApiTags,
 } from "@nestjs/swagger"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
-import { JwtAuthGuard, User } from "../shared"
+import { AuthInterceptor, JwtAuthGuard, User } from "../shared"
 import { UserDto } from "@shared"
 import CourseService from "./course.service"
 import { FileInterceptor } from "@nestjs/platform-express"
 
-@ApiTags("Courses")
+@ApiTags("Course")
 @Controller("api/course")
 export default class CourseController {
 	constructor(private readonly courseService: CourseService) {}
@@ -74,6 +74,7 @@ export default class CourseController {
   })
   @ApiBadRequestResponse()
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(AuthInterceptor)
   @Post()
   @UseInterceptors(FileInterceptor("file"))
 	async create(
@@ -94,15 +95,15 @@ export default class CourseController {
   	return await this.courseService.findById(id)
   }
 
-  @Get()
-  @ApiOkResponse()
-  async getAll(): Promise<CreateReponseDto[]> {
-  	return await this.courseService.findAll()
-  }
+//   @Get()
+//   @ApiOkResponse()
+//   async getAll(): Promise<CreateReponseDto[]> {
+//   	return await this.courseService.findAll()
+//   }
 
-  @Delete(":id")
-  @ApiBadRequestResponse()
-  async delete(@Param("id", ParseUUIDPipe) id: string) {
-  	return await this.courseService.delete(id)
-  }
+//   @Delete(":id")
+//   @ApiBadRequestResponse()
+//   async delete(@Param("id", ParseUUIDPipe) id: string) {
+//   	return await this.courseService.delete(id)
+//   }
 }

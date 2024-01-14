@@ -1,5 +1,5 @@
-type Query{
-    findById(input: ID!): FindByIdResponse!
+input FindByCourseIdRequest{
+	courseId: ID!
 }
 
 enum VerifyStatus {
@@ -12,7 +12,7 @@ type CourseIncludes {
     time: Float
 }
 
-type FindByIdResponse {
+type FindByCourseIdResponse {
   	courseId: ID
   	title: String
   	thumbnailUrl: String
@@ -26,3 +26,8 @@ type FindByIdResponse {
   	targets: String
   	includes: CourseIncludes
 }
+
+type Query{
+    findByCourseId(input: FindByCourseIdRequest!): FindByCourseIdResponse!
+}
+

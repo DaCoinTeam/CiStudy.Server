@@ -1,4 +1,3 @@
-import SignUpRequestDto from "./sign-up.dto"
-import RefreshResponseDto from "./response.dto"
+import SignUpRequestDto from "./sign-up/request.dto"
 
-export { SignUpRequestDto, RefreshResponseDto }
+export { SignUpRequestDto }

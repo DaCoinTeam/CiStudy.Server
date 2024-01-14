@@ -13,6 +13,7 @@ import { SectionEntity } from "../section"
 import { TopicEntity } from "../topic/topic.entity"
 import UserEntity from "../user/user.entity"
 import { Exclude, Expose } from "class-transformer"
+import PostEntity from "../post/post.entity"
 
 export enum VerifyStatus {
   Pending = "Pending",
@@ -69,6 +70,10 @@ export default class CourseEntity {
 
   @Column({ type: "json", default: null })
   	includes: CourseIncludes
+
+	// chiều thuận, đéo cần join => gen thêm để mày theo tác
+  @OneToMany(() => PostEntity, (post) => post.courseId)
+  	posts: PostEntity[]
 
 	// --- relations ---
 

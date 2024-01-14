@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm"
+import { SessionEntity } from "../session"
 
 export enum UserRole {
   User = "User",
@@ -67,4 +68,7 @@ export default class UserEntity {
 
   @Column({ type: "varchar", length: 128, default: null })
   	externalId: string
+
+  @OneToMany(() => SessionEntity, (session) => session.user)
+  	sessions: SessionEntity[]
 }

@@ -1,7 +1,9 @@
-import extractUtils from "./extract"
+import extract from "./extract"
+
+export { extract }
 
 const utils = {
-	extract: extractUtils,
+	extract,
 }
 
 export default utils

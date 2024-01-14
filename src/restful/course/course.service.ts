@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
 import { UserDto } from "@shared"
 
+
 @Injectable()
 export default class CourseService {
 	constructor(private readonly courseMySqlService: CourseMySqlService) {}
@@ -15,15 +16,15 @@ export default class CourseService {
 		return await this.courseMySqlService.create(body)
 	}
 
-	async findById(courseId: string): Promise<CreateReponseDto> {
-		return await this.courseMySqlService.findById(courseId)
-	}
+	// async findById(courseId: string): Promise<CreateReponseDto> {
+	// 	return await this.courseMySqlService.findById(courseId)
+	// }
 
-	async findAll(): Promise<CreateReponseDto[]> {
-		return await this.courseMySqlService.findAll()
-	}
+	// async findAll(): Promise<CreateReponseDto[]> {
+	// 	return await this.courseMySqlService.findAll()
+	// }
 
-	async delete(courseId: string) {
-		return await this.courseMySqlService.delete(courseId)
-	}
+	// async delete(courseId: string) {
+	// 	return await this.courseMySqlService.delete(courseId)
+	// }
 }
