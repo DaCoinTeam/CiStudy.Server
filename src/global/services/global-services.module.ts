@@ -37,4 +37,4 @@ import { MetamaskService } from "./blockchain"
 		MetamaskService
 	],
 })
-export default class GlobalModule {}
+export default class GlobalServicesModule {}

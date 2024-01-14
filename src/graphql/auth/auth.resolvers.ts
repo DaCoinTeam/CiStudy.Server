@@ -43,9 +43,10 @@ export default class AuthResolvers {
 			throw new UnauthorizedException("Invalid credentials.")
 		console.log(args)
 		return this.tokenManagerService.generateResponse(
-			args.clientId,
 			found.userId,
 			found,
+			true,
+			args.clientId,
 		)
 	}
 
@@ -56,9 +57,10 @@ export default class AuthResolvers {
     @Args("input") args: InitRequestDto,
   ): Promise<Response<UserDto>> {
   	return this.tokenManagerService.generateResponse(
-  		args.clientId,
   		user.userId,
   		user,
+  		true,
+  		args.clientId,
   	)
   }
 
@@ -85,9 +87,10 @@ export default class AuthResolvers {
 
   	pubSub.publish("userCreated", found)
   	return this.tokenManagerService.generateResponse(
-  		args.clientId,
   		found.userId,
   		found,
+  		true,
+  		args.clientId,
   	)
   }
 }

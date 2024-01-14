@@ -14,6 +14,8 @@ export default class PostService {
 	async create(
 		user: UserDto,
 		body: CreateRequestDto,
+		authTokensRequested: boolean,
+		clientId?: string
 	): Promise<CreateResponseDto> {
 		const post: Partial<PostDto> = {
 			...body,
@@ -21,10 +23,10 @@ export default class PostService {
 		}
 		const created = await this.postMySqlService.create(post)
 		return await this.tokenManagerService.generateResponse(
-			body.clientId,
 			user.userId,
 			created,
-			body.requestAuthTokens
+			authTokensRequested,
+			clientId,
 		)
 	}
 }

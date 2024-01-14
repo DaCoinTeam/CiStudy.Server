@@ -1,4 +1,4 @@
-import { blockchainConfig } from "@config"
+
 import { Injectable } from "@nestjs/common"
 import HDWalletProvider from "@machinomy/hdwallet-provider"
 import {Web3} from "web3"
@@ -9,7 +9,6 @@ export default class MetamaskService {
 
 	constructor() {
 		//testing only
-		const metamaskPrivateKey = blockchainConfig().metamaskPrivateKey
 		const localKeyProvider =  HDWalletProvider.mnemonic({
 			mnemonic: "agent merit inspire runway priority wonder height renew once high appear robust",
 			rpc: "https://api.baobab.klaytn.net:8651"
@@ -18,10 +17,6 @@ export default class MetamaskService {
 		localKeyProvider.getAddresses().then(x => console.log(x))
 
 		this.web3 = new Web3(localKeyProvider)
-
 	}
 
-	async mint(amount: string) {
-
-	}
 }

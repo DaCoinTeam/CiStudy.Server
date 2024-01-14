@@ -1,6 +1,6 @@
-export * from "./3rd"
-export * from "./base"
+export * from "./services/3rd"
+export * from "./services/base"
 
-import GlobalModule from "./global.module"
+import { GlobalServicesModule } from "./services"
 
-export { GlobalModule }
+export { GlobalServicesModule }

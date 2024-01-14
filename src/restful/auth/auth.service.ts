@@ -1,11 +1,12 @@
 // import { UserMySqlService } from "@database"
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common"
-import { SignUpRequestDto } from "./dto"
 import {
-	MailerService,
-	Sha256Service,
-	TokenManagerService,
-} from "@global"
+	ConflictException,
+	Injectable,
+	NotFoundException,
+	UnauthorizedException,
+} from "@nestjs/common"
+import { SignUpRequestDto } from "./dto"
+import { MailerService, Sha256Service, TokenManagerService } from "@global"
 import { UserDto } from "@shared"
 import RefreshResponseDto from "./dto/refresh/response.dto"
 import { JwtService } from "@nestjs/jwt"
@@ -19,11 +20,15 @@ export default class AuthService {
     private readonly sha256Service: Sha256Service,
     private readonly mailerService: MailerService,
     private readonly tokenManagerService: TokenManagerService,
-	private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
 	) {}
 
-	async refresh(params: UserDto): Promise<RefreshResponseDto> {
-		return await this.tokenManagerService.generateAuthTokens(params)
+	async refresh(user: UserDto, clientId?: string): Promise<RefreshResponseDto> {
+		return await this.tokenManagerService.generateAuthTokens(
+			user.userId,
+			user,
+			clientId,
+		)
 	}
 
 	async signUp(params: SignUpRequestDto): Promise<string> {
@@ -43,14 +48,13 @@ export default class AuthService {
 		)
 	}
 
-	async verifyRegistration(token: string) : Promise<string> {
-		let decoded : UserDto
-		try{
+	async verifyRegistration(token: string): Promise<string> {
+		let decoded: UserDto
+		try {
 			decoded = this.jwtService.verify<UserDto>(token, {
-				secret: jwtConfig().secret
+				secret: jwtConfig().secret,
 			})
-		}
-		catch(ex){
+		} catch (ex) {
 			throw new UnauthorizedException("Invalid token.")
 		}
 		const userId = decoded.userId
@@ -58,7 +62,7 @@ export default class AuthService {
 
 		const updated = await this.userMySqlService.update({
 			userId,
-			verified: true
+			verified: true,
 		})
 
 		if (!updated) throw new NotFoundException("Cannot verify user.")

@@ -1,19 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsBoolean, IsNotEmpty, IsUUID, MinLength } from "class-validator"
+import { IsNotEmpty, IsUUID, MinLength } from "class-validator"
 
 export default class CreateRequestDto {
-    @IsUUID()
-    @ApiProperty({
-    	example: "1a469863-ceb1-421f-8f17-700d61a85253", description: "ClientId"
-    })
-    	clientId: string
-
-    @IsBoolean()
-    @ApiProperty({
-    	example: false, description: "RequestAuthTokens"
-    })
-    	requestAuthTokens?: boolean
-
     @IsNotEmpty()
     @MinLength(20)
     @ApiProperty({

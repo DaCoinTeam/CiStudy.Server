@@ -1,6 +1,10 @@
 import { jwtConfig } from "@config"
 import { RefreshMySqlService } from "@database"
-import { Injectable, InternalServerErrorException } from "@nestjs/common"
+import {
+	Injectable,
+	InternalServerErrorException,
+	UnauthorizedException,
+} from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 
 @Injectable()
@@ -18,21 +22,17 @@ export default class TokenManagerService {
 		}
 	}
 
-	async validateAndVerifyRefreshToken<T extends object>(
+	async validateRefreshToken(
 		clientId: string,
 		userId: string,
 		token: string,
-	): Promise<T | null> {
-		try {
-			const refresh = await this.refreshMySqlService.findByClientIdAndUserId(
-				clientId,
-				userId,
-			)
-			if (refresh.token !== token || refresh.isDeleted) return null
-			return await this.verifyToken(token)
-		} catch (ex) {
-			return null
-		}
+	): Promise<void> {
+		const refresh = await this.refreshMySqlService.findByClientIdAndUserId(
+			clientId,
+			userId,
+		)
+		if (refresh.token !== token || refresh.isDeleted)
+			throw new UnauthorizedException("Invalid refresh token.")
 	}
 
 	private async generateToken<T extends object>(
@@ -54,9 +54,27 @@ export default class TokenManagerService {
 			},
 		)
 	}
-	async generateAuthTokens<T extends object>(data: T): Promise<AuthTokens> {
+	async generateAuthTokens<T extends object>(
+		userId: string,
+		data: T,
+		clientId?: string
+	): Promise<AuthTokens> {
 		const accessToken = await this.generateToken<T>(data)
 		const refreshToken = await this.generateToken<T>(data, TokenType.Refresh)
+
+		if (clientId) {
+			const createOrUpdateResult = await this.refreshMySqlService.createOrUpdate({
+				clientId,
+				userId,
+				token: refreshToken,
+			})
+	
+			if (!createOrUpdateResult)
+				throw new InternalServerErrorException(
+					"Cannot create or update refresh token.",
+				)
+		}
+
 		return {
 			accessToken,
 			refreshToken,
@@ -64,27 +82,16 @@ export default class TokenManagerService {
 	}
 
 	async generateResponse<T extends object>(
-		clientId: string,
 		userId: string,
 		data: T,
-		requestAuthTokens : boolean = true
+		authTokensRequested: boolean = true,
+		clientId?: string,
 	): Promise<Response<T>> {
-		const tokens = await this.generateAuthTokens(data)
-
-		const createOrUpdateResult = await this.refreshMySqlService.createOrUpdate({
-			clientId,
-			userId,
-			token: tokens.refreshToken,
-		})
-
-		if (!createOrUpdateResult)
-			throw new InternalServerErrorException(
-				"Cannot create or update refresh token.",
-			)
+		const tokens = await this.generateAuthTokens(userId, data, clientId)
 
 		return {
 			data,
-			...requestAuthTokens ? { tokens } : undefined
+			...(authTokensRequested ? { tokens } : undefined),
 		}
 	}
 }
