@@ -30,7 +30,8 @@ import { FirebaseService } from "@global"
 @ApiTags("Course")
 @Controller("api/course")
 export default class CourseController {
-	constructor(private readonly courseService: CourseService) {}
+	constructor(private readonly courseService: CourseService,
+		private readonly firebaseSerive: FirebaseService) {}
 
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: CreateReponseDto })
@@ -85,8 +86,8 @@ export default class CourseController {
     @Body() body: CreateRequestDto,
 	) {
 		console.log(file)
-		const newFireBaseService = new FirebaseService()
-		const url = await newFireBaseService.uploadFile(file.buffer)
+
+		const url = this.firebaseSerive.uploadFile(file.buffer)
 		console.log(url)
 		return await this.courseService.create(user, body)
 	}
@@ -111,4 +112,9 @@ export default class CourseController {
   async delete(@Param("id", ParseUUIDPipe) id: string) {
   	// return await this.courseService.delete(id)
   }
+//   @Delete(":id")
+//   @ApiBadRequestResponse()
+//   async delete(@Param("id", ParseUUIDPipe) id: string) {
+//   	return await this.courseService.delete(id)
+//   }
 }

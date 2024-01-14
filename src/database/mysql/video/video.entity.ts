@@ -15,7 +15,7 @@ export class VideoEntity {
   @Column({ name: "sectionId" })
   	sectionId: string
 
-  @ManyToOne(() => SectionEntity, (sectionEntity) => sectionEntity.video)
+  @ManyToOne(() => SectionEntity, (section) => section.video)
   @JoinColumn({ name: "sectionId" })
   	section: SectionEntity
 }

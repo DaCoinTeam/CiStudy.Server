@@ -1,7 +1,16 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
-import { CourseEntity } from "../course"
-import { PostCommentEntity } from "../post_comment/post_comment.entity"
-import PostContentEntity from "../post_content/post_content.entity"
+import {
+	Column,
+	Entity,
+	JoinColumn,
+	ManyToMany,
+	ManyToOne,
+	OneToMany,
+	PrimaryGeneratedColumn,
+} from "typeorm"
+import CourseEntity from "../course/course.entity"
+import PostCommentEntity from "../post-comment/post-comment.entity"
+import PostContentEntity from "../post-content/post-content.entity"
+import PostLikeEntity from "../post-like/post-like.entity"
 
 @Entity("post")
 export default class PostEntity {
@@ -14,18 +23,19 @@ export default class PostEntity {
   @Column({ type: "uuid", length: 36 })
   	creatorId: string
 
-  @Column({ type: "uuid", length: 36})
-    courseId: string
+  @Column({ type: "uuid", length: 36 })
+  	courseId: string
 
   @ManyToOne(() => CourseEntity, (course) => course.posts)
-    course: CourseEntity
+  @JoinColumn({ name: "courseId" })
+  	course: CourseEntity
 
-  @OneToMany(() => PostCommentEntity, (comment) => comment.post)
-  	comments: PostCommentEntity[]
-
-  @OneToMany( () => PostContentEntity, (postContent) => postContent.post)
+  @OneToMany(() => PostContentEntity, (postContent) => postContent.post)
   	postContents: PostContentEntity[]
-	// @ManyToOne(() => CourseEntity, (courseEntity) => courseEntity.posts)
-	// @JoinColumn({ name: "courseId" })
-	// 	course: CourseEntity
+
+  @OneToMany(() => PostCommentEntity, (postComment) => postComment.post)
+  	postComments: PostCommentEntity[]
+
+	@OneToMany(() => PostLikeEntity, (postLike) => postLike.post)
+		postLikes: PostLikeEntity[]
 }

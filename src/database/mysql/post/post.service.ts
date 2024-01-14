@@ -5,11 +5,11 @@ import PostEntity from "./post.entity"
 
 @Injectable()
 export default class PostService {
-	constructor(@InjectRepository(PostEntity) private readonly postRepository: Repository<PostEntity>) {}
+	constructor(@InjectRepository(PostEntity)
+	 private readonly postRepository: Repository<PostEntity>) {}
 
-	async create(post: Partial<PostEntity>): Promise<PostEntity> {
-		const created = this.postRepository.create(post)
-		console.log(created)
+	async create(body: Partial<PostEntity>): Promise<PostEntity> {
+		const created = this.postRepository.create(body)
 		return await this.postRepository.save(created)
 	}
 

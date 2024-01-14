@@ -1,5 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm"
-import { SessionEntity } from "../session"
+import SessionEntity from "../session/session.entity"
+import PostCommentEntity from "../post-comment/post-comment.entity"
+import PostLikeEntity from "../post-like/post-like.entity"
 
 export enum UserRole {
   User = "User",
@@ -71,4 +73,10 @@ export default class UserEntity {
 
   @OneToMany(() => SessionEntity, (session) => session.user)
   	sessions: SessionEntity[]
+
+  @OneToMany(() => PostCommentEntity, (postComment) => postComment.user)
+  	postComments: PostCommentEntity[]
+
+    @OneToMany(() => PostLikeEntity, (postLike) => postLike.user)
+  	postLikes: PostLikeEntity[]
 }
