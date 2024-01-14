@@ -6,8 +6,9 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
 import { AuthGraphQLModule, CourseGraphQLModule } from "@graphql"
 import { AuthRestfulModule, CourseRestfulModule, PostRestfulModule } from "@restful"
-import { GlobalServicesModule } from "@global"
+import { GlobalServicesModule, AuthInterceptor } from "@global"
 import { TypeOrmModule } from "@nestjs/typeorm"
+import { APP_INTERCEPTOR } from "@nestjs/core"
 
 @Module({
 	imports: [
@@ -34,6 +35,7 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 			},
 		}),
 
+		
 		//graphql
 		AuthGraphQLModule,
 		CourseGraphQLModule,
@@ -47,6 +49,11 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		GlobalServicesModule
 	],
 	controllers: [],
-	providers: [],
+	providers: [
+		{
+			provide: APP_INTERCEPTOR,
+			useClass: AuthInterceptor,
+		  },
+	],
 })
 export class AppModule {}

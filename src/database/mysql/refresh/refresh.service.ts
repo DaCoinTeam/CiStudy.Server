@@ -43,13 +43,13 @@ export default class RefreshService {
 			refreshTokenId,
 		})
 	}
-	async findByClientIdAndUserId(
-		clientId: string,
+	async findByUserIdAndClientId(
 		userId: string,
+		clientId: string,
 	): Promise<RefreshEntity | null> {
 		return await this.refreshRepository.findOneBy({
-			clientId,
 			userId,
+			clientId,
 		})
 	}
 }

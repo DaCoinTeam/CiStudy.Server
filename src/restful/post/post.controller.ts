@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common"
 import { ApiBearerAuth, ApiCreatedResponse, ApiQuery, ApiTags } from "@nestjs/swagger"
 import { CreateRequestDto, CreateResponseDto } from "./dto"
-import { AuthTokensRequested, ClientId, JwtAuthGuard, User } from "../shared"
+import { JwtAuthGuard, User } from "../shared"
 import { UserDto } from "@shared"
 import PostService from "./post.service"
 
@@ -15,7 +15,7 @@ export default class PostController {
   	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935"
   })
   @ApiQuery({
-  	name: "authTokensRequested",
+  	name: "isRefreshToken",
   	example: "true"
   })
   @ApiBearerAuth()
@@ -25,9 +25,7 @@ export default class PostController {
 	async create(
     @User() user: UserDto,
     @Body() body: CreateRequestDto,
-    @AuthTokensRequested() authTokensRequested: boolean,
-    @ClientId() clientId?: string,
 	) {
-		return await this.postService.create(user, body, authTokensRequested, clientId)
+		return await this.postService.create(user, body)
 	}
 }
