@@ -11,9 +11,8 @@ export default class CourseService {
 		user: UserDto,
 		body: CreateRequestDto,
 	): Promise<CreateReponseDto | null> {
-		// body.creatorId = user.userId
-		// return await this.courseMySqlService.create(body)
-		return null
+		body.creatorId = user.userId
+		return await this.courseMySqlService.create(body)
 	}
 
 	async findById(courseId: string): Promise<CreateReponseDto> {

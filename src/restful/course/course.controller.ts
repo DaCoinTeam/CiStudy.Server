@@ -6,12 +6,15 @@ import {
 	Param,
 	ParseUUIDPipe,
 	Post,
+	UploadedFile,
 	UseGuards,
+	UseInterceptors,
 } from "@nestjs/common"
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
-	ApiCreatedResponse,
+	ApiBody,
+	ApiConsumes,
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiTags,
@@ -20,6 +23,7 @@ import { CreateReponseDto, CreateRequestDto } from "./dto"
 import { JwtAuthGuard, User } from "../shared"
 import { UserDto } from "@shared"
 import CourseService from "./course.service"
+import { FileInterceptor } from "@nestjs/platform-express"
 
 @ApiTags("Courses")
 @Controller("api/course")
@@ -27,17 +31,66 @@ export default class CourseController {
 	constructor(private readonly courseService: CourseService) {}
 
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: CreateReponseDto })
+  //   @ApiCreatedResponse({ type: CreateReponseDto })
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+  	description: "Course File",
+  	schema: {
+  		type: "object",
+  		properties: {
+  			thumbnailUrl: {
+  				type: "string",
+  				format: "binary",
+  			},
+  			title: {
+  				type: "string",
+  			},
+  			description: {
+  				type: "string",
+  			},
+  			price: {
+  				type: "number",
+  			},
+  			previewVideoUrl: {
+  				type: "string",
+  				format: "binary",
+  			},
+  			targets: {
+  				type: "array",
+  				items: {
+  					type: "string",
+  				},
+  			},
+  			includes: {
+  				type: "object",
+  				properties: {
+  					property1: {
+  						type: "string",
+  					},
+  				},
+  			},
+  		},
+  	},
+  })
+  @ApiBadRequestResponse()
   @UseGuards(JwtAuthGuard)
   @Post()
-	async create(@User() user: UserDto, @Body() body: CreateRequestDto) {
+  @UseInterceptors(FileInterceptor("file"))
+	async create(
+    @User() user: UserDto,
+    @UploadedFile() file,
+    @Body() body: CreateRequestDto,
+	) {
+		console.log(file)
 		return await this.courseService.create(user, body)
 	}
 
   @ApiOkResponse({ type: CreateRequestDto })
   @ApiNotFoundResponse()
   @Get(":id")
-  async getById(@Param("id", ParseUUIDPipe) id: string): Promise<CreateRequestDto> {
+  async getById(
+    @Param("id", ParseUUIDPipe) id: string,
+  ): Promise<CreateReponseDto> {
   	return await this.courseService.findById(id)
   }
 
