@@ -72,8 +72,10 @@ export default class CourseEntity {
   	includes: CourseIncludes
 
 	// chiều thuận, đéo cần join => gen thêm để mày theo tác
-	// @OneToMany(() => PostEntity, (post) => post.)
-	//    	posts: PostEntity[]
+  @OneToMany(() => PostEntity, (post) => post.course)
+  posts: PostEntity[]
+	//   @OneToMany(() => PostEntity, (postEntity) => postEntity.course)
+	//   	posts: PostEntity[]
 
 	// --- relations ---
 
