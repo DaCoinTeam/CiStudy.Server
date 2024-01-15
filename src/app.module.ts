@@ -27,14 +27,9 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
-			typePaths: ["./**/*.graphql"],
-			installSubscriptionHandlers: true,
-			definitions: {
-				path: join(process.cwd(), "src/graphql.schema.ts"),
-				outputAs: "class",
-			},
+			autoSchemaFile: join(process.cwd(), "src/schema.gql"),
+			sortSchema: true,
 		}),
-
 		
 		//graphql
 		AuthGraphQLModule,

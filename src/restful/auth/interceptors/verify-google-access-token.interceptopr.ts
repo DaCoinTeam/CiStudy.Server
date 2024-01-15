@@ -6,7 +6,6 @@ import {
 } from "@nestjs/common"
 import { AuthTokens, TokenManagerService } from "@global"
 import { Observable, mergeMap } from "rxjs"
-import { UserMySqlDto } from "@shared"
 
 @Injectable()
 export default class VerifyGoogleAccessTokenInterceptor
