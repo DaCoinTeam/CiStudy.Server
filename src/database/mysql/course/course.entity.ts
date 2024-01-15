@@ -1,23 +1,14 @@
 import {
-	AfterLoad,
-	BeforeInsert,
-	BeforeUpdate,
 	Column,
 	Entity,
-	JoinColumn,
-	JoinTable,
-	ManyToMany,
-	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm"
-import { MaterialEntity } from "../material"
-import { SectionEntity } from "../section"
-import { TopicEntity } from "../topic/topic.entity"
-import UserEntity from "../user/user.entity"
-import PostEntity from "../post/post.entity"
 
-export enum VerifyStatus {
+import PostEntity from "../post/post.entity"
+import EnrolledEntity from "../enrolled-info/enrolled-info.entity"
+
+export enum VerifiedStatus {
   Pending = "Pending",
   Approved = "Approved",
   Rejected = "Rejected",
@@ -52,8 +43,8 @@ export default class CourseEntity {
   @Column({ type: "float", default: 0 })
   	price: number
 
-  @Column({ type: "enum", enum: VerifyStatus, default: null })
-  	verifyStatus: VerifyStatus
+  @Column({ type: "enum", enum: VerifiedStatus, default: null })
+  	verifiedStatus: VerifiedStatus
 
   @Column({ default: true })
   	isDraft: boolean
@@ -76,6 +67,9 @@ export default class CourseEntity {
 
   @OneToMany(() => PostEntity, (post) => post.course)
   	posts: PostEntity[]
+
+	@OneToMany(() => EnrolledEntity, (enrolled) => enrolled.course)
+  	enrolledInfos: EnrolledEntity[]
 
 	// --- relations ---
 

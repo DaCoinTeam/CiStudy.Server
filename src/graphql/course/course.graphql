@@ -2,7 +2,7 @@ input FindByCourseIdRequest{
 	courseId: ID!
 }
 
-enum VerifyStatus {
+enum VerifiedStatus {
   Pending,
   Approved,
   Rejected
@@ -18,7 +18,7 @@ type FindByCourseIdResponse {
   	thumbnailUrl: String
   	description: String
   	price: Float
-  	verifyStatus: VerifyStatus
+  	verifiedStatus: VerifiedStatus
   	isDraft: Boolean
   	creatorId: ID
   	isDeleted: String

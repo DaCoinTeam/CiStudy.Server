@@ -1,5 +1,5 @@
 // verifiedStatus
-export enum VerifyStatus {
+export enum VerifiedStatus {
   Pending = "Pending",
   Approved = "Approved",
   Rejected = "Rejected",
@@ -11,7 +11,7 @@ export interface CourseDto {
   title: string;
   description: string;
   price: number;
-  verifyStatus: VerifyStatus;
+  verifiedStatus: VerifiedStatus;
   isDraft: boolean;
   isPublished: boolean;
   studentId: string;

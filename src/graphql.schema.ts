@@ -20,7 +20,7 @@ export enum UserKind {
     Facebook = "Facebook"
 }
 
-export enum VerifyStatus {
+export enum VerifiedStatus {
     Pending = "Pending",
     Approved = "Approved",
     Rejected = "Rejected"
@@ -91,7 +91,7 @@ export class FindByCourseIdResponse {
     thumbnailUrl?: Nullable<string>;
     description?: Nullable<string>;
     price?: Nullable<number>;
-    verifyStatus?: Nullable<VerifyStatus>;
+    verifiedStatus?: Nullable<VerifiedStatus>;
     isDraft?: Nullable<boolean>;
     creatorId?: Nullable<string>;
     isDeleted?: Nullable<string>;
