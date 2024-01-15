@@ -26,7 +26,6 @@ implements NestInterceptor
 		return next.handle().pipe(
 			mergeMap(async (data) => {
 				return await this.tokenManagerService.generateAuthTokens(
-					data.userId,
 					data,
 					clientId,
 				)

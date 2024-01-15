@@ -6,6 +6,7 @@ import {
 	UnauthorizedException,
 } from "@nestjs/common"
 import { JsonWebTokenError, JwtService } from "@nestjs/jwt"
+import { Payload } from "@shared"
 
 @Injectable()
 export default class TokenManagerService {
@@ -15,9 +16,9 @@ export default class TokenManagerService {
 	) {}
 
 	// rất ít khi xài bởi vì guard lo hết rồi. làm thủ công thì cần
-	async verifyToken<T extends object>(token: string): Promise<T> {
+	async verifyToken(token: string): Promise<Payload> {
 		try {
-			return await this.jwtService.verifyAsync<T>(token)
+			return await this.jwtService.verifyAsync<Payload>(token)
 		} catch (ex) {
 			if (ex instanceof JsonWebTokenError) {
 				throw new UnauthorizedException("Invalid token.")
@@ -26,21 +27,19 @@ export default class TokenManagerService {
 	}
 
 	//cái này là cái check map
-	async validateRefreshToken(
-		userId: string,
-		clientId: string,
-	): Promise<void> {
+	async validateRefreshToken(userId: string, clientId: string): Promise<void> {
 		const refresh = await this.sessionMySqlService.findByUserIdAndClientId(
 			userId,
 			clientId,
 		)
 		console.log(refresh)
-		if (refresh === null) throw new UnauthorizedException("Refresh token not found.")
+		if (refresh === null)
+			throw new UnauthorizedException("Refresh token not found.")
 		if (refresh.isDisabled)
 			throw new UnauthorizedException("Invalid refresh token.")
 	}
 
-	private async generateToken<T extends object>(
+	private async generateToken<T extends Payload>(
 		data: T,
 		type: TokenType = TokenType.Access,
 	) {
@@ -52,7 +51,7 @@ export default class TokenManagerService {
 		const expiresIn = typeToExpiresIn[type]
 
 		return await this.jwtService.signAsync(
-			{ ...data },
+			{ userId: data.userId },
 			{
 				expiresIn,
 				secret: jwtConfig().secret,
@@ -61,19 +60,18 @@ export default class TokenManagerService {
 	}
 
 	// cho phép mày triển 1 cái clientId (optials), nếu browser có gửi clientId thì mới cái entry refresh vào db
-	async generateAuthTokens<T extends object>(
-		userId: string,
+	async generateAuthTokens<T extends Payload>(
 		data: T,
 		clientId?: string,
 	): Promise<AuthTokens> {
-		const accessToken = await this.generateToken<T>(data)
-		const refreshToken = await this.generateToken<T>(data, TokenType.Refresh)
+		const accessToken = await this.generateToken(data)
+		const refreshToken = await this.generateToken(data, TokenType.Refresh)
 
 		if (clientId) {
 			const createOrUpdateResult =
         await this.sessionMySqlService.createOrUpdate({
         	clientId,
-        	userId
+        	userId: data.userId,
         })
 
 			if (!createOrUpdateResult)
@@ -95,7 +93,7 @@ export default class TokenManagerService {
 		clientId?: string,
 	): Promise<Response<T>> {
 		const tokens = refresh
-			? await this.generateAuthTokens(userId, data, clientId)
+			? await this.generateAuthTokens({ userId }, clientId)
 			: undefined
 
 		return {

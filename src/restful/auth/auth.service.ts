@@ -82,7 +82,7 @@ export default class AuthService {
 	async verifyRegistration({
 		token,
 	}: VerifyRegistrationRequestDto) {
-		const decoded = await this.tokenManagerService.verifyToken<UserMySqlDto>(token)
+		const decoded = await this.tokenManagerService.verifyToken(token)
 		const userId = decoded.userId
 		if (!userId) throw new NotFoundException("User not found.")
 
