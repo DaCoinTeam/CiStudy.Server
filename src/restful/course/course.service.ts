@@ -2,19 +2,39 @@ import { CourseMySqlService } from "@database"
 import { Injectable } from "@nestjs/common"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
 import { UserDto } from "@shared"
-
+import { FirebaseService } from "@global"
 
 @Injectable()
 export default class CourseService {
-	constructor(private readonly courseMySqlService: CourseMySqlService) {}
+	constructor(
+    private readonly courseMySqlService: CourseMySqlService,
+    private readonly firebaseSerive: FirebaseService,
+	) {}
 
 	async create(
 		user: UserDto,
+		files: {
+      thumbnailUrl?: Express.Multer.File[];
+      previewVideoUrl?: Express.Multer.File[];
+    },
 		body: CreateRequestDto,
 	): Promise<CreateReponseDto | null> {
-		console.log("service")
+		if (files.thumbnailUrl && files.thumbnailUrl[0]) {
+			const url = await this.firebaseSerive.uploadFile(
+				files.thumbnailUrl[0].buffer,
+				files.thumbnailUrl[0].mimetype.split("/")[1],
+			)
+			body.thumbnailUrl = url
+		}
+
+		if (files.previewVideoUrl && files.previewVideoUrl[0]) {
+			const url = await this.firebaseSerive.uploadFile(
+				files.previewVideoUrl[0].buffer,
+				files.previewVideoUrl[0].mimetype.split("/")[1],
+			)
+			body.previewVideoUrl = url
+		}
 		body.creatorId = user.userId
-		
 		return await this.courseMySqlService.create(body)
 	}
 
@@ -26,7 +46,7 @@ export default class CourseService {
 		return await this.courseMySqlService.findAll()
 	}
 
-	// async delete(courseId: string) {
-	// 	return awa2it this.courseMySqlService.delete(courseId)
-	// }
+	async delete(courseId: string) {
+		return await this.courseMySqlService.delete(courseId)
+	}
 }

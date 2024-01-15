@@ -1,4 +1,7 @@
 import {
+	AfterLoad,
+	BeforeInsert,
+	BeforeUpdate,
 	Column,
 	Entity,
 	JoinColumn,
@@ -12,7 +15,6 @@ import { MaterialEntity } from "../material"
 import { SectionEntity } from "../section"
 import { TopicEntity } from "../topic/topic.entity"
 import UserEntity from "../user/user.entity"
-import { Exclude, Expose } from "class-transformer"
 import PostEntity from "../post/post.entity"
 
 export enum VerifyStatus {
@@ -47,7 +49,7 @@ export default class CourseEntity {
   @Column({ type: "varchar", length: 1000 })
   	description: string
 
-  @Column({ type: "float", default: 0})
+  @Column({ type: "float", default: 0 })
   	price: number
 
   @Column({ type: "enum", enum: VerifyStatus, default: null })
@@ -56,7 +58,7 @@ export default class CourseEntity {
   @Column({ default: true })
   	isDraft: boolean
 
-  @Column({ type: "uuid", length: 36,  })
+  @Column({ type: "uuid", length: 36 })
   	creatorId: string
 
   @Column({ default: false })
@@ -65,8 +67,9 @@ export default class CourseEntity {
   @Column({ type: "varchar", length: 255 })
   	previewVideoUrl: string
 
-  @Column({ type: "json", default: null })
-  	targets: string[]
+  @Column({ type: "varchar", length: 255, default: null })
+  	targets: string
+
 
   @Column({ type: "json", default: null })
   	includes: CourseIncludes

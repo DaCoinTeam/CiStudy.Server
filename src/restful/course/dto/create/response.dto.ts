@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { Expose } from "class-transformer"
+import { Exclude, Expose } from "class-transformer"
 
 export enum VerifyStatus {
   Pending = "Pending",
@@ -23,7 +23,7 @@ export default class CreateReponseDto {
   @ApiProperty()
   	price: number
   
-  @Expose()
+  @Exclude()
   @ApiProperty()
   	verifyStatus: VerifyStatus
 
@@ -34,7 +34,7 @@ export default class CreateReponseDto {
   	previewVideoUrl: string
 
   @ApiProperty()
-  	targets: string[]
+  	targets: string
 
   @ApiProperty()
   	includes: CourseIncludes

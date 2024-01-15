@@ -1,40 +1,74 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsNotEmpty, IsNumber, IsUrl, Max, Min } from "class-validator"
+import { Transform } from "class-transformer"
+import { IsJSON, IsNotEmpty } from "class-validator"
 
 interface CourseIncludes {
-    time: number;
+  time: number;
 }
 export default class CreateRequestDto {
-    @IsNotEmpty()
-    @ApiProperty({ example: "Khóa học XYZ" })
-    	title: string
-    
-    @IsNotEmpty()
-    @IsUrl()
-    @ApiProperty({ example: "https://www.facebook.com/" })
-    	thumbnailUrl: string
+  @IsNotEmpty()
+  @ApiProperty()
+  	title: string
 
-    @IsNotEmpty()
-    @ApiProperty({ example: "The most advanced and modern CSS course on the internet: master flexbox, CSS Grid, responsive design, and so much more." })
-    	description: string
-    
-    @IsNotEmpty()
-    @IsNumber()
-    @Min(0)
-    @Max(10000000)
-    @ApiProperty({ example: "129999" })
-    	price: number
-        
-    // @ApiProperty()
-    creatorId: string
+  @ApiProperty({ type: "string",  format: "binary" })
+  	thumbnailUrl: string
 
-    @IsUrl()
-    @ApiProperty({ example: "https://www.facebook.com/" })
-    	previewVideoUrl: string
+  @IsNotEmpty()
+  @ApiProperty()
+  	description: string
 
-    @ApiProperty({ example: ["Target 1", "Target 2", "Target 3", "Target 4"] })
-    	targets: string[]
-    
-    @ApiProperty({ example: {"time": "9hour", "artical": "2"} })
-    	includes: CourseIncludes
+  @IsNotEmpty()
+  @Transform(({ value }) => parseFloat(value))
+  @ApiProperty()
+  	price: number
+
+  // @ApiProperty()
+  creatorId: string
+
+  @ApiProperty({format: "binary"})
+  	previewVideoUrl: string
+
+  @ApiProperty()
+  	targets: string
+
+  @IsJSON()
+  @ApiProperty()
+  	includes: CourseIncludes
+}
+
+export const swaggerSchema = {
+	type: "object",
+	properties: {
+		thumbnailUrl: {
+			type: "string",
+			format: "binary",
+		},
+		title: {
+			type: "string",
+		},
+		description: {
+			type: "string",
+		},
+		price: {
+			type: "number",
+		},
+		previewVideoUrl: {
+			type: "string",
+			format: "binary",
+		},
+		targets: {
+			type: "array",
+			items: {
+				type: "string",
+			},
+		},
+		includes: {
+			type: "object",
+			properties: {
+				property1: {
+					type: "string",
+				},
+			},
+		},
+	}
 }
