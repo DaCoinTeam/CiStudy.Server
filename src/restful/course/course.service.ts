@@ -19,21 +19,29 @@ export default class CourseService {
     },
 		body: CreateRequestDto,
 	): Promise<CreateReponseDto | null> {
-		if (files.thumbnailUrl && files.thumbnailUrl[0]) {
-			const url = await this.firebaseSerive.uploadFile(
-				files.thumbnailUrl[0].buffer,
-				files.thumbnailUrl[0].mimetype.split("/")[1],
-			)
-			body.thumbnailUrl = url
+		const promises : Promise<void>[] = []
+		const thumbnailPromise = async () => {
+			if (files.thumbnailUrl && files.thumbnailUrl[0]) {
+				const url = await this.firebaseSerive.uploadFile(
+					files.thumbnailUrl[0].buffer,
+					files.thumbnailUrl[0].mimetype.split("/")[1],
+				)
+				body.thumbnailUrl = url
+			}
 		}
+		promises.push(thumbnailPromise())
+		const previewVideoUrlPromise = async () => {
+			if (files.previewVideoUrl && files.previewVideoUrl[0]) {
+				const url = await this.firebaseSerive.uploadFile(
+					files.previewVideoUrl[0].buffer,
+					files.previewVideoUrl[0].mimetype.split("/")[1],
+				)
+				body.previewVideoUrl = url
+			}
+		}
+		promises.push(previewVideoUrlPromise())
+		await Promise.all(promises)
 
-		if (files.previewVideoUrl && files.previewVideoUrl[0]) {
-			const url = await this.firebaseSerive.uploadFile(
-				files.previewVideoUrl[0].buffer,
-				files.previewVideoUrl[0].mimetype.split("/")[1],
-			)
-			body.previewVideoUrl = url
-		}
 		body.creatorId = user.userId
 		return await this.courseMySqlService.create(body)
 	}

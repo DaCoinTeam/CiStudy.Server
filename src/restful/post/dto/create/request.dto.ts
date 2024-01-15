@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
+import { SchemaObject } from "@nestjs/swagger/dist/interfaces/open-api-spec.interface"
 import { IsNotEmpty, IsString, IsUUID, MinLength } from "class-validator"
 
 export default class CreatePostDto {
@@ -36,4 +37,20 @@ export class PostContentRequestDto {
   
   @ApiProperty()
   	contentType: ContentType
+}
+
+export const createSchema : SchemaObject = {
+	type: "object",
+	properties: {
+		postContent: {
+			type: "array",
+			properties: {
+				item: {
+					
+					type: "file",
+					format: "binary"
+				}
+			}
+		}
+	}
 }

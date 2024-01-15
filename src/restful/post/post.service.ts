@@ -8,7 +8,7 @@ export default class PostService {
 	constructor(
     private readonly postMySqlService: PostMySqlService
 	) {}
-
+		
 	async create(user: UserDto, body: CreateRequestDto) {  //: Promise<CreateResponseDto>
 		try {
 			const post: Partial<PostDto> = {
