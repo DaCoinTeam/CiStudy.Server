@@ -6,38 +6,29 @@ import {
 } from "@nestjs/common"
 import { Response, TokenManagerService } from "@global"
 import { Observable, mergeMap } from "rxjs"
-import { UserMySqlDto } from "@shared"
+import { SignInResponseDto } from "../dto"
 
 @Injectable()
-export default class AuthInterceptor<T extends object>
-implements NestInterceptor<T, Response<T>>
+export default class SignInInterceptor
+implements NestInterceptor
 {
 	constructor(private readonly tokenManagerService: TokenManagerService) {}
 
 	async intercept(
 		context: ExecutionContext,
 		next: CallHandler,
-	): Promise<Observable<Response<T>>> {
+	): Promise<Observable<Response<SignInResponseDto>>> {
 		const request = context.switchToHttp().getRequest()
 		const query = request.query
 
-		const user = request.user as UserMySqlDto
 		const clientId = query.clientId as string | undefined
-		const refresh = query.refresh === "true"
-
-		if (refresh) {
-			await this.tokenManagerService.validateRefreshToken(
-				user.userId,
-				clientId,
-			)
-		}
 
 		return next.handle().pipe(
 			mergeMap(async (data) => {
-				return await this.tokenManagerService.generateResponse<T>(
-					user.userId,
+				return await this.tokenManagerService.generateResponse<SignInResponseDto>(
+					data.userId,
 					data,
-					refresh,
+					true,
 					clientId,
 				)
 			}),

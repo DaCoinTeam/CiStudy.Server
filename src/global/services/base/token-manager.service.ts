@@ -91,10 +91,10 @@ export default class TokenManagerService {
 	async generateResponse<T extends object>(
 		userId: string,
 		data: T,
-		authTokensRequested: boolean = false,
+		refresh: boolean = false,
 		clientId?: string,
 	): Promise<Response<T>> {
-		const tokens = authTokensRequested
+		const tokens = refresh
 			? await this.generateAuthTokens(userId, data, clientId)
 			: undefined
 

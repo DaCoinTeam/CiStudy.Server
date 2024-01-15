@@ -1,15 +1,5 @@
-export enum UserRole {
-    User = "User",
-    Moderator = "Moderator",
-    Administrator = "Administrator",
-  }
-  
-export enum UserKind {
-    Local = "Local",
-    Google = "Google",
-    Facebook = "Facebook",
-  }
-  
+import { UserRole, UserKind } from "@shared"
+
 export default class SignInResponseDto {
 	userId: string
 	email?: string

@@ -10,7 +10,6 @@ import {
 	SignInRequestDto,
 	SignInResponseDto,
 	SignUpRequestDto,
-	SignUpResponseDto,
 	VerifyGoogleAccessTokenRequestDto,
 	VerifyGoogleAccessTokenResponseDto,
 	VerifyRegistrationRequestDto,
@@ -35,17 +34,17 @@ export default class AuthService {
     private readonly firebaseService: FirebaseService,
 	) {}
 
-	async signUp(params: SignUpRequestDto): Promise<SignUpResponseDto> {
-		const found = await this.userMySqlService.findByEmail(params.email)
+	async signUp(body: SignUpRequestDto): Promise<string> {
+		const found = await this.userMySqlService.findByEmail(body.email)
 		if (found)
 			throw new ConflictException(
-				`User with email ${params.email} has existed.`,
+				`User with email ${body.email} has existed.`,
 			)
-		params.password = this.sha256Service.createHash(params.password)
-		const created = await this.userMySqlService.create(params)
+		body.password = this.sha256Service.createHash(body.password)
+		const created = await this.userMySqlService.create(body)
 
-		await this.mailerService.sendMail(created.userId, params.email)
-		return created
+		await this.mailerService.sendMail(created.userId, body.email)
+		return `An user with id ${created.userId} has been created`  
 	}
 
 	async signIn(body: SignInRequestDto): Promise<SignInResponseDto> {
