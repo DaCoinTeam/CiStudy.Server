@@ -8,7 +8,6 @@ export default class CourseService {
 	constructor(@InjectRepository(CourseEntity) private readonly courseRepository: Repository<CourseEntity>) {}
     
 	async create(course: Partial<CourseEntity>): Promise<CourseEntity> {
-		console.log("repo")
 		const newCourse = this.courseRepository.create(course)
 		return this.courseRepository.save(newCourse)
 	}

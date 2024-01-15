@@ -14,30 +14,35 @@ export default class FirebaseService {
 	bucket: Bucket
 	constructor() {
 		const adminConfig: ServiceAccount = {
-		  projectId: thirdPartyConfig().firebase.projectId,
-		  privateKey: thirdPartyConfig().firebase.privateKey.replace(/\\n/g, "\n"),
-		  clientEmail: thirdPartyConfig().firebase.clientEmail,
+			projectId: thirdPartyConfig().firebase.projectId,
+			privateKey: thirdPartyConfig().firebase.privateKey.replace(/\\n/g, "\n"),
+			clientEmail: thirdPartyConfig().firebase.clientEmail,
 		}
-	  
-		let app: admin.app.App
-	  
-		if (!admin.apps.length) {
-		  app = admin.initializeApp({
-				credential: admin.credential.cert(adminConfig),
-		  })
-		} else {
-		  app = admin.app() // if default app already exists, use it.
-		}
-	  
-		this.auth = firebase.auth(app)
-		this.bucket = firebase.storage(app).bucket("supple-century-363201.appspot.com")
-	  }
 
-	async verifyGoogleAccessToken(token: string) : Promise<DecodedIdToken> {
+		let app: admin.app.App
+
+		if (!admin.apps.length) {
+			app = admin.initializeApp({
+				credential: admin.credential.cert(adminConfig),
+			})
+		} else {
+			app = admin.app() // if default app already exists, use it.
+		}
+
+		this.auth = firebase.auth(app)
+		this.bucket = firebase
+			.storage(app)
+			.bucket("supple-century-363201.appspot.com")
+	}
+
+	async verifyGoogleAccessToken(token: string): Promise<DecodedIdToken> {
 		return await this.auth.verifyIdToken(token)
 	}
 
-	async uploadFile(buffer: Buffer, extensions: "jpg" | "png" | "jpeg" | "json" = "png") {
+	async uploadFile(
+		buffer: Buffer,
+		extensions: string,
+	) {
 		const fileName = uuidv4()
 		const created = this.bucket.file(`${fileName}.${extensions}`)
 		await created.save(buffer)

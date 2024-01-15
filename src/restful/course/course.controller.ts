@@ -6,7 +6,7 @@ import {
 	Param,
 	ParseUUIDPipe,
 	Post,
-	UploadedFile,
+	UploadedFiles,
 	UseGuards,
 	UseInterceptors,
 } from "@nestjs/common"
@@ -24,72 +24,41 @@ import { CreateReponseDto, CreateRequestDto } from "./dto"
 import { AuthInterceptor, JwtAuthGuard, User } from "../shared"
 import { UserDto } from "@shared"
 import CourseService from "./course.service"
-import { FileInterceptor } from "@nestjs/platform-express"
-import { FirebaseService } from "@global"
+import { FileFieldsInterceptor } from "@nestjs/platform-express"
+import { swaggerSchema } from "./dto/create/request.dto"
 
 @ApiTags("Course")
 @Controller("api/course")
 export default class CourseController {
-	constructor(private readonly courseService: CourseService,
-		private readonly firebaseSerive: FirebaseService) {}
+	constructor(private readonly courseService: CourseService) {}
 
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: CreateReponseDto })
   @ApiConsumes("multipart/form-data")
   @ApiBody({
   	description: "Course File",
-  	schema: {
-  		type: "object",
-  		properties: {
-  			thumbnailUrl: {
-  				type: "string",
-  				format: "binary",
-  			},
-  			title: {
-  				type: "string",
-  			},
-  			description: {
-  				type: "string",
-  			},
-  			price: {
-  				type: "number",
-  			},
-  			previewVideoUrl: {
-  				type: "string",
-  				format: "binary",
-  			},
-  			targets: {
-  				type: "array",
-  				items: {
-  					type: "string",
-  				},
-  			},
-  			includes: {
-  				type: "object",
-  				properties: {
-  					property1: {
-  						type: "string",
-  					},
-  				},
-  			},
-  		},
-  	},
+  	schema: swaggerSchema,
   })
   @ApiBadRequestResponse()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(AuthInterceptor)
   @Post()
-  @UseInterceptors(FileInterceptor("thumbnailUrl"))
+  @UseInterceptors(
+  	FileFieldsInterceptor([
+  		{ name: "thumbnailUrl", maxCount: 1 },
+  		{ name: "previewVideoUrl", maxCount: 1 },
+  	]),
+  )
 	async create(
     @User() user: UserDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles()
+    	files: {
+      thumbnailUrl?: Express.Multer.File[];
+      previewVideoUrl?: Express.Multer.File[];
+    },
     @Body() body: CreateRequestDto,
 	) {
-		console.log(file)
-
-		const url = this.firebaseSerive.uploadFile(file.buffer)
-		console.log(url)
-		return await this.courseService.create(user, body)
+		return await this.courseService.create(user, files, body)
 	}
 
   @ApiOkResponse({ type: CreateRequestDto })
@@ -110,11 +79,6 @@ export default class CourseController {
   @Delete(":id")
   @ApiBadRequestResponse()
   async delete(@Param("id", ParseUUIDPipe) id: string) {
-  	// return await this.courseService.delete(id)
+  	return await this.courseService.delete(id)
   }
-//   @Delete(":id")
-//   @ApiBadRequestResponse()
-//   async delete(@Param("id", ParseUUIDPipe) id: string) {
-//   	return await this.courseService.delete(id)
-//   }
 }
