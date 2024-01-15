@@ -2,7 +2,6 @@ import {
 	Column,
 	Entity,
 	JoinColumn,
-	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
@@ -30,12 +29,12 @@ export default class PostEntity {
   @JoinColumn({ name: "courseId" })
   	course: CourseEntity
 
-  @OneToMany(() => PostContentEntity, (postContent) => postContent.post)
+  @OneToMany(() => PostContentEntity, (postContent) => postContent.post, { cascade: true })
   	postContents: PostContentEntity[]
 
   @OneToMany(() => PostCommentEntity, (postComment) => postComment.post)
   	postComments: PostCommentEntity[]
 
-	@OneToMany(() => PostLikeEntity, (postLike) => postLike.post)
-		postLikes: PostLikeEntity[]
+  @OneToMany(() => PostLikeEntity, (postLike) => postLike.post)
+  	postLikes: PostLikeEntity[]
 }

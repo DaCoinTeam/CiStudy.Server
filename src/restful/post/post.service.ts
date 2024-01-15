@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common"
 import { PostMySqlService } from "@database"
-import { CreateRequestDto, CreateResponseDto } from "./dto"
-import { PostDto, UserDto } from "@shared"
+import { CreateRequestDto } from "./dto"
+import { UserDto } from "@shared"
 
 @Injectable()
 export default class PostService {
@@ -9,14 +9,16 @@ export default class PostService {
     private readonly postMySqlService: PostMySqlService
 	) {}
 
-	async create(
-		user: UserDto,
-		body: CreateRequestDto
-	): Promise<CreateResponseDto> {
-		const post: Partial<PostDto> = {
-			...body,
-			creatorId: user.userId,
+	async create(user: UserDto, body: CreateRequestDto) {  //: Promise<CreateResponseDto>
+		try {
+			const post: Partial<CreateRequestDto> = {
+				...body,
+				creatorId: user.userId,
+				// postContents: body.postContents
+			}
+			return await this.postMySqlService.create(post)	
+		} catch (error) {
+			console.log(error)
 		}
-		return await this.postMySqlService.create(post)	
 	}
 }

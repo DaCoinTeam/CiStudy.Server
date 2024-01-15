@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { IsNotEmpty, IsUUID, MinLength } from "class-validator"
-import { PostContent } from "../shared"
+import { PostContentDto } from "src/shared/dtos/post-content.dto"
 
-export default class CreateRequestDto {
+export default class CreatePostDto {
   @IsNotEmpty()
   @MinLength(20)
   @ApiProperty({
@@ -18,5 +18,7 @@ export default class CreateRequestDto {
   	courseId: string
 
   @ApiProperty()
-  	postContents: PostContent[]
+  	postContents: PostContentDto[]
+
+  creatorId: string
 }
