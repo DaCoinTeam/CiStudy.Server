@@ -1,7 +1,7 @@
 import { CourseMySqlService } from "@database"
 import { Injectable } from "@nestjs/common"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
-import { UserDto } from "@shared"
+import { UserMySqlDto } from "@shared"
 import { FirebaseService } from "@global"
 
 @Injectable()
@@ -12,7 +12,7 @@ export default class CourseService {
 	) {}
 
 	async create(
-		user: UserDto,
+		user: UserMySqlDto,
 		files: {
       thumbnailUrl?: Express.Multer.File[];
       previewVideoUrl?: Express.Multer.File[];

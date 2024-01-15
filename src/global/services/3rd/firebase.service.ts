@@ -41,10 +41,9 @@ export default class FirebaseService {
 
 	async uploadFile(
 		buffer: Buffer,
-		extensions: string,
+		fileName: string,
 	) {
-		const fileName = uuidv4()
-		const created = this.bucket.file(`${fileName}.${extensions}`)
+		const created = this.bucket.file(`${uuidv4()}-${fileName}`)
 		await created.save(buffer)
 		return getDownloadURL(created)
 	}

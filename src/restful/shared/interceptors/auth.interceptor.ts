@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common"
 import { Response, TokenManagerService } from "@global"
 import { Observable, mergeMap } from "rxjs"
-import { UserDto } from "@shared"
+import { UserMySqlDto } from "@shared"
 
 @Injectable()
 export default class AuthInterceptor<T extends object>
@@ -21,7 +21,7 @@ implements NestInterceptor<T, Response<T>>
 		const request = context.switchToHttp().getRequest()
 		const query = request.query
 
-		const user = request.user as UserDto
+		const user = request.user as UserMySqlDto
 		const clientId = query.clientId as string
 		const refresh = query.refresh === "true"
 

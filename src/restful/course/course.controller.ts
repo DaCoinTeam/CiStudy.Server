@@ -22,7 +22,7 @@ import {
 } from "@nestjs/swagger"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
 import { AuthInterceptor, JwtAuthGuard, User } from "../shared"
-import { UserDto } from "@shared"
+import { UserMySqlDto } from "@shared"
 import CourseService from "./course.service"
 import { FileFieldsInterceptor } from "@nestjs/platform-express"
 import { swaggerSchema } from "./dto/create/request.dto"
@@ -50,7 +50,7 @@ export default class CourseController {
   	]),
   )
 	async create(
-    @User() user: UserDto,
+    @User() user: UserMySqlDto,
     @UploadedFiles()
     	files: {
       thumbnailUrl?: Express.Multer.File[];

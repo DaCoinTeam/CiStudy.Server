@@ -20,6 +20,12 @@ export default class PostLikeEntity {
   })
   	createdAt: Date
 
+    @Column({
+    	type: "boolean",
+    	default: false
+    })
+    	isDeleted: boolean
+
       @ManyToOne(() => UserEntity, (user) => user.postLikes)
       @JoinColumn({ name: "userId" })
       	user: UserEntity

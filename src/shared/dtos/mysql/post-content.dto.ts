@@ -6,7 +6,7 @@ export enum ContentType {
     Label = "Label"
   }
 
-export interface PostContentDto {
+export default interface PostContentDto {
     postContentId : string;
     index: number;
     content: string;

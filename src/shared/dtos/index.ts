@@ -1,4 +1,8 @@
-export * from "./user.dto"
-export * from "./course.dto"
-export * from "./post.dto"
+export * from "./mysql"
 export * from "./payload.dto"
+export * from "./files.dto"
+
+import Payload from "./payload.dto"
+import Files from "./files.dto"
+
+export { Payload, Files }

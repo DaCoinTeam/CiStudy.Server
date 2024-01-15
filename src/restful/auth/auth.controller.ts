@@ -3,7 +3,7 @@ import { ApiTags } from "@nestjs/swagger"
 import { SignInRequestDto, SignUpRequestDto, SignUpResponseDto } from "./dto"
 import UserService from "./auth.service"
 import { SignUpGuard } from "./guards"
-import { UserDto } from "@shared"
+import { UserMySqlDto } from "@shared"
 import { AuthInterceptor, JwtAuthGuard, User } from "../shared"
 import { SignInResponseDto } from "./dto/sign-in"
 
@@ -36,7 +36,7 @@ export default class AuthController {
   @Get("init")
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(AuthInterceptor)
-  async init(@User() user: UserDto){
+  async init(@User() user: UserMySqlDto){
   	return await this.userService.init(user)
   }
 }

@@ -20,7 +20,7 @@ import {
 } from "./dtos"
 import { JwtAuthGuard } from "../shared/guard"
 import { User } from "../shared"
-import { UserDto } from "@shared"
+import { UserMySqlDto } from "@shared"
 
 const pubSub = new PubSub()
 
@@ -36,7 +36,7 @@ export default class AuthResolvers {
   @Query("signIn")
 	async signIn(
     @Args("input") args: SignInRequestDto,
-	): Promise<Response<UserDto>> {
+	): Promise<Response<UserMySqlDto>> {
 		const found = await this.userMySqlService.findByEmail(args.email)
 		if (!found) throw new NotFoundException("User not found.")
 		if (!this.sha256Service.verifyHash(args.password, found.password))
@@ -53,9 +53,9 @@ export default class AuthResolvers {
   @Query("init")
   @UseGuards(JwtAuthGuard)
   async init(
-    @User() user: UserDto,
+    @User() user: UserMySqlDto,
     @Args("input") args: InitRequestDto,
-  ): Promise<Response<UserDto>> {
+  ): Promise<Response<UserMySqlDto>> {
   	return this.tokenManagerService.generateResponse(
   		user.userId,
   		user,
@@ -67,7 +67,7 @@ export default class AuthResolvers {
   @Mutation("verifyGoogleAccessToken")
   async verifyGoogleAccessToken(
     @Args("input") args: VerifyGoogleAccessTokenRequestDto,
-  ): Promise<Response<UserDto>> {
+  ): Promise<Response<UserMySqlDto>> {
   	const decoded = await this.firebaseService.verifyGoogleAccessToken(
   		args.token,
   	)

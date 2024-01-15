@@ -10,7 +10,7 @@ export enum UserKind {
   Facebook = "Facebook",
 }
 
-export interface UserDto {
+export default interface UserDto {
 	userId: string
 	email?: string
 	password?: string

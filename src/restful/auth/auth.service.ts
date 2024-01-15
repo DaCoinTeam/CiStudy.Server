@@ -22,7 +22,7 @@ import {
 	TokenManagerService,
 } from "@global"
 import { UserMySqlService } from "@database"
-import { UserDto } from "@shared"
+import { UserMySqlDto } from "@shared"
 import { UserKind } from "./dto/verify-google-access-token"
 
 @Injectable()
@@ -56,7 +56,7 @@ export default class AuthService {
 		return found
 	}
 
-	async init(user: UserDto): Promise<InitResponseDto> {
+	async init(user: UserMySqlDto): Promise<InitResponseDto> {
 		return user
 	}
 
@@ -83,7 +83,7 @@ export default class AuthService {
 	async verifyRegistration({
 		token,
 	}: VerifyRegistrationRequestDto) {
-		const decoded = await this.tokenManagerService.verifyToken<UserDto>(token)
+		const decoded = await this.tokenManagerService.verifyToken<UserMySqlDto>(token)
 		const userId = decoded.userId
 		if (!userId) throw new NotFoundException("User not found.")
 

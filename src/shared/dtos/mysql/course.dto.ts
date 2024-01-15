@@ -5,7 +5,7 @@ export enum VerifiedStatus {
   Rejected = "Rejected",
 }
 
-export interface CourseDto {
+export default interface CourseDto {
   courseId: string;
   thumbnail: string;
   title: string;
