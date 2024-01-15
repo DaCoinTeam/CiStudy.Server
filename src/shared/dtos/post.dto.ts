@@ -5,5 +5,5 @@ export interface PostDto {
   title: string;
   creatorId: string;
   courseId: string;
-  postContent: PostContentDto[]
+  postContents: Partial<PostContentDto>[]
 }

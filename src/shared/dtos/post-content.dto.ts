@@ -7,7 +7,7 @@ export enum ContentType {
   }
 
 export interface PostContentDto {
-    // postContentId : string;
+    postContentId : string;
     index: number;
     content: string;
     contentType: ContentType;

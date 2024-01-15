@@ -30,7 +30,7 @@ export default class PostEntity {
   	course: CourseEntity
 
   @OneToMany(() => PostContentEntity, (postContent) => postContent.post, { cascade: true })
-  	postContents: PostContentEntity[]
+  	postContents: Partial<PostContentEntity>[]
 
   @OneToMany(() => PostCommentEntity, (postComment) => postComment.post)
   	postComments: PostCommentEntity[]
