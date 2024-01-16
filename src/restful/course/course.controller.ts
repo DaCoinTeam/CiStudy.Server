@@ -3,9 +3,13 @@ import {
 	Controller,
 	Delete,
 	Get,
+	Header,
+	Headers,
 	Param,
 	ParseUUIDPipe,
 	Post,
+	Req,
+	Res,
 	UploadedFiles,
 	UseGuards,
 	UseInterceptors,
@@ -61,14 +65,14 @@ export default class CourseController {
 		return await this.courseService.create(user, files, body)
 	}
 
-  @ApiOkResponse({ type: CreateRequestDto })
-  @ApiNotFoundResponse()
-  @Get(":id")
-  async getById(
-    @Param("id", ParseUUIDPipe) id: string,
-  ): Promise<CreateReponseDto> {
-  	return await this.courseService.findById(id)
-  }
+//   @ApiOkResponse({ type: CreateRequestDto })
+//   @ApiNotFoundResponse()
+//   @Get(":id")
+//   async getById(
+//     @Param("id", ParseUUIDPipe) id: string,
+//   ): Promise<CreateReponseDto> {
+//   	return await this.courseService.findById(id)
+//   }
 
   @Get()
   @ApiOkResponse()
@@ -80,5 +84,11 @@ export default class CourseController {
   @ApiBadRequestResponse()
   async delete(@Param("id", ParseUUIDPipe) id: string) {
   	return await this.courseService.delete(id)
+  }
+
+  @Get("stream")
+  async getFile(@Headers("range") range: string) {
+	console.log(range)
+  	return this.courseService.getFile()
   }
 }

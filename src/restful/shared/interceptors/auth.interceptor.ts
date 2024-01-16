@@ -31,7 +31,7 @@ implements NestInterceptor<T, Response<T>>
 				clientId,
 			)
 		}
-
+		//request ở đây nè
 		return next.handle().pipe(
 			mergeMap(async (data) => {
 				return await this.tokenManagerService.generateResponse<T>(

@@ -14,7 +14,7 @@ export default class MustEnrolledGuard implements CanActivate {
 	}
 
 	private isValid(user: UserMySqlDto) {
-        // fill logic here
-        return true
+		// fill logic here
+		return true
 	}
 }

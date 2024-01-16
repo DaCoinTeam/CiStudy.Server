@@ -1,8 +1,10 @@
 import { CourseMySqlService } from "@database"
-import { Injectable } from "@nestjs/common"
+import { Injectable, StreamableFile } from "@nestjs/common"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
 import { UserMySqlDto } from "@shared"
 import { FirebaseService } from "@global"
+import { createReadStream } from "fs"
+import { join } from "path"
 
 @Injectable()
 export default class CourseService {
@@ -56,5 +58,11 @@ export default class CourseService {
 
 	async delete(courseId: string) {
 		return await this.courseMySqlService.delete(courseId)
+	}
+
+	getFile(): StreamableFile {
+		console.log(join(process.cwd(), "2023-12-09_20-46-25.mkv"))
+		const file = createReadStream(join(process.cwd(), "2023-12-09_20-46-25.mkv"))
+		return new StreamableFile(file)
 	}
 }
