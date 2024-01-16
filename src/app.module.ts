@@ -1,12 +1,30 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common"
-import { appConfig, blockchainConfig, databaseConfig, paymentConfig } from "@config"
+import {
+	MiddlewareConsumer,
+	Module,
+	NestModule,
+	RequestMethod,
+} from "@nestjs/common"
+import {
+	appConfig,
+	blockchainConfig,
+	databaseConfig,
+	paymentConfig,
+} from "@config"
 import { ConfigModule } from "@nestjs/config"
 import { GraphQLModule } from "@nestjs/graphql"
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
 import { AuthGraphQLModule, CourseGraphQLModule } from "@graphql"
-import { AuthRestfulModule, CourseRestfulModule, PostRestfulModule } from "@restful"
-import { AuthMiddleware, GlobalServicesModule } from "@global"
+import {
+	AuthRestfulModule,
+	CourseRestfulModule,
+	PostRestfulModule,
+} from "@restful"
+import {
+	SetBearerTokenFromQueryMiddleware,
+	AttachCourseIdFromQueryMiddleware,
+	GlobalServicesModule,
+} from "@global"
 import { TypeOrmModule } from "@nestjs/typeorm"
 import { RouteInfo } from "@nestjs/common/interfaces"
 
@@ -35,7 +53,7 @@ import { RouteInfo } from "@nestjs/common/interfaces"
 				outputAs: "class",
 			},
 		}),
-		
+
 		//graphql
 		AuthGraphQLModule,
 		CourseGraphQLModule,
@@ -46,27 +64,22 @@ import { RouteInfo } from "@nestjs/common/interfaces"
 		PostRestfulModule,
 
 		//global
-		GlobalServicesModule
+		GlobalServicesModule,
 	],
 	controllers: [],
-	providers: [
-	],
+	providers: [],
 })
-export class AppModule implements NestModule{
+export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(SetBearerTokenFromQueryMiddleware).forRoutes()
 		consumer
-		  .apply(AuthMiddleware)
-		  .forRoutes(...routeInfos)
-	  }
-}
-
-const routeInfos: RouteInfo[] = [
-	{
-		path: "api/auth",
-		method: RequestMethod.GET
-	},
-	{
-		path: "api/course",
-		method: RequestMethod.GET
+			.apply(
+				SetBearerTokenFromQueryMiddleware,
+				AttachCourseIdFromQueryMiddleware,
+			)
+			.forRoutes({
+				path: "api/course/stream-preview",
+				method: RequestMethod.GET,
+			})
 	}
-]
+}

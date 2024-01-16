@@ -2,20 +2,30 @@ import { Injectable, StreamableFile } from "@nestjs/common"
 import { RequestOptions, get } from "https"
 import { Readable } from "node:stream"
 import { Response } from "express"
+import axios from "axios"
 
 @Injectable()
 export default class VideoStreamerService {
 	constructor() {}
 
+	private async getFileSizeFromUrl(url: string) {
+		try{
+			const response = await axios.head(url)
+			console.log(response.headers)
+			return parseInt(response.headers["Content-Length"].toString(), 10)
+		} catch(ex){
+			console.log(ex)
+		}
+	}
+
 	private createUrlReadStream(
 		url: string,
 		options?: ReadStreamOptions,
-	): UrlReadStreamData {
+	): Readable {
 		const readable = new Readable({
 			read() {},
 		})
 
-		let fileSize = 0
 		const requestOptions: RequestOptions = {
 			headers: {
 				Range: options ? `bytes=${options.start}-${options.end ?? ""}` : undefined,
@@ -23,8 +33,6 @@ export default class VideoStreamerService {
 		
 		}
 		get(url, requestOptions, (response) => {
-			fileSize = parseInt(response.headers["content-length"], 10)
-
 			response.on("data", (chunk) => {
 				readable.push(chunk)
 			})
@@ -34,25 +42,39 @@ export default class VideoStreamerService {
 		}).on("error", (error) => {
 			readable.emit("error", error)
 		})
-		return {
-			readable,
-			fileSize,
-		}
+
+		return readable
 	}
 
-	stream(url: string, range: string, res: Response): StreamableFile {
+	async stream(url: string, range: string, res: Response): Promise<StreamableFile> {
 		const parts = range.replace(/bytes=/, "").split("-")
 		const start = parseInt(parts[0], 10)
-		const end = parts[1] ? parseInt(parts[1], 10) : undefined
+		let end = parts[1] ? parseInt(parts[1], 10) : undefined
 
-		const { readable, fileSize } = this.createUrlReadStream(url, {
+		const fileSize = await this.getFileSizeFromUrl(url)
+
+		const readable = this.createUrlReadStream(url, {
 			start,
 			end,
 		})
 
+		if (!end) {
+			end = fileSize - 1
+		}
+
+		const chunksize = end - start + 1
+
+		console.log({
+			"Content-Range": `bytes ${start}-${end}/${fileSize}`,
+			"Accept-Ranges": "bytes",
+			"Content-Length": `${chunksize}`,
+			"Content-Type": "video/mp4"
+		})
 		res.set({
-			"Content-Range": `bytes ${start}-${end ?? ""}/${fileSize}`,
-			
+			"Content-Range": `bytes ${start}-${end}/${fileSize}`,
+			"Accept-Ranges": "bytes",
+			"Content-Length": `${chunksize}`,
+			"Content-Type": "video/mp4"
 		})
 		return new StreamableFile(readable)
 	}
@@ -61,9 +83,4 @@ export default class VideoStreamerService {
 export interface ReadStreamOptions {
   start: number;
   end: number;
-}
-
-export interface UrlReadStreamData {
-  readable: Readable;
-  fileSize: number;
 }

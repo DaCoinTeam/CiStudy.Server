@@ -8,4 +8,5 @@ import CourseService from "./course.service"
 	controllers: [CourseController],
 	providers: [CourseService],
 })
-export default class CourseModule {}
+export default class CourseModule {
+}

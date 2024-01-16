@@ -2,11 +2,11 @@ import { Injectable, NestMiddleware } from "@nestjs/common"
 import { Request, Response, NextFunction } from "express"
 
 @Injectable()
-export class AuthMiddleware implements NestMiddleware {
+export default class AttachCourseIdFromQueryMiddleware  implements NestMiddleware {
 	use(req: Request, res: Response, next: NextFunction) {
-		const token = req.query.token
-		if (token){
-			req.headers.authorization = `Bearer ${token}` 
+		const courseId = req.query.courseId
+		if (courseId ){
+			req.body.courseId = courseId
 		}
 		next()
 	}
