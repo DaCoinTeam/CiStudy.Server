@@ -59,7 +59,7 @@ export default class CourseService {
 	async delete(courseId: string) {
 		return await this.courseMySqlService.delete(courseId)
 	}
-	
+
 	async streamPreview(
 		courseId: string,
 		range: string,

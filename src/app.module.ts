@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common"
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common"
 import { appConfig, blockchainConfig, databaseConfig, paymentConfig } from "@config"
 import { ConfigModule } from "@nestjs/config"
 import { GraphQLModule } from "@nestjs/graphql"
@@ -6,8 +6,9 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
 import { AuthGraphQLModule, CourseGraphQLModule } from "@graphql"
 import { AuthRestfulModule, CourseRestfulModule, PostRestfulModule } from "@restful"
-import { GlobalServicesModule } from "@global"
+import { AuthMiddleware, GlobalServicesModule } from "@global"
 import { TypeOrmModule } from "@nestjs/typeorm"
+import { RouteInfo } from "@nestjs/common/interfaces"
 
 @Module({
 	imports: [
@@ -51,4 +52,21 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 	providers: [
 	],
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+	configure(consumer: MiddlewareConsumer) {
+		consumer
+		  .apply(AuthMiddleware)
+		  .forRoutes(...routeInfos)
+	  }
+}
+
+const routeInfos: RouteInfo[] = [
+	{
+		path: "api/auth",
+		method: RequestMethod.GET
+	},
+	{
+		path: "api/course",
+		method: RequestMethod.GET
+	}
+]
