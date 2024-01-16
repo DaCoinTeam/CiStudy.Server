@@ -1,8 +1,8 @@
 const extractTokenFromAuthorization = (authorization: string) => {
 	return authorization.split(" ")[1]
 }
-const extractUtils = {
+const extract = {
 	extractTokenFromAuthorization,
 }
 
-export default extractUtils
+export default extract
