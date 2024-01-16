@@ -5,6 +5,29 @@ const createSchema : SchemaObject = {
 	properties: {
 		data: {
 			type: "object",
+			properties: {
+				title: {
+					type: "string",
+				},
+				courseId: {
+					type: "string",
+				},
+				postContents: {
+					type: "array",
+					items: {
+						type: "object",
+						properties: {
+							content: {
+								type: "string",
+							},
+							contentType: {
+								type: "string",
+								enum: ["Image", "Video", "Text"],
+							},
+						},
+					},
+				},
+			},
 		},
 		files: {
 			type: "array",
