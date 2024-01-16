@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { SchemaObject } from "@nestjs/swagger/dist/interfaces/open-api-spec.interface";
 import { Transform } from "class-transformer"
 import { IsJSON, IsNotEmpty } from "class-validator"
 
@@ -37,7 +36,7 @@ export default class CreateRequestDto {
   	includes: CourseIncludes
 }
 
-export const swaggerSchema : SchemaObject = {
+export const swaggerSchema = {
 	type: "object",
 	properties: {
 		thumbnailUrl: {

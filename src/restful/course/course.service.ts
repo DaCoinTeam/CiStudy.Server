@@ -2,15 +2,15 @@ import { CourseMySqlService } from "@database"
 import { Injectable, StreamableFile } from "@nestjs/common"
 import { CreateReponseDto, CreateRequestDto } from "./dto"
 import { UserMySqlDto } from "@shared"
-import { FirebaseService } from "@global"
-import { createReadStream } from "fs"
-import { join } from "path"
+import { FirebaseService, VideoStreamerService } from "@global"
+import { Response } from "express"
 
 @Injectable()
 export default class CourseService {
 	constructor(
     private readonly courseMySqlService: CourseMySqlService,
     private readonly firebaseSerive: FirebaseService,
+    private readonly videoStreamerService: VideoStreamerService,
 	) {}
 
 	async create(
@@ -21,7 +21,7 @@ export default class CourseService {
     },
 		body: CreateRequestDto,
 	): Promise<CreateReponseDto | null> {
-		const promises : Promise<void>[] = []
+		const promises: Promise<void>[] = []
 		const thumbnailPromise = async () => {
 			if (files.thumbnailUrl && files.thumbnailUrl[0]) {
 				const url = await this.firebaseSerive.uploadFile(
@@ -59,10 +59,13 @@ export default class CourseService {
 	async delete(courseId: string) {
 		return await this.courseMySqlService.delete(courseId)
 	}
-
-	getFile(): StreamableFile {
-		console.log(join(process.cwd(), "2023-12-09_20-46-25.mkv"))
-		const file = createReadStream(join(process.cwd(), "2023-12-09_20-46-25.mkv"))
-		return new StreamableFile(file)
+	
+	async streamPreview(
+		courseId: string,
+		range: string,
+		res: Response,
+	): Promise<StreamableFile> {
+		const course = await this.courseMySqlService.findById(courseId)
+		return this.videoStreamerService.stream(course.previewVideoUrl, range, res)
 	}
 }
