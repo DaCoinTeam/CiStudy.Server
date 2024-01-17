@@ -57,7 +57,6 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		AuthRestfulModule,
 		CourseRestfulModule,
 		PostRestfulModule,
-		SectionRestfulModule,
 
 		//global
 		GlobalServicesModule,
