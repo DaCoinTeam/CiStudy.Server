@@ -1,4 +1,4 @@
-import EnrolledInfoService from "./enrolled-info.service"
-import EnrolledInfoModule from "./enrolled-info.module"
+import EnrolledInfoMySqlService from "./enrolled-info.service"
+import EnrolledInfoMySqlModule from "./enrolled-info.module"
 
-export { EnrolledInfoService, EnrolledInfoModule }
+export { EnrolledInfoMySqlService, EnrolledInfoMySqlModule }

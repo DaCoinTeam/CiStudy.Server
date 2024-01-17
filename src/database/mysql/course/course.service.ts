@@ -1,13 +1,15 @@
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import CourseEntity from "./course.entity"
-import { Repository } from "typeorm"
+import { DeepPartial, Repository } from "typeorm"
 
 @Injectable()
 export default class CourseService {
-	constructor(@InjectRepository(CourseEntity) private readonly courseRepository: Repository<CourseEntity>) {}
+	constructor(
+		@InjectRepository(CourseEntity) private readonly courseRepository: Repository<CourseEntity>,
+	) {}
     
-	async create(course: Partial<CourseEntity>): Promise<CourseEntity> {
+	async create(course: DeepPartial<CourseEntity>): Promise<CourseEntity> {
 		const newCourse = this.courseRepository.create(course)
 		return this.courseRepository.save(newCourse)
 	}

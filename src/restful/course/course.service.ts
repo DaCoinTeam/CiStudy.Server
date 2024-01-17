@@ -1,7 +1,8 @@
-import { CourseMySqlService } from "@database"
+import { DeepPartial } from "typeorm"
+import { CourseMySqlService, EnrolledInfoMySqlService } from "@database"
 import { Injectable, StreamableFile } from "@nestjs/common"
-import { CreateReponseDto, CreateRequestDto } from "./dto"
-import { UserMySqlDto } from "@shared"
+import { CreateReponseDto, CreateRequestDto, EnrollRequestDto } from "./dto"
+import { EnrolledInfoMySqlDto, UserMySqlDto } from "@shared"
 import { FirebaseService } from "@global"
 import { createReadStream } from "fs"
 import { join } from "path"
@@ -10,6 +11,7 @@ import { join } from "path"
 export default class CourseService {
 	constructor(
     private readonly courseMySqlService: CourseMySqlService,
+	private readonly enrolledInfoMySqlService: EnrolledInfoMySqlService,
     private readonly firebaseSerive: FirebaseService,
 	) {}
 
@@ -64,5 +66,14 @@ export default class CourseService {
 		console.log(join(process.cwd(), "2023-12-09_20-46-25.mkv"))
 		const file = createReadStream(join(process.cwd(), "2023-12-09_20-46-25.mkv"))
 		return new StreamableFile(file)
+	}
+
+	async enroll(user: UserMySqlDto, body: EnrollRequestDto) {
+		const enrolledInfo : DeepPartial<EnrolledInfoMySqlDto> = {
+			userId: user.userId,
+			...body,
+		}
+		const created = await this.enrolledInfoMySqlService.create(enrolledInfo)
+		return `Enroll successfully with id ${created.enrolledId}`
 	}
 }
