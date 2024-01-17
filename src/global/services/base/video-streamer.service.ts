@@ -37,7 +37,7 @@ export default class VideoStreamerService {
 		return readable
 	}
 
-	async stream(url: string, range: string, res: Response): Promise<StreamableFile> {
+	async getStreamableVideo(url: string, range: string, res: Response): Promise<StreamableFile> {
 		const parts = range.replace(/bytes=/, "").split("-")
 		const start = parseInt(parts[0], 10)
 		let end = parts[1] ? parseInt(parts[1], 10) : undefined

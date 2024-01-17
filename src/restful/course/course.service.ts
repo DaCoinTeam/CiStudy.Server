@@ -66,6 +66,6 @@ export default class CourseService {
 		res: Response,
 	): Promise<StreamableFile> {
 		const course = await this.courseMySqlService.findById(courseId)
-		return this.videoStreamerService.stream(course.previewVideoUrl, range, res)
+		return this.videoStreamerService.getStreamableVideo(course.previewVideoUrl, range, res)
 	}
 }
