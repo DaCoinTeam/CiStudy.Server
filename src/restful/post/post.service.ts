@@ -161,7 +161,7 @@ export default class PostService {
 			...data,
 			postId: fatherComment.postId,
 			userId: user.userId,
-			fatherCommentId: fatherComment.fatherCommentId,
+			fatherCommentId: fatherComment.postCommentId,
 			postCommentContents: postCommentContents.map((postCommentContent, index) => ({
 				...postCommentContent,
 				index,
