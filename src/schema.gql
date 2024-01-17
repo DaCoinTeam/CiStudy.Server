@@ -1,0 +1,32 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Course {
+  courseId: ID!
+  creatorId: String!
+  description: String!
+  includes: String
+  isDeleted: Boolean!
+  isDraft: Boolean!
+  previewVideoUrl: String
+  price: Float!
+  targets: String
+  thumbnailUrl: String
+  title: String!
+  verifiedStatus: VerifiedStatus
+}
+
+input FindOneInput {
+  courseId: ID!
+}
+
+type Query {
+  findOne(input: FindOneInput!): Course!
+}
+
+enum VerifiedStatus {
+  Approved
+  Pending
+  Rejected
+}

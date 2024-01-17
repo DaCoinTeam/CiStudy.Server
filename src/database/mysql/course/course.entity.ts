@@ -1,12 +1,8 @@
-import {
-	Column,
-	Entity,
-	OneToMany,
-	PrimaryGeneratedColumn,
-} from "typeorm"
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 
 import PostEntity from "../post/post.entity"
 import EnrolledEntity from "../enrolled-info/enrolled-info.entity"
+import SectionEntity from "../section/section.entity"
 
 export enum VerifiedStatus {
   Pending = "Pending",
@@ -61,39 +57,28 @@ export default class CourseEntity {
   @Column({ type: "varchar", length: 255, default: null })
   	targets: string
 
-
   @Column({ type: "json", default: null })
   	includes: CourseIncludes
 
   @OneToMany(() => PostEntity, (post) => post.course)
   	posts: PostEntity[]
 
-	@OneToMany(() => EnrolledEntity, (enrolled) => enrolled.course)
+  @OneToMany(() => EnrolledEntity, (enrolled) => enrolled.course)
   	enrolledInfos: EnrolledEntity[]
 
-	// --- relations ---
+  // --- relations ---
 
-	//student
-	//   @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
-	//   @JoinColumn({ name: "studentId" })
-	//   	student: UserEntity
+  // material
+  //   @OneToMany(() => MaterialEntity, (material) => material.course, {
+  //   	onDelete: "CASCADE",
+  //   })
+  //   	materials: MaterialEntity[]
 
-	// creator
-	//   @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
-	//   @JoinColumn({ name: "creatorId" })
-	//   	creator: UserEntity
-
-	// material
-	//   @OneToMany(() => MaterialEntity, (material) => material.course, {
-	//   	onDelete: "CASCADE",
-	//   })
-	//   	materials: MaterialEntity[]
-
-	// section
-	//   @OneToMany(() => SectionEntity, (section) => section.course, {
-	//   	onDelete: "CASCADE",
-	//   })
-	//   	sections: SectionEntity[]
+  //section
+  @OneToMany(() => SectionEntity, (section) => section.course, {
+  	onDelete: "CASCADE",
+  })
+  	sections: SectionEntity[]
 
 	// topic
 	//   @ManyToMany(() => TopicEntity, (topicEntity) => topicEntity.courses)

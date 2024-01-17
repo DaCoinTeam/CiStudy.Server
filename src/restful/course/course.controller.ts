@@ -1,15 +1,15 @@
 import {
+	BadRequestException,
 	Body,
 	Controller,
 	Delete,
 	Get,
-	Header,
 	Headers,
 	Param,
 	ParseUUIDPipe,
 	Post,
-	Req,
 	Res,
+	StreamableFile,
 	UploadedFiles,
 	UseGuards,
 	UseInterceptors,
@@ -23,12 +23,18 @@ import {
 	ApiOkResponse,
 	ApiTags,
 } from "@nestjs/swagger"
-import { CreateReponseDto, CreateRequestDto, EnrollRequestDto } from "./dto"
+import {
+	CreateReponseDto,
+	CreateRequestDto,
+	EnrollRequestDto,
+	StreamPreviewRequestDto,
+} from "./dto"
 import { AuthInterceptor, JwtAuthGuard, User } from "../shared"
 import { UserMySqlDto } from "@shared"
 import CourseService from "./course.service"
 import { FileFieldsInterceptor } from "@nestjs/platform-express"
 import { swaggerSchema } from "./dto/create/request.dto"
+import { Response } from "express"
 
 @ApiTags("Course")
 @Controller("api/course")
@@ -64,15 +70,6 @@ export default class CourseController {
 		return await this.courseService.create(user, files, body)
 	}
 
-  //   @ApiOkResponse({ type: CreateRequestDto })
-  //   @ApiNotFoundResponse()
-  //   @Get(":id")
-  //   async getById(
-  //     @Param("id", ParseUUIDPipe) id: string,
-  //   ): Promise<CreateReponseDto> {
-  //   	return await this.courseService.findById(id)
-  //   }
-
   @Get()
   @ApiOkResponse()
   async getAll(): Promise<CreateReponseDto[]> {
@@ -85,10 +82,19 @@ export default class CourseController {
   	return await this.courseService.delete(id)
   }
 
-  @Get("stream")
-  async getFile(@Headers("range") range: string) {
-  	console.log(range)
-  	return this.courseService.getFile()
+  @Get("stream-preview")
+  @UseGuards(JwtAuthGuard)
+  async getFile(
+    @Headers("range") range: string,
+    @Body() body: StreamPreviewRequestDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+  	if (range) {
+  		return await this.courseService.streamPreview(body.courseId, range, res)
+  	}
+  	throw new BadRequestException(
+  		"Invalid request. Video streaming requires a 'Range' header.",
+  	)
   }
 
   @Post("enroll")

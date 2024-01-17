@@ -1,11 +1,10 @@
 export * from "./mailer.service"
 export * from "./sha256.service"
-export * from "./token-manager.service"
+export * from "./auth-manager.service"
 
 import MailerService from "./mailer.service"
 import Sha256Service from "./sha256.service"
-import TokenManagerService from "./token-manager.service"
-import ResponseService from "./response.service"
+import AuthManagerService from "./auth-manager.service"
+import VideoStreamerService from "./video-streamer.service"
 
-export { MailerService, Sha256Service, TokenManagerService, ResponseService }
-
+export { MailerService, Sha256Service, AuthManagerService, VideoStreamerService }

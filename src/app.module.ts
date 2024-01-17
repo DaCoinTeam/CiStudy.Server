@@ -1,12 +1,30 @@
-import { Module } from "@nestjs/common"
-import { appConfig, blockchainConfig, databaseConfig, paymentConfig } from "@config"
+import {
+	MiddlewareConsumer,
+	Module,
+	NestModule,
+	RequestMethod,
+} from "@nestjs/common"
+import {
+	appConfig,
+	blockchainConfig,
+	databaseConfig,
+	paymentConfig,
+} from "@config"
 import { ConfigModule } from "@nestjs/config"
 import { GraphQLModule } from "@nestjs/graphql"
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { join } from "path"
 import { AuthGraphQLModule, CourseGraphQLModule } from "@graphql"
-import { AuthRestfulModule, CourseRestfulModule, PostRestfulModule } from "@restful"
-import { GlobalServicesModule } from "@global"
+import {
+	AuthRestfulModule,
+	CourseRestfulModule,
+	PostRestfulModule,
+} from "@restful"
+import {
+	SetBearerTokenMiddleware,
+	AttachCourseIdMiddleware,
+	GlobalServicesModule,
+} from "@global"
 import { TypeOrmModule } from "@nestjs/typeorm"
 
 @Module({
@@ -27,14 +45,10 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
-			typePaths: ["./**/*.graphql"],
-			installSubscriptionHandlers: true,
-			definitions: {
-				path: join(process.cwd(), "src/graphql.schema.ts"),
-				outputAs: "class",
-			},
+			autoSchemaFile: join(process.cwd(), "src/schema.gql"),
+			sortSchema: true,
 		}),
-		
+
 		//graphql
 		AuthGraphQLModule,
 		CourseGraphQLModule,
@@ -43,12 +57,22 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		AuthRestfulModule,
 		CourseRestfulModule,
 		PostRestfulModule,
+		SectionRestfulModule,
 
 		//global
-		GlobalServicesModule
+		GlobalServicesModule,
 	],
 	controllers: [],
-	providers: [
-	],
+	providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(SetBearerTokenMiddleware).forRoutes()
+		consumer
+			.apply(SetBearerTokenMiddleware, AttachCourseIdMiddleware)
+			.forRoutes({
+				path: "api/course/stream-preview",
+				method: RequestMethod.GET,
+			})
+	}
+}
