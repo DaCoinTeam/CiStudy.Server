@@ -5,8 +5,8 @@ export default interface Payload {
 }
 
 export enum TokenType {
-    Access,
-    Refresh,
-    Verify,
+    Access = "Access",
+    Refresh = "Refresh",
+    Verify = "Verify",
   }
   
