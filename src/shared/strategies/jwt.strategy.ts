@@ -22,7 +22,7 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
 	}
 }
 
-export interface Validated {
+export interface ValidatedInfo {
 	user: UserMySqlDto,
 	type: TokenType
 }
