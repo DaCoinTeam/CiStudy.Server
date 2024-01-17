@@ -1,19 +1,27 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm"
-import { VideoEntity } from "../video/video.entity"
+import {
+	Column,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	PrimaryGeneratedColumn,
+} from "typeorm"
 import CourseEntity from "../course/course.entity"
 
-@Entity()
-export class SectionEntity {
+@Entity("section")
+export default class SectionEntity {
+  @PrimaryGeneratedColumn("uuid")
+  	sectionId: string
+
   @Column()
   	sectionName: string
 
-  @Column({ name: "couseId" })
-  	couseId: string
+  @Column({ name: "courseId" })
+  	courseId: string
 
-  // @ManyToOne(() => CourseEntity, (courseEntity) => courseEntity.sections)
-  // @JoinColumn({ name: "couseId" })
-  // 	course: CourseEntity
+  @ManyToOne(() => CourseEntity, (courseEntity) => courseEntity.sections)
+  @JoinColumn({ name: "courseId" })
+  	course: CourseEntity
 
-  @OneToMany(() => VideoEntity, (videoEntity) => videoEntity.section)
-  	video: VideoEntity[]
+	// @OneToMany(() => VideoEntity, (videoEntity) => videoEntity.section)
+	// 	video: VideoEntity[]
 }

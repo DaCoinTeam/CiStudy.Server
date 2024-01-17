@@ -1,5 +1,4 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm"
-import { SectionEntity } from "../section/section.entity"
 
 @Entity()
 export class VideoEntity {
@@ -15,7 +14,7 @@ export class VideoEntity {
   @Column({ name: "sectionId" })
   	sectionId: string
 
-  @ManyToOne(() => SectionEntity, (section) => section.video)
-  @JoinColumn({ name: "sectionId" })
-  	section: SectionEntity
+	// @ManyToOne(() => SectionEntity, (section) => section.video)
+	// @JoinColumn({ name: "sectionId" })
+	// 	section: SectionEntity
 }
