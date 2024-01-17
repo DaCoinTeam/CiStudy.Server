@@ -15,7 +15,7 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
 		})
 	}
 
-	async validate(payload: Payload) {
+	async validate(payload: Payload) : Promise<ValidatedInfo> {
 		const { userId, type } = payload
 		const user = await this.userMySqlService.findByUserId(userId)
 		return { user, type }
