@@ -8,7 +8,7 @@ const Response = <T extends object>(T: Type<T>) => {
         @Field(type => T)
     	data: T
 
-    @Field(type => AuthTokens, { defaultValue: null })
+    @Field(type => AuthTokens, { nullable: true })
     	tokens: AuthTokens
     }
     return Response

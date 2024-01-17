@@ -26,8 +26,13 @@ input FindOneInput {
   courseId: ID!
 }
 
+type FindOneOutput {
+  data: Course!
+  tokens: AuthTokens
+}
+
 type Query {
-  findOne(input: FindOneInput!): Course!
+  findOne(input: FindOneInput!): FindOneOutput!
 }
 
 enum VerifiedStatus {
