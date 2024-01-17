@@ -22,9 +22,11 @@ export default class PostCommentEntity {
   @Column({ type: "uuid", length: 36 })
   	postId: string
 
-  @Column({ type: "varchar", length: 1000 })
-  	content: string
-
+  @ManyToOne(
+  	() => PostCommentEntity,
+  	(postComment) => postComment.childComments,
+  )
+  @JoinColumn({ name: "fatherCommentId" })
   @Column({ type: "uuid", default: null, length: 36 })
   	fatherCommentId: string
 
@@ -32,19 +34,26 @@ export default class PostCommentEntity {
   @JoinColumn({ name: "postId" })
   	post: PostEntity
 
+  @ManyToOne(() => UserEntity, (user) => user.postComments)
+  @JoinColumn({ name: "userId" })
+  	user: UserEntity
+
   @OneToMany(
   	() => PostCommentContentEntity,
   	(postCommentContent) => postCommentContent.postComment,
+  	{ cascade: true },
   )
   	postCommentContents: PostCommentContentEntity[]
 
-	@ManyToOne(() => UserEntity, (user) => user.postComments)
-	@JoinColumn({ name: "userId" })
-		user: UserEntity
+  @OneToMany(
+  	() => PostCommentLikeEntity,
+  	(postCommentLike) => postCommentLike.postComment,
+  )
+  	postCommentLikes: PostCommentLikeEntity[]
 
-		@OneToMany(
-			() => PostCommentLikeEntity,
-			(postCommentLike) => postCommentLike.postComment,
-		)
-			postCommentLikes: PostCommentLikeEntity[]
+  @OneToMany(
+  	() => PostCommentEntity,
+  	(postComment) => postComment.fatherCommentId, { cascade: true }
+  )
+  	childComments: PostCommentEntity[]
 }

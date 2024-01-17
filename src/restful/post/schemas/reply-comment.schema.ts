@@ -1,15 +1,15 @@
 import { SchemaObject } from "@nestjs/swagger/dist/interfaces/open-api-spec.interface"
 
-const createSchema : SchemaObject = {
+const replyCommentSchema : SchemaObject = {
 	type: "object",
 	properties: {
 		data: {
 			type: "object",
 			properties: {
-				title: {
+				postId: {
 					type: "string",
 				},
-				courseId: {
+				fatherCommentId: {
 					type: "string",
 				},
 				postCommentContents: {
@@ -39,4 +39,4 @@ const createSchema : SchemaObject = {
 	}
 }
 
-export default createSchema
+export default replyCommentSchema

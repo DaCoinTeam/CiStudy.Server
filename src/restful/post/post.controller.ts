@@ -13,13 +13,13 @@ import {
 	ApiQuery,
 	ApiTags,
 } from "@nestjs/swagger"
-import { CreateRequestDto, LikeRequestDto, UnlikeRequestDto } from "./dto"
+import { CreateRequestDto, LikeRequestDto, UnlikeRequestDto, CreateCommentRequestDto } from "./dto"
 import { AuthInterceptor, DataFromBody, User } from "../shared"
 import { Files, UserMySqlDto } from "@shared"
 import PostService from "./post.service"
 import { FileFieldsInterceptor } from "@nestjs/platform-express"
 import { JwtAuthGuard } from "src/graphql/shared"
-import { createSchema } from "./schemas"
+import { createSchema, createCommentSchema } from "./schemas"
 import { MustEnrolledGuard } from "./guards"
 
 @ApiTags("Post")
@@ -40,7 +40,7 @@ export default class PostController {
   	AuthInterceptor,
   	FileFieldsInterceptor([{ name: "files", maxCount: 5 }]),
   )
-  @Post()
+  @Post("/create")
 	async create(
     @User() user: UserMySqlDto,
     @DataFromBody() data: CreateRequestDto,
@@ -81,5 +81,49 @@ export default class PostController {
 @Post("unlike")
   async unlike(@User() user: UserMySqlDto, @Body() body: UnlikeRequestDto) {
   	return await this.postService.unlike(user, body)
+  }
+
+  // comment
+  @ApiQuery({
+  	name: "clientId",
+  	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935",
+  })
+@ApiConsumes("multipart/form-data")
+@ApiBody({ schema: createCommentSchema})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, MustEnrolledGuard)
+@UseInterceptors(
+	AuthInterceptor,
+	FileFieldsInterceptor([{ name: "files", maxCount: 5 }]),
+)
+@Post("comment")
+  async comment(
+  @User() user: UserMySqlDto,
+  @DataFromBody() data: CreateCommentRequestDto,
+  @UploadedFiles() { files }: Files,
+  ) {
+	  return await this.postService.comment(user, data, files)
+  }
+
+  // reply comment
+  @ApiQuery({
+  	name: "clientId",
+  	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935",
+  })
+@ApiConsumes("multipart/form-data")
+@ApiBody({ schema: createCommentSchema})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, MustEnrolledGuard)
+@UseInterceptors(
+	AuthInterceptor,
+	FileFieldsInterceptor([{ name: "files", maxCount: 5 }]),
+)
+@Post("reply-comment")
+  async replyComment(
+  @User() user: UserMySqlDto,
+  @DataFromBody() data: CreateCommentRequestDto,
+  @UploadedFiles() { files }: Files,
+  ) {
+	  return await this.postService.replyComment(user, data, files)
   }
 }

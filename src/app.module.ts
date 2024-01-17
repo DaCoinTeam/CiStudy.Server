@@ -19,7 +19,6 @@ import {
 	AuthRestfulModule,
 	CourseRestfulModule,
 	PostRestfulModule,
-	SectionRestfulModule,
 } from "@restful"
 import {
 	SetBearerTokenMiddleware,

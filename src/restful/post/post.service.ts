@@ -1,8 +1,9 @@
 import { ConflictException, Injectable } from "@nestjs/common"
-import { PostLikeMySqlService, PostMySqlService } from "@database"
-import { CreateRequestDto, LikeRequestDto } from "./dto"
-import { ContentType, PostMySqlDto, UserMySqlDto } from "@shared"
+import { PostLikeMySqlService, PostMySqlService, PostCommentMySqlService } from "@database"
+import { CreateRequestDto, LikeRequestDto, CreateCommentRequestDto } from "./dto"
+import { ContentType, PostMySqlDto, UserMySqlDto, PostCommentSqlDto } from "@shared"
 import { FirebaseService } from "@global"
+import { DeepPartial } from "typeorm"
 
 @Injectable()
 export default class PostService {
@@ -10,6 +11,7 @@ export default class PostService {
     private readonly postMySqlService: PostMySqlService,
     private readonly postLikeMySqlService: PostLikeMySqlService,
     private readonly firebaseService: FirebaseService,
+	private readonly postCommentMySqlService: PostCommentMySqlService,
 	) {}
 
 	async create(
@@ -18,11 +20,10 @@ export default class PostService {
 		files: Express.Multer.File[],
 	): Promise<string> {
 		const { postContents } = data
-		console.log(files)
 		const promises: Promise<void>[] = []
 
 		let indexFile = 0
-		for (const postContent of data.postContents) {
+		for (const postContent of postContents) {
 			const promise = async () => {
 				if (
 					postContent.contentType === ContentType.Image ||
@@ -38,7 +39,7 @@ export default class PostService {
 		}
 		await Promise.all(promises)
 
-		const post: Partial<PostMySqlDto> = {
+		const post: DeepPartial<PostMySqlDto> = {
 			...data,
 			creatorId: user.userId,
 			postContents: postContents.map((postContent, index) => ({
@@ -48,6 +49,7 @@ export default class PostService {
 		}
 
 		const created = await this.postMySqlService.create(post)
+		console.log(created)
 		return `A post with id ${created.postId} has been created successfully.`
 	}
 
@@ -81,5 +83,88 @@ export default class PostService {
 			postId: body.postId
 		})
 		return `Successfully unliked the post with id ${body.postId}.`
+	}
+
+	async comment(
+		user: UserMySqlDto,
+		data: CreateCommentRequestDto,
+		files: Express.Multer.File[],
+	): Promise<string> {
+		const { postCommentContents } = data
+		const promises: Promise<void>[] = []
+
+		let indexFile = 0
+		for (const postCommentContent of postCommentContents) {
+			const promise = async () => {
+				if (
+					postCommentContent.contentType === ContentType.Image ||
+					postCommentContent.contentType === ContentType.Video
+				) {
+					const { buffer, filename } = files.at(indexFile)
+					const url = await this.firebaseService.uploadFile(buffer, filename)
+					
+					postCommentContent.content = url
+					indexFile++
+				}
+			}
+			promises.push(promise())
+		}
+		await Promise.all(promises)
+
+		const postComment: DeepPartial<PostCommentSqlDto> = {
+			...data,
+			userId: user.userId,
+			postCommentContents: postCommentContents.map((postCommentContent, index) => ({
+				...postCommentContent,
+				index,
+			})),
+		}
+
+		const created = await this.postCommentMySqlService.create(postComment)
+
+		console.log(created)
+	
+		return `A comment with id ${created.postId} has been created successfully.`
+	}
+
+	async replyComment(
+		user: UserMySqlDto,
+		data: CreateCommentRequestDto,
+		files: Express.Multer.File[],
+	): Promise<string> {
+		const { postCommentContents } = data
+		const promises: Promise<void>[] = []
+
+		let indexFile = 0
+		for (const postCommentContent of postCommentContents) {
+			const promise = async () => {
+				if (
+					postCommentContent.contentType === ContentType.Image ||
+					postCommentContent.contentType === ContentType.Video
+				) {
+					const { buffer, filename } = files.at(indexFile)
+					const url = await this.firebaseService.uploadFile(buffer, filename)
+					
+					postCommentContent.content = url
+					indexFile++
+				}
+			}
+			promises.push(promise())
+		}
+		await Promise.all(promises)
+
+		const postComment: DeepPartial<PostCommentSqlDto> = {
+			...data,
+			userId: user.userId,
+			fatherCommentId: data.fatherCommentId,
+			postCommentContents: postCommentContents.map((postCommentContent, index) => ({
+				...postCommentContent,
+				index,
+			})),
+		}
+
+		const created = await this.postCommentMySqlService.create(postComment)
+	
+		return `Comment with id ${created.postCommentId} reply successfully to comment with id ${created.fatherCommentId}.`
 	}
 }

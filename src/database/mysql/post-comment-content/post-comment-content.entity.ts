@@ -23,6 +23,9 @@ export default class PostCommentContentEntity {
   @Column({ type: "uuid", length: 36 })
   	postCommentId: string
 
+  @Column({ type: "int", default: 0 })
+  	index: number
+
   @Column({ type: "enum", enum: ContentType, default: ContentType.Text })
   	contentType: ContentType
 
