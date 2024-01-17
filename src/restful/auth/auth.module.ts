@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common"
 import AuthService from "./auth.service"
 import AuthController from "./auth.controller"
 import { UserMySqlModule } from "@database"
-import { JwtStrategy } from "../shared"
+import { JwtStrategy } from "@shared"
 
 @Module({
 	imports: [UserMySqlModule],

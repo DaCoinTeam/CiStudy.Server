@@ -69,15 +69,6 @@ export default class CourseController {
 		return await this.courseService.create(user, files, body)
 	}
 
-  //   @ApiOkResponse({ type: CreateRequestDto })
-  //   @ApiNotFoundResponse()
-  //   @Get(":id")
-  //   async getById(
-  //     @Param("id", ParseUUIDPipe) id: string,
-  //   ): Promise<CreateReponseDto> {
-  //   	return await this.courseService.findById(id)
-  //   }
-
   @Get()
   @ApiOkResponse()
   async getAll(): Promise<CreateReponseDto[]> {

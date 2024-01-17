@@ -4,7 +4,7 @@
 // import { PubSub } from "graphql-subscriptions"
 // import {
 // 	Sha256Service,
-// 	TokenManagerService,
+// 	AuthManagerService,
 // 	Response,
 // 	FirebaseService,
 // } from "@global"
@@ -30,7 +30,7 @@
 //     private readonly userMySqlService: UserMySqlService,
 //     private readonly sha256Service: Sha256Service,
 //     private readonly firebaseService: FirebaseService,
-//     private readonly tokenManagerService: TokenManagerService,
+//     private readonly authManagerService: AuthManagerService,
 // 	) {}
 
 //   @Query("signIn")
@@ -42,7 +42,7 @@
 // 		if (!this.sha256Service.verifyHash(args.password, found.password))
 // 			throw new UnauthorizedException("Invalid credentials.")
 // 		console.log(args)
-// 		return this.tokenManagerService.generateResponse(
+// 		return this.authManagerService.generateResponse(
 // 			found.userId,
 // 			found,
 // 			true,
@@ -56,7 +56,7 @@
 //     @User() user: UserMySqlDto,
 //     @Args("input") args: InitRequestDto,
 //   ): Promise<Response<UserMySqlDto>> {
-//   	return this.tokenManagerService.generateResponse(
+//   	return this.authManagerService.generateResponse(
 //   		user.userId,
 //   		user,
 //   		true,
@@ -86,7 +86,7 @@
 //   	}
 
 //   	pubSub.publish("userCreated", found)
-//   	return this.tokenManagerService.generateResponse(
+//   	return this.authManagerService.generateResponse(
 //   		found.userId,
 //   		found,
 //   		true,

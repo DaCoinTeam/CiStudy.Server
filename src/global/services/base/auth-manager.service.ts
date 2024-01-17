@@ -6,16 +6,15 @@ import {
 	UnauthorizedException,
 } from "@nestjs/common"
 import { JsonWebTokenError, JwtService } from "@nestjs/jwt"
-import { Payload } from "@shared"
+import { Payload, TokenType } from "@shared"
 
 @Injectable()
-export default class TokenManagerService {
+export default class AuthManagerService {
 	constructor(
     private readonly jwtService: JwtService,
     private readonly sessionMySqlService: SessionMySqlService,
 	) {}
 
-	// rất ít khi xài bởi vì guard lo hết rồi. làm thủ công thì cần
 	async verifyToken(token: string): Promise<Payload> {
 		try {
 			return await this.jwtService.verifyAsync<Payload>(token)
@@ -26,20 +25,22 @@ export default class TokenManagerService {
 		}
 	}
 
-	//cái này là cái check map
-	async validateRefreshToken(userId: string, clientId: string): Promise<void> {
-		const refresh = await this.sessionMySqlService.findByUserIdAndClientId(
+	async getTokenType(token: string): Promise<TokenType> {
+		const { type } = await this.verifyToken(token)
+		return type
+	}
+
+	async validateSession(userId: string, clientId: string): Promise<void> {
+		const session = await this.sessionMySqlService.findByUserIdAndClientId(
 			userId,
 			clientId,
 		)
-		console.log(refresh)
-		if (refresh === null)
-			throw new UnauthorizedException("Refresh token not found.")
-		if (refresh.isDisabled)
-			throw new UnauthorizedException("Invalid refresh token.")
+		if (session === null) throw new UnauthorizedException("Session not found.")
+		if (session.isDisabled)
+			throw new UnauthorizedException("Session is disabled.")
 	}
 
-	private async generateToken<T extends Payload>(
+	private async generateToken<T extends PayloadLike>(
 		data: T,
 		type: TokenType = TokenType.Access,
 	) {
@@ -51,7 +52,7 @@ export default class TokenManagerService {
 		const expiresIn = typeToExpiresIn[type]
 
 		return await this.jwtService.signAsync(
-			{ userId: data.userId },
+			{ userId: data.userId, type },
 			{
 				expiresIn,
 				secret: jwtConfig().secret,
@@ -59,8 +60,7 @@ export default class TokenManagerService {
 		)
 	}
 
-	// cho phép mày triển 1 cái clientId (optials), nếu browser có gửi clientId thì mới cái entry refresh vào db
-	async generateAuthTokens<T extends Payload>(
+	async generateAuthTokens<T extends PayloadLike>(
 		data: T,
 		clientId?: string,
 	): Promise<AuthTokens> {
@@ -89,10 +89,10 @@ export default class TokenManagerService {
 	async generateResponse<T extends object>(
 		userId: string,
 		data: T,
-		refresh: boolean = false,
+		authTokensRequested: boolean = false,
 		clientId?: string,
 	): Promise<Response<T>> {
-		const tokens = refresh
+		const tokens = authTokensRequested
 			? await this.generateAuthTokens({ userId }, clientId)
 			: undefined
 
@@ -108,10 +108,8 @@ export interface Response<T extends object> {
   tokens?: AuthTokens;
 }
 
-export enum TokenType {
-  Access,
-  Refresh,
-  Verify,
+export interface PayloadLike {
+  userId: string;
 }
 
 export interface AuthTokens {

@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common"
-import { MailerService, Sha256Service, TokenManagerService, VideoStreamerService } from "./base"
+import { MailerService, Sha256Service, AuthManagerService, VideoStreamerService } from "./base"
 import { FirebaseService } from "./3rd"
 import { JwtService } from "@nestjs/jwt"
 import { SessionMySqlModule } from "@database"
@@ -16,7 +16,7 @@ import { MetamaskService } from "./blockchain"
 		//base
 		Sha256Service,
 		MailerService,
-		TokenManagerService,
+		AuthManagerService,
 		JwtService,
 		VideoStreamerService,
 
@@ -29,7 +29,7 @@ import { MetamaskService } from "./blockchain"
 		//base
 		Sha256Service,
 		MailerService,
-		TokenManagerService,
+		AuthManagerService,
 		JwtService,
 		VideoStreamerService,
 

@@ -18,7 +18,7 @@ import {
 	FirebaseService,
 	MailerService,
 	Sha256Service,
-	TokenManagerService,
+	AuthManagerService,
 } from "@global"
 import { UserMySqlService } from "@database"
 import { UserMySqlDto } from "@shared"
@@ -30,7 +30,7 @@ export default class AuthService {
     private readonly userMySqlService: UserMySqlService,
     private readonly sha256Service: Sha256Service,
     private readonly mailerService: MailerService,
-    private readonly tokenManagerService: TokenManagerService,
+    private readonly authManagerService: AuthManagerService,
     private readonly firebaseService: FirebaseService,
 	) {}
 
@@ -82,7 +82,7 @@ export default class AuthService {
 	async verifyRegistration({
 		token,
 	}: VerifyRegistrationRequestDto) {
-		const decoded = await this.tokenManagerService.verifyToken(token)
+		const decoded = await this.authManagerService.verifyToken(token)
 		const userId = decoded.userId
 		if (!userId) throw new NotFoundException("User not found.")
 

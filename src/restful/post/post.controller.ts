@@ -32,10 +32,6 @@ export default class PostController {
   	name: "clientId",
   	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935",
   })
-  @ApiQuery({
-  	name: "refresh",
-  	example: "true",
-  })
   @ApiConsumes("multipart/form-data")
   @ApiBody({ schema: createSchema })
   @ApiBearerAuth()

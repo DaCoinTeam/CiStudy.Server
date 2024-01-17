@@ -2,7 +2,7 @@ import { PassportStrategy } from "@nestjs/passport"
 import { ExtractJwt, Strategy } from "passport-jwt"
 import { jwtConfig } from "@config"
 import { Injectable } from "@nestjs/common"
-import { Payload, UserMySqlDto } from "@shared"
+import { Payload, TokenType, UserMySqlDto } from "@shared"
 import { UserMySqlService } from "@database"
 
 @Injectable()
@@ -15,8 +15,14 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
 		})
 	}
 
-	async validate(payload: Payload): Promise<UserMySqlDto> {
-		const userId = payload.userId
-		return await this.userMySqlService.findByUserId(userId)
+	async validate(payload: Payload) {
+		const { userId, type } = payload
+		const user = await this.userMySqlService.findByUserId(userId)
+		return { user, type }
 	}
+}
+
+export interface Validated {
+	user: UserMySqlDto,
+	type: TokenType
 }

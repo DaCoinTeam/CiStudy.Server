@@ -4,14 +4,14 @@ import {
 	ExecutionContext,
 	CallHandler,
 } from "@nestjs/common"
-import { AuthTokens, TokenManagerService } from "@global"
+import { AuthTokens, AuthManagerService } from "@global"
 import { Observable, mergeMap } from "rxjs"
 
 @Injectable()
 export default class VerifyGoogleAccessTokenInterceptor
 implements NestInterceptor
 {
-	constructor(private readonly tokenManagerService: TokenManagerService) {}
+	constructor(private readonly authManagerService: AuthManagerService) {}
 
 	async intercept(
 		context: ExecutionContext,
@@ -24,7 +24,7 @@ implements NestInterceptor
 
 		return next.handle().pipe(
 			mergeMap(async (data) => {
-				return await this.tokenManagerService.generateAuthTokens(
+				return await this.authManagerService.generateAuthTokens(
 					data,
 					clientId,
 				)
