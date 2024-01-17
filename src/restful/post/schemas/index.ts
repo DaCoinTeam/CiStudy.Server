@@ -1,3 +1,4 @@
 import createSchema from "./create.schema"
-import createCommentSchema from "./create-comment.schema"
-export { createSchema, createCommentSchema }
+import commentSchema from "./comment.schema"
+import replyCommentSchema from "./reply-comment.schema"
+export { createSchema, commentSchema, replyCommentSchema }

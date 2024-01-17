@@ -6,9 +6,6 @@ const replyCommentSchema : SchemaObject = {
 		data: {
 			type: "object",
 			properties: {
-				postId: {
-					type: "string",
-				},
 				fatherCommentId: {
 					type: "string",
 				},

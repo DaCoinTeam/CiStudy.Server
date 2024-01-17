@@ -13,13 +13,13 @@ import {
 	ApiQuery,
 	ApiTags,
 } from "@nestjs/swagger"
-import { CreateRequestDto, LikeRequestDto, UnlikeRequestDto, CreateCommentRequestDto } from "./dto"
+import { CreateRequestDto, LikeRequestDto, UnlikeRequestDto, CommentRequestDto, ReplyCommentRequestDto } from "./dto"
 import { AuthInterceptor, DataFromBody, User } from "../shared"
 import { Files, UserMySqlDto } from "@shared"
 import PostService from "./post.service"
 import { FileFieldsInterceptor } from "@nestjs/platform-express"
 import { JwtAuthGuard } from "src/graphql/shared"
-import { createSchema, createCommentSchema } from "./schemas"
+import { createSchema, commentSchema, replyCommentSchema } from "./schemas"
 import { MustEnrolledGuard } from "./guards"
 
 @ApiTags("Post")
@@ -89,7 +89,7 @@ export default class PostController {
   	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935",
   })
 @ApiConsumes("multipart/form-data")
-@ApiBody({ schema: createCommentSchema})
+@ApiBody({ schema: commentSchema})
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, MustEnrolledGuard)
 @UseInterceptors(
@@ -99,7 +99,7 @@ export default class PostController {
 @Post("comment")
   async comment(
   @User() user: UserMySqlDto,
-  @DataFromBody() data: CreateCommentRequestDto,
+  @DataFromBody() data: CommentRequestDto,
   @UploadedFiles() { files }: Files,
   ) {
 	  return await this.postService.comment(user, data, files)
@@ -111,7 +111,7 @@ export default class PostController {
   	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935",
   })
 @ApiConsumes("multipart/form-data")
-@ApiBody({ schema: createCommentSchema})
+@ApiBody({ schema: replyCommentSchema})
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, MustEnrolledGuard)
 @UseInterceptors(
@@ -121,7 +121,7 @@ export default class PostController {
 @Post("reply-comment")
   async replyComment(
   @User() user: UserMySqlDto,
-  @DataFromBody() data: CreateCommentRequestDto,
+  @DataFromBody() data: ReplyCommentRequestDto,
   @UploadedFiles() { files }: Files,
   ) {
 	  return await this.postService.replyComment(user, data, files)

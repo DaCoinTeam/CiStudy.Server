@@ -10,7 +10,15 @@ export default class PostCommentService {
     private readonly postCommentRepository: Repository<PostCommentEntity>,
 	) {}
 
-	async create(postComment: DeepPartial<PostCommentEntity>): Promise<PostCommentEntity> {
+	async findOne(
+		post: Partial<PostCommentEntity>,
+	): Promise<PostCommentEntity> {
+		return await this.postCommentRepository.findOneBy(post)
+	}
+
+	async create(
+		postComment: DeepPartial<PostCommentEntity>,
+	): Promise<PostCommentEntity> {
 		const created = this.postCommentRepository.create(postComment)
 		return await this.postCommentRepository.save(created)
 	}

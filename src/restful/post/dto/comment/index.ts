@@ -1,4 +1,4 @@
 export * from "./request.dto"
-import CreateCommentRequestDto from "./request.dto"
+import CommentRequestDto from "./request.dto"
 
-export { CreateCommentRequestDto }
+export { CommentRequestDto }

@@ -16,22 +16,8 @@ export default class UserService {
 		return await this.userRepository.save(created)
 	}
 
-	async findByUserId(userId: string): Promise<UserEntity | null> {
-		return await this.userRepository.findOneBy({
-			userId,
-		})
-	}
-
-	async findByExternalId(externalId: string): Promise<UserEntity | null> {
-		return await this.userRepository.findOneBy({
-			externalId,
-		})
-	}
-
-	async findByEmail(email: string): Promise<UserEntity | null> {
-		return await this.userRepository.findOneBy({
-			email,
-		})
+	async findOne(user: Partial<UserEntity>): Promise<UserEntity | null> {
+		return await this.userRepository.findOneBy(user)
 	}
 
 	async update(user: Partial<UserEntity>): Promise<boolean> {

@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from "@nestjs/common"
 import { PostLikeMySqlService, PostMySqlService, PostCommentMySqlService } from "@database"
-import { CreateRequestDto, LikeRequestDto, CreateCommentRequestDto } from "./dto"
+import { CreateRequestDto, LikeRequestDto, CommentRequestDto, ReplyCommentRequestDto } from "./dto"
 import { ContentType, PostMySqlDto, UserMySqlDto, PostCommentSqlDto } from "@shared"
 import { FirebaseService } from "@global"
 import { DeepPartial } from "typeorm"
@@ -87,7 +87,7 @@ export default class PostService {
 
 	async comment(
 		user: UserMySqlDto,
-		data: CreateCommentRequestDto,
+		data: CommentRequestDto,
 		files: Express.Multer.File[],
 	): Promise<string> {
 		const { postCommentContents } = data
@@ -129,11 +129,15 @@ export default class PostService {
 
 	async replyComment(
 		user: UserMySqlDto,
-		data: CreateCommentRequestDto,
+		data: ReplyCommentRequestDto,
 		files: Express.Multer.File[],
 	): Promise<string> {
 		const { postCommentContents } = data
 		const promises: Promise<void>[] = []
+
+		const fatherComment = await this.postCommentMySqlService.findOne({
+			postCommentId: data.fatherCommentId
+		})
 
 		let indexFile = 0
 		for (const postCommentContent of postCommentContents) {
@@ -155,8 +159,9 @@ export default class PostService {
 
 		const postComment: DeepPartial<PostCommentSqlDto> = {
 			...data,
+			postId: fatherComment.postId,
 			userId: user.userId,
-			fatherCommentId: data.fatherCommentId,
+			fatherCommentId: fatherComment.fatherCommentId,
 			postCommentContents: postCommentContents.map((postCommentContent, index) => ({
 				...postCommentContent,
 				index,

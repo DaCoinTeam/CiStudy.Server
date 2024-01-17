@@ -31,10 +31,10 @@ export default class AuthManagerService {
 	}
 
 	async validateSession(userId: string, clientId: string): Promise<void> {
-		const session = await this.sessionMySqlService.findByUserIdAndClientId(
+		const session = await this.sessionMySqlService.findOne({
 			userId,
 			clientId,
-		)
+		})
 		if (session === null) throw new UnauthorizedException("Session not found.")
 		if (session.isDisabled)
 			throw new UnauthorizedException("Session is disabled.")

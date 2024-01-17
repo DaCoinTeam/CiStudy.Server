@@ -36,18 +36,7 @@ export default class SessionService {
 		}
 	}
 
-	async findBysessionId(sessionId: string): Promise<SessionEntity | null> {
-		return await this.sessionRepository.findOneBy({
-			sessionId,
-		})
-	}
-	async findByUserIdAndClientId(
-		userId: string,
-		clientId: string,
-	): Promise<SessionEntity | null> {
-		return await this.sessionRepository.findOneBy({
-			userId,
-			clientId,
-		})
+	async findOne(session: Partial<SessionEntity>): Promise<SessionEntity> {
+		return await this.sessionRepository.findOneBy(session)
 	}
 }

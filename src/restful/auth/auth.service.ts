@@ -35,7 +35,7 @@ export default class AuthService {
 	) {}
 
 	async signUp(body: SignUpRequestDto): Promise<string> {
-		const found = await this.userMySqlService.findByEmail(body.email)
+		const found = await this.userMySqlService.findOne({ email : body.email })
 		if (found)
 			throw new ConflictException(
 				`User with email ${body.email} has existed.`,
@@ -48,7 +48,7 @@ export default class AuthService {
 	}
 
 	async signIn(body: SignInRequestDto): Promise<SignInResponseDto> {
-		const found = await this.userMySqlService.findByEmail(body.email)
+		const found = await this.userMySqlService.findOne( { email : body.email })
 		if (!found) throw new NotFoundException("User not found.")
 		if (!this.sha256Service.verifyHash(body.password, found.password))
 			throw new UnauthorizedException("Invalid credentials.")
@@ -66,7 +66,7 @@ export default class AuthService {
 		if (!decoded)
 			throw new UnauthorizedException("Invalid Google access token.")
 
-		let found = await this.userMySqlService.findByExternalId(decoded.uid)
+		let found = await this.userMySqlService.findOne({ externalId : decoded.uid })
 		if (!found) {
 			found = await this.userMySqlService.create({
 				externalId: decoded.uid,

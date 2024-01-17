@@ -1,6 +1,6 @@
 import { SchemaObject } from "@nestjs/swagger/dist/interfaces/open-api-spec.interface"
 
-const createCommentSchema : SchemaObject = {
+const commentSchema : SchemaObject = {
 	type: "object",
 	properties: {
 		data: {
@@ -36,4 +36,4 @@ const createCommentSchema : SchemaObject = {
 	}
 }
 
-export default createCommentSchema
+export default commentSchema
