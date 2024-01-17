@@ -1,2 +1,3 @@
 import createSchema from "./create.schema"
-export { createSchema }
+import createCommentSchema from "./create-comment.schema"
+export { createSchema, createCommentSchema }
