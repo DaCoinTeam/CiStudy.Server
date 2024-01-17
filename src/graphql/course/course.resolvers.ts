@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CourseMySqlService } from "@database"
 import { Resolver, Query, Args } from "@nestjs/graphql"
-import { FindByCourseIdRequestDto } from "./dtos"
+import { Course, FindOneInput, FindOneOutput } from "./models"
 
-@Resolver("Course")
+@Resolver(of => Course)
 export default class CourseResolvers {
 	constructor(private readonly courseMySqlService: CourseMySqlService){
 	}
-    @Query("findByCourseId")
-	async findByCourseId(
-    @Args("input") args: FindByCourseIdRequestDto,
+	@Query(returns => Course)
+	async findOne(
+    @Args("input") args: FindOneInput,
 	) {
 		return await this.courseMySqlService.findById(args.courseId)
 	}

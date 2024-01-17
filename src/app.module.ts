@@ -21,12 +21,11 @@ import {
 	PostRestfulModule,
 } from "@restful"
 import {
-	SetBearerTokenFromQueryMiddleware,
-	AttachCourseIdFromQueryMiddleware,
+	SetBearerTokenMiddleware,
+	AttachCourseIdMiddleware,
 	GlobalServicesModule,
 } from "@global"
 import { TypeOrmModule } from "@nestjs/typeorm"
-import { RouteInfo } from "@nestjs/common/interfaces"
 
 @Module({
 	imports: [
@@ -46,12 +45,8 @@ import { RouteInfo } from "@nestjs/common/interfaces"
 		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
-			typePaths: ["./**/*.graphql"],
-			installSubscriptionHandlers: true,
-			definitions: {
-				path: join(process.cwd(), "src/graphql.schema.ts"),
-				outputAs: "class",
-			},
+			autoSchemaFile: join(process.cwd(), "src/schema.gql"),
+			sortSchema: true,
 		}),
 
 		//graphql
@@ -71,12 +66,9 @@ import { RouteInfo } from "@nestjs/common/interfaces"
 })
 export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(SetBearerTokenFromQueryMiddleware).forRoutes()
+		consumer.apply(SetBearerTokenMiddleware).forRoutes()
 		consumer
-			.apply(
-				SetBearerTokenFromQueryMiddleware,
-				AttachCourseIdFromQueryMiddleware,
-			)
+			.apply(SetBearerTokenMiddleware, AttachCourseIdMiddleware)
 			.forRoutes({
 				path: "api/course/stream-preview",
 				method: RequestMethod.GET,

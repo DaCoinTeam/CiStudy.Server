@@ -70,43 +70,4 @@ export default class CourseEntity {
 
 	@OneToMany(() => EnrolledEntity, (enrolled) => enrolled.course)
   	enrolledInfos: EnrolledEntity[]
-
-	// --- relations ---
-
-	//student
-	//   @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
-	//   @JoinColumn({ name: "studentId" })
-	//   	student: UserEntity
-
-	// creator
-	//   @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
-	//   @JoinColumn({ name: "creatorId" })
-	//   	creator: UserEntity
-
-	// material
-	//   @OneToMany(() => MaterialEntity, (material) => material.course, {
-	//   	onDelete: "CASCADE",
-	//   })
-	//   	materials: MaterialEntity[]
-
-	// section
-	//   @OneToMany(() => SectionEntity, (section) => section.course, {
-	//   	onDelete: "CASCADE",
-	//   })
-	//   	sections: SectionEntity[]
-
-	// topic
-	//   @ManyToMany(() => TopicEntity, (topicEntity) => topicEntity.courses)
-	//   @JoinTable({
-	//   	name: "course_topic_mapping",
-	//   	joinColumn: {
-	//   		name: "courseId",
-	//   		referencedColumnName: "id",
-	//   	},
-	//   	2inverseJoinColumn: {
-	//   		name: "topicId",
-	//   		referencedColumnName: "id",
-	//   	},
-	//   })
-	//   	topics: TopicEntity[]
 }

@@ -1,4 +1,4 @@
-import SetBearerTokenFromQueryMiddleware from "./set-bearer-token-from-query.middleware"
-import AttachCourseIdFromQueryMiddleware from "./attach-course-id-from-query"
+import SetBearerTokenMiddleware from "./set-bearer-token.middleware"
+import AttachCourseIdMiddleware from "./attach-course-id.middleware"
 
-export { SetBearerTokenFromQueryMiddleware, AttachCourseIdFromQueryMiddleware }
+export { SetBearerTokenMiddleware, AttachCourseIdMiddleware }
