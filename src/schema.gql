@@ -2,11 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type AuthTokens {
-  accessToken: String!
-  refreshToken: String!
-}
-
 type Course {
   courseId: ID!
   creatorId: String!
@@ -26,13 +21,8 @@ input FindOneInput {
   courseId: ID!
 }
 
-type FindOneOutput {
-  data: Course!
-  tokens: AuthTokens
-}
-
 type Query {
-  findOne(input: FindOneInput!): FindOneOutput!
+  findOne(input: FindOneInput!): Course!
 }
 
 enum VerifiedStatus {
