@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { UserKind, UserRole } from "@database"
 import { Field, ID, ObjectType } from "@nestjs/graphql"
 
@@ -7,16 +6,16 @@ export default class UserModel {
   @Field(() => ID)
   	userId: string
 
-  @Field((type) => String)
+  @Field(() => String)
   	email: string
 
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   	password: string
 
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   	avatarUrl: string
 
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   	phoneNumber: string
 
   @Field(() => Number, { nullable: true })
@@ -25,24 +24,24 @@ export default class UserModel {
   @Field(() => UserRole)
   	role: UserRole
 
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   	walletId: string
 
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   	firstName: string
 
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   	lastName: string
 
-  @Field((type) => Date, { nullable: true })
+  @Field(() => Date, { nullable: true })
   	birthdate: Date
 
-  @Field((type) => Boolean)
+  @Field(() => Boolean)
   	verified: boolean
 
-  @Field((type) => UserKind)
+  @Field(() => UserKind)
   	kind: UserKind
 
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   	externalId: string
 }
