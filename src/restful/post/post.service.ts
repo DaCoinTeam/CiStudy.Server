@@ -1,7 +1,17 @@
 import { ConflictException, Injectable } from "@nestjs/common"
-import { PostLikeMySqlEntity, ContentType, PostMySqlEntity, PostCommentMySqlEntity } from "@database"
-import { CreateRequestDto, LikeRequestDto, CommentRequestDto, ReplyCommentRequestDto } from "./dto"
-import { PostMySqlDto, UserMySqlDto, PostCommentSqlDto } from "@shared"
+import {
+	PostLikeMySqlEntity,
+	ContentType,
+	PostMySqlEntity,
+	PostCommentMySqlEntity,
+	UserMySqlEntity,
+} from "@database"
+import {
+	CreateRequestDto,
+	LikeRequestDto,
+	CommentRequestDto,
+	ReplyCommentRequestDto,
+} from "./dto"
 import { FirebaseService } from "@global"
 import { DeepPartial, Repository } from "typeorm"
 import { InjectRepository } from "@nestjs/typeorm"
@@ -9,18 +19,18 @@ import { InjectRepository } from "@nestjs/typeorm"
 @Injectable()
 export default class PostService {
 	constructor(
-		@InjectRepository(PostMySqlEntity)
+    @InjectRepository(PostMySqlEntity)
     private readonly postMySqlRepository: Repository<PostMySqlEntity>,
-	@InjectRepository(PostLikeMySqlEntity)
+    @InjectRepository(PostLikeMySqlEntity)
     private readonly postLikeMySqlRepository: Repository<PostLikeMySqlEntity>,
-	@InjectRepository(PostCommentMySqlEntity)
-	private readonly postCommentMySqlRepository: Repository<PostCommentMySqlEntity>,
+    @InjectRepository(PostCommentMySqlEntity)
+    private readonly postCommentMySqlRepository: Repository<PostCommentMySqlEntity>,
 
-	private readonly firebaseService: FirebaseService,
+    private readonly firebaseService: FirebaseService,
 	) {}
 
 	async create(
-		user: UserMySqlDto,
+		user: UserMySqlEntity,
 		data: CreateRequestDto,
 		files: Express.Multer.File[],
 	): Promise<string> {
@@ -44,7 +54,7 @@ export default class PostService {
 		}
 		await Promise.all(promises)
 
-		const post: DeepPartial<PostMySqlDto> = {
+		const post: DeepPartial<PostMySqlEntity> = {
 			...data,
 			creatorId: user.userId,
 			postContents: postContents.map((postContent, index) => ({
@@ -57,7 +67,7 @@ export default class PostService {
 		return `A post with id ${created.postId} has been created successfully.`
 	}
 
-	async like(user: UserMySqlDto, body: LikeRequestDto) {
+	async like(user: UserMySqlEntity, body: LikeRequestDto) {
 		const found = await this.postLikeMySqlRepository.findOneBy({
 			userId: user.userId,
 			postId: body.postId,
@@ -68,29 +78,29 @@ export default class PostService {
 			)
 		await this.postCommentMySqlRepository.save({
 			userId: user.userId,
-			postId: body.postId
+			postId: body.postId,
 		})
 		return `Successfully liked the post with id ${body.postId}.`
 	}
 
-	async unlike(user: UserMySqlDto, body: LikeRequestDto) {
+	async unlike(user: UserMySqlEntity, body: LikeRequestDto) {
 		const found = await this.postLikeMySqlRepository.findOneBy({
 			userId: user.userId,
 			postId: body.postId,
-		}	)
+		})
 		if (found === null || found.isDeleted)
 			throw new ConflictException(
 				`The post with id ${body.postId} has already not been liked.`,
 			)
 		await this.postLikeMySqlRepository.save({
 			userId: user.userId,
-			postId: body.postId
+			postId: body.postId,
 		})
 		return `Successfully unliked the post with id ${body.postId}.`
 	}
 
 	async comment(
-		user: UserMySqlDto,
+		user: UserMySqlEntity,
 		data: CommentRequestDto,
 		files: Express.Multer.File[],
 	): Promise<string> {
@@ -102,11 +112,11 @@ export default class PostService {
 			const promise = async () => {
 				if (
 					postCommentContent.contentType === ContentType.Image ||
-					postCommentContent.contentType === ContentType.Video
+          postCommentContent.contentType === ContentType.Video
 				) {
 					const { buffer, filename } = files.at(indexFile)
 					const url = await this.firebaseService.uploadFile(buffer, filename)
-					
+
 					postCommentContent.content = url
 				}
 			}
@@ -115,13 +125,15 @@ export default class PostService {
 		}
 		await Promise.all(promises)
 
-		const postComment: DeepPartial<PostCommentSqlDto> = {
+		const postComment: DeepPartial<PostCommentMySqlEntity> = {
 			...data,
 			userId: user.userId,
-			postCommentContents: postCommentContents.map((postCommentContent, index) => ({
-				...postCommentContent,
-				index,
-			})),
+			postCommentContents: postCommentContents.map(
+				(postCommentContent, index) => ({
+					...postCommentContent,
+					index,
+				}),
+			),
 		}
 
 		const created = await this.postLikeMySqlRepository.save(postComment)
@@ -129,7 +141,7 @@ export default class PostService {
 	}
 
 	async replyComment(
-		user: UserMySqlDto,
+		user: UserMySqlEntity,
 		data: ReplyCommentRequestDto,
 		files: Express.Multer.File[],
 	): Promise<string> {
@@ -137,7 +149,7 @@ export default class PostService {
 		const promises: Promise<void>[] = []
 
 		const fatherComment = await this.postCommentMySqlRepository.findOneBy({
-			postCommentId: data.fatherCommentId
+			postCommentId: data.fatherCommentId,
 		})
 
 		let indexFile = 0
@@ -145,11 +157,11 @@ export default class PostService {
 			const promise = async () => {
 				if (
 					postCommentContent.contentType === ContentType.Image ||
-					postCommentContent.contentType === ContentType.Video
+          postCommentContent.contentType === ContentType.Video
 				) {
 					const { buffer, filename } = files.at(indexFile)
 					const url = await this.firebaseService.uploadFile(buffer, filename)
-					
+
 					postCommentContent.content = url
 				}
 			}
@@ -158,19 +170,21 @@ export default class PostService {
 		}
 		await Promise.all(promises)
 
-		const postComment: DeepPartial<PostCommentSqlDto> = {
+		const postComment: DeepPartial<PostCommentMySqlEntity> = {
 			...data,
 			postId: fatherComment.postId,
 			userId: user.userId,
 			fatherCommentId: fatherComment.postCommentId,
-			postCommentContents: postCommentContents.map((postCommentContent, index) => ({
-				...postCommentContent,
-				index,
-			})),
+			postCommentContents: postCommentContents.map(
+				(postCommentContent, index) => ({
+					...postCommentContent,
+					index,
+				}),
+			),
 		}
 
 		const created = await this.postCommentMySqlRepository.save(postComment)
-	
+
 		return `Comment with id ${created.postCommentId} reply successfully to comment with id ${created.fatherCommentId}.`
 	}
 }

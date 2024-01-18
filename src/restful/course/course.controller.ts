@@ -30,11 +30,11 @@ import {
 	StreamPreviewRequestDto,
 } from "./dto"
 import { AuthInterceptor, JwtAuthGuard, User } from "../shared"
-import { UserMySqlDto } from "@shared"
 import CourseService from "./course.service"
 import { FileFieldsInterceptor } from "@nestjs/platform-express"
 import { swaggerSchema } from "./dto/create/request.dto"
 import { Response } from "express"
+import { UserMySqlEntity } from "@database"
 
 @ApiTags("Course")
 @Controller("api/course")
@@ -59,7 +59,7 @@ export default class CourseController {
   	]),
   )
 	async create(
-    @User() user: UserMySqlDto,
+    @User() user: UserMySqlEntity,
     @UploadedFiles()
     	files: {
       thumbnailUrl?: Express.Multer.File[];
@@ -101,7 +101,7 @@ export default class CourseController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async enrollToCourse(
-    @User() user: UserMySqlDto,
+    @User() user: UserMySqlEntity,
     @Body() body: EnrollRequestDto,
   ) {
   	await this.courseService.enroll(user, body)

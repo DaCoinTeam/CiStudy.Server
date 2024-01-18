@@ -1,4 +1,4 @@
-import { UserRole, UserKind } from "@shared"
+import { UserRole, UserKind } from "@database"
 
 export default class SignInResponseDto {
 	userId: string

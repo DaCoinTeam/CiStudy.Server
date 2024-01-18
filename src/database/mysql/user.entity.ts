@@ -1,20 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm"
-import SessionEntity from "../session/session.entity"
-import PostCommentEntity from "../post-comment.entity"
-import PostLikeEntity from "../post-like.entity"
-import EnrolledEntity from "../enrolled-info/enrolled-info.entity"
+import SessionEntity from "./session.entity"
+import PostCommentEntity from "./post-comment.entity"
+import PostLikeEntity from "./post-like.entity"
+import EnrolledEntity from "./enrolled-info.entity"
+import { UserKind, UserRole } from "./shared"
 
-export enum UserRole {
-  User = "User",
-  Moderator = "Moderator",
-  Administrator = "Administrator",
-}
-
-export enum UserKind {
-  Local = "Local",
-  Google = "Google",
-  Facebook = "Facebook",
-}
 
 @Entity("user")
 export default class UserEntity {

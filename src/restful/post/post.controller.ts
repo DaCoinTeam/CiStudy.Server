@@ -15,12 +15,13 @@ import {
 } from "@nestjs/swagger"
 import { CreateRequestDto, LikeRequestDto, UnlikeRequestDto, CommentRequestDto, ReplyCommentRequestDto } from "./dto"
 import { AuthInterceptor, DataFromBody, User } from "../shared"
-import { Files, UserMySqlDto } from "@shared"
+import { Files } from "@shared"
 import PostService from "./post.service"
 import { FileFieldsInterceptor } from "@nestjs/platform-express"
 import { JwtAuthGuard } from "src/graphql/shared"
 import { createSchema, commentSchema, replyCommentSchema } from "./schemas"
 import { MustEnrolledGuard } from "./guards"
+import { UserMySqlEntity } from "@database"
 
 @ApiTags("Post")
 @Controller("api/post")
@@ -42,7 +43,7 @@ export default class PostController {
   )
   @Post("/create")
 	async create(
-    @User() user: UserMySqlDto,
+    @User() user: UserMySqlEntity,
     @DataFromBody() data: CreateRequestDto,
     @UploadedFiles() { files }: Files,
 	) {
@@ -62,7 +63,7 @@ export default class PostController {
   @UseGuards(JwtAuthGuard, MustEnrolledGuard)
   @UseInterceptors(AuthInterceptor)
   @Post("like")
-  async like(@User() user: UserMySqlDto, @Body() body: LikeRequestDto) {
+  async like(@User() user: UserMySqlEntity, @Body() body: LikeRequestDto) {
   	return await this.postService.like(user, body)
   }
 
@@ -79,7 +80,7 @@ export default class PostController {
 @UseGuards(JwtAuthGuard, MustEnrolledGuard)
 @UseInterceptors(AuthInterceptor)
 @Post("unlike")
-  async unlike(@User() user: UserMySqlDto, @Body() body: UnlikeRequestDto) {
+  async unlike(@User() user: UserMySqlEntity, @Body() body: UnlikeRequestDto) {
   	return await this.postService.unlike(user, body)
   }
 
@@ -98,7 +99,7 @@ export default class PostController {
 )
 @Post("comment")
   async comment(
-  @User() user: UserMySqlDto,
+  @User() user: UserMySqlEntity,
   @DataFromBody() data: CommentRequestDto,
   @UploadedFiles() { files }: Files,
   ) {
@@ -120,7 +121,7 @@ export default class PostController {
 )
 @Post("reply-comment")
   async replyComment(
-  @User() user: UserMySqlDto,
+  @User() user: UserMySqlEntity,
   @DataFromBody() data: ReplyCommentRequestDto,
   @UploadedFiles() { files }: Files,
   ) {

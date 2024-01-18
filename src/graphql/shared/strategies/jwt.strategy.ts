@@ -1,7 +1,7 @@
 import { PassportStrategy } from "@nestjs/passport"
 import { ExtractJwt, Strategy } from "passport-jwt"
 import { jwtConfig } from "@config"
-import { UserMySqlDto } from "@shared"
+import { UserMySqlEntity } from "@database"
 import { Injectable } from "@nestjs/common"
 
 @Injectable()
@@ -14,10 +14,10 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
 		})
 	}
 
-	async validate(payload: UserMySqlDto & {
+	async validate(payload: UserMySqlEntity & {
 		iat: number,
 		exp: number
-	}): Promise<UserMySqlDto> {
+	}): Promise<UserMySqlEntity> {
 		return payload
 	}
 }

@@ -20,14 +20,16 @@ import {
 	Sha256Service,
 	AuthManagerService,
 } from "@global"
-import { UserMySqlService } from "@database"
-import { UserMySqlDto } from "@shared"
+import { UserMySqlEntity } from "@database"
 import { UserKind } from "./dto/verify-google-access-token"
+import { InjectRepository } from "@nestjs/typeorm"
+import { Repository } from "typeorm"
 
 @Injectable()
 export default class AuthService {
 	constructor(
-    private readonly userMySqlService: UserMySqlService,
+    @InjectRepository(UserMySqlEntity)
+    private readonly userMySqlRepository: Repository<UserMySqlEntity>,
     private readonly sha256Service: Sha256Service,
     private readonly mailerService: MailerService,
     private readonly authManagerService: AuthManagerService,
@@ -35,27 +37,27 @@ export default class AuthService {
 	) {}
 
 	async signUp(body: SignUpRequestDto): Promise<string> {
-		const found = await this.userMySqlService.findOne({ email : body.email })
+		const found = await this.userMySqlRepository.findBy({ email: body.email })
 		if (found)
-			throw new ConflictException(
-				`User with email ${body.email} has existed.`,
-			)
+			throw new ConflictException(`User with email ${body.email} has existed.`)
 		body.password = this.sha256Service.createHash(body.password)
-		const created = await this.userMySqlService.create(body)
+		const created = await this.userMySqlRepository.save(body)
 
 		await this.mailerService.sendMail(created.userId, body.email)
-		return `An user with id ${created.userId} has been created`  
+		return `An user with id ${created.userId} has been created`
 	}
 
 	async signIn(body: SignInRequestDto): Promise<SignInResponseDto> {
-		const found = await this.userMySqlService.findOne( { email : body.email })
+		const found = await this.userMySqlRepository.findOneBy({
+			email: body.email,
+		})
 		if (!found) throw new NotFoundException("User not found.")
 		if (!this.sha256Service.verifyHash(body.password, found.password))
 			throw new UnauthorizedException("Invalid credentials.")
 		return found
 	}
 
-	async init(user: UserMySqlDto): Promise<InitResponseDto> {
+	async init(user: UserMySqlEntity): Promise<InitResponseDto> {
 		return user
 	}
 
@@ -65,9 +67,11 @@ export default class AuthService {
 		const decoded = await this.firebaseService.verifyGoogleAccessToken(token)
 		if (!decoded)
 			throw new UnauthorizedException("Invalid Google access token.")
-		let found = await this.userMySqlService.findOne({ externalId : decoded.uid })
+		let found = await this.userMySqlRepository.findOneBy({
+			externalId: decoded.uid,
+		})
 		if (!found) {
-			found = await this.userMySqlService.create({
+			found = await this.userMySqlRepository.save({
 				externalId: decoded.uid,
 				email: decoded.email,
 				avatarUrl: decoded.picture,
@@ -78,18 +82,15 @@ export default class AuthService {
 		return found
 	}
 
-	async verifyRegistration({
-		token,
-	}: VerifyRegistrationRequestDto) {
+	async verifyRegistration({ token }: VerifyRegistrationRequestDto) {
 		const decoded = await this.authManagerService.verifyToken(token)
 		const userId = decoded.userId
 		if (!userId) throw new NotFoundException("User not found.")
 
-		const updated = await this.userMySqlService.update({
-			userId,
+		const updatedResult = await this.userMySqlRepository.update(userId, {
 			verified: true,
 		})
 
-		if (!updated) throw new NotFoundException("Cannot verify user.")
+		if (!updatedResult.affected) throw new NotFoundException("Cannot verify user.")
 	}
 }

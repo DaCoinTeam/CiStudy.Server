@@ -1,18 +1,21 @@
 import { jwtConfig } from "@config"
-import { SessionMySqlService } from "@database"
+import { SessionMySqlEntity } from "@database"
 import {
 	Injectable,
 	InternalServerErrorException,
 	UnauthorizedException,
 } from "@nestjs/common"
 import { JsonWebTokenError, JwtService } from "@nestjs/jwt"
+import { InjectRepository } from "@nestjs/typeorm"
 import { Payload, TokenType } from "@shared"
+import { Repository } from "typeorm"
 
 @Injectable()
 export default class AuthManagerService {
 	constructor(
     private readonly jwtService: JwtService,
-    private readonly sessionMySqlService: SessionMySqlService,
+    @InjectRepository(SessionMySqlEntity)
+    private readonly sessionMySqlRepository: Repository<SessionMySqlEntity>,
 	) {}
 
 	async verifyToken(token: string): Promise<Payload> {
@@ -31,7 +34,7 @@ export default class AuthManagerService {
 	}
 
 	async validateSession(userId: string, clientId: string): Promise<void> {
-		const session = await this.sessionMySqlService.findOne({
+		const session = await this.sessionMySqlRepository.findOneBy({
 			userId,
 			clientId,
 		})
@@ -68,11 +71,13 @@ export default class AuthManagerService {
 		const refreshToken = await this.generateToken(data, TokenType.Refresh)
 
 		if (clientId) {
-			const createOrUpdateResult =
-        await this.sessionMySqlService.createOrUpdate({
-        	clientId,
-        	userId: data.userId,
-        })
+			const createOrUpdateResult = await this.sessionMySqlRepository.update(
+				{
+					clientId,
+					userId: data.userId,
+				},
+				{}
+			)
 
 			if (!createOrUpdateResult)
 				throw new InternalServerErrorException(

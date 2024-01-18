@@ -1,22 +1,28 @@
-import { DeepPartial } from "typeorm"
-import { CourseMySqlService, EnrolledInfoMySqlService } from "@database"
+import { DeepPartial, Repository } from "typeorm"
+import {
+	CourseMySqlEntity,
+	EnrolledInfoMySqlEntity,
+	UserMySqlEntity,
+} from "@database"
 import { Injectable, StreamableFile } from "@nestjs/common"
 import { CreateReponseDto, CreateRequestDto, EnrollRequestDto } from "./dto"
-import { EnrolledInfoMySqlDto, UserMySqlDto } from "@shared"
 import { FirebaseService, VideoStreamerService } from "@global"
 import { Response } from "express"
+import { InjectRepository } from "@nestjs/typeorm"
 
 @Injectable()
 export default class CourseService {
 	constructor(
-    private readonly courseMySqlService: CourseMySqlService,
-	private readonly enrolledInfoMySqlService: EnrolledInfoMySqlService,
+		@InjectRepository(CourseMySqlEntity)
+    private readonly courseMySqlRepository: Repository<CourseMySqlEntity>,
+		@InjectRepository(EnrolledInfoMySqlEntity)
+    private readonly enrolledInfoMySqlRepository: Repository<EnrolledInfoMySqlEntity>,
     private readonly firebaseSerive: FirebaseService,
     private readonly videoStreamerService: VideoStreamerService,
 	) {}
 
 	async create(
-		user: UserMySqlDto,
+		user: UserMySqlEntity,
 		files: {
       thumbnailUrl?: Express.Multer.File[];
       previewVideoUrl?: Express.Multer.File[];
@@ -47,19 +53,19 @@ export default class CourseService {
 		await Promise.all(promises)
 
 		body.creatorId = user.userId
-		return await this.courseMySqlService.create(body)
+		return await this.courseMySqlRepository.save(body)
 	}
 
 	async findById(courseId: string): Promise<CreateReponseDto> {
-		return await this.courseMySqlService.findById(courseId)
+		return await this.courseMySqlRepository.findOneBy({courseId})
 	}
 
 	async findAll(): Promise<CreateReponseDto[]> {
-		return await this.courseMySqlService.findAll()
+		return await this.courseMySqlRepository.find()
 	}
 
 	async delete(courseId: string) {
-		return await this.courseMySqlService.delete(courseId)
+		return await this.courseMySqlRepository.delete(courseId)
 	}
 
 	async streamPreview(
@@ -67,16 +73,20 @@ export default class CourseService {
 		range: string,
 		res: Response,
 	): Promise<StreamableFile> {
-		const course = await this.courseMySqlService.findById(courseId)
-		return this.videoStreamerService.getStreamableVideo(course.previewVideoUrl, range, res)
+		const course = await this.courseMySqlRepository.findOneBy({courseId})
+		return this.videoStreamerService.getStreamableVideo(
+			course.previewVideoUrl,
+			range,
+			res,
+		)
 	}
 
-	async enroll(user: UserMySqlDto, body: EnrollRequestDto) {
-		const enrolledInfo : DeepPartial<EnrolledInfoMySqlDto> = {
+	async enroll(user: UserMySqlEntity, body: EnrollRequestDto) {
+		const enrolledInfo: DeepPartial<EnrolledInfoMySqlEntity> = {
 			userId: user.userId,
 			...body,
 		}
-		const created = await this.enrolledInfoMySqlService.create(enrolledInfo)
+		const created = await this.enrolledInfoMySqlRepository.save(enrolledInfo)
 		return `Enroll successfully with id ${created.enrolledId}`
 	}
 }

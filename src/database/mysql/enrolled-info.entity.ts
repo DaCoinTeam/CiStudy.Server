@@ -5,8 +5,8 @@ import {
 	ManyToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm"
-import UserEntity from "../user/user.entity"
-import CourseEntity from "../course/course.entity"
+import UserEntity from "./user.entity"
+import CourseEntity from "./course.entity"
 
 @Entity("enrolled_info")
 export default class EnrolledInfoEntity {

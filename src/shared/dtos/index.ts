@@ -1,4 +1,3 @@
-export * from "./mysql"
 export * from "./payload.dto"
 export * from "./files.dto"
 

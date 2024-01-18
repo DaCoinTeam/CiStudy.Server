@@ -1,8 +1,9 @@
 import { Module } from "@nestjs/common"
-import { UserMySqlModule } from "@database"
+import { UserMySqlEntity } from "@database"
+import { TypeOrmModule } from "@nestjs/typeorm"
 
 @Module({
-	imports: [UserMySqlModule],
+	imports: [TypeOrmModule.forFeature([UserMySqlEntity])],
 	providers: [
 	],
 })

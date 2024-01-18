@@ -20,7 +20,7 @@
 // } from "./dtos"
 // import { JwtAuthGuard } from "../shared/guard"
 // import { User } from "../shared"
-// import { UserMySqlDto } from "@shared"
+// import { UserMySqlEntity } from "@shared"
 
 // const pubSub = new PubSub()
 
@@ -36,7 +36,7 @@
 //   @Query("signIn")
 // 	async signIn(
 //     @Args("input") args: SignInRequestDto,
-// 	): Promise<Response<UserMySqlDto>> {
+// 	): Promise<Response<UserMySqlEntity>> {
 // 		const found = await this.userMySqlService.findByEmail(args.email)
 // 		if (!found) throw new NotFoundException("User not found.")
 // 		if (!this.sha256Service.verifyHash(args.password, found.password))
@@ -53,9 +53,9 @@
 //   @Query("init")
 //   @UseGuards(JwtAuthGuard)
 //   async init(
-//     @User() user: UserMySqlDto,
+//     @User() user: UserMySqlEntity,
 //     @Args("input") args: InitRequestDto,
-//   ): Promise<Response<UserMySqlDto>> {
+//   ): Promise<Response<UserMySqlEntity>> {
 //   	return this.authManagerService.generateResponse(
 //   		user.userId,
 //   		user,
@@ -67,7 +67,7 @@
 //   @Mutation("verifyGoogleAccessToken")
 //   async verifyGoogleAccessToken(
 //     @Args("input") args: VerifyGoogleAccessTokenRequestDto,
-//   ): Promise<Response<UserMySqlDto>> {
+//   ): Promise<Response<UserMySqlEntity>> {
 //   	const decoded = await this.firebaseService.verifyGoogleAccessToken(
 //   		args.token,
 //   	)

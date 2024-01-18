@@ -8,7 +8,7 @@ import {
 } from "typeorm"
 import PostEntity from "./post.entity"
 import PostCommentContentEntity from "./post-comment-content.entity"
-import UserEntity from "./user/user.entity"
+import UserEntity from "./user.entity"
 import PostCommentLikeEntity from "./post-comment-like.entity"
 
 @Entity("post_comment")

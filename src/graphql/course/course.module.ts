@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common"
-import { CourseMySqlModule } from "@database"
+import { CourseMySqlEntity } from "@database"
 import CourseResolvers from "./course.resolvers"
+import { TypeOrmModule } from "@nestjs/typeorm"
 
 @Module({
-	imports: [CourseMySqlModule],
+	imports: [TypeOrmModule.forFeature([CourseMySqlEntity])],
 	providers: [
 		CourseResolvers
 	],

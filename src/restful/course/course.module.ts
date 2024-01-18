@@ -1,12 +1,14 @@
-import { CourseMySqlModule, EnrolledInfoMySqlModule } from "@database"
 import { Module } from "@nestjs/common"
 import CourseController from "./course.controller"
 import CourseService from "./course.service"
+import { TypeOrmModule } from "@nestjs/typeorm"
+import { EnrolledInfoMySqlEntity, CourseMySqlEntity } from "@database"
 
 @Module({
-	imports: [CourseMySqlModule, EnrolledInfoMySqlModule],
+	imports: [
+		TypeOrmModule.forFeature([CourseMySqlEntity, EnrolledInfoMySqlEntity]),
+	],
 	controllers: [CourseController],
 	providers: [CourseService],
 })
-export default class CourseModule {
-}
+export default class CourseModule {}

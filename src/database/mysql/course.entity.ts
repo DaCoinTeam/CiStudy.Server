@@ -1,14 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 
-import PostEntity from "../post.entity"
-import EnrolledEntity from "../enrolled-info/enrolled-info.entity"
-import SectionEntity from "../section/section.entity"
-
-export enum VerifiedStatus {
-  Pending = "Pending",
-  Approved = "Approved",
-  Rejected = "Rejected",
-}
+import PostEntity from "./post.entity"
+import EnrolledEntity from "./enrolled-info.entity"
+import SectionEntity from "./section.entity"
+import { VerifiedStatus } from "./shared"
 
 interface CourseIncludes {
   time: number;
@@ -75,10 +70,10 @@ export default class CourseEntity {
   //   	materials: MaterialEntity[]
 
   //section
-  @OneToMany(() => SectionEntity, (section) => section.course, {
-  	onDelete: "CASCADE",
-  })
-  	sections: SectionEntity[]
+//   @OneToMany(() => SectionEntity, (section) => section.course, {
+//   	onDelete: "CASCADE",
+//   })
+//   	sections: SectionEntity[]
 
 	// topic
 	//   @ManyToMany(() => TopicEntity, (topicEntity) => topicEntity.courses)

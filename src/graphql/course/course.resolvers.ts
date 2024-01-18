@@ -1,17 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CourseMySqlService } from "@database"
+import { CourseMySqlEntity } from "@database"
 import { Resolver, Query, Args } from "@nestjs/graphql"
 import { FindOneInput } from "./models"
 import { Course } from "../shared"
+import { InjectRepository } from "@nestjs/typeorm"
+import { Repository } from "typeorm"
 
-@Resolver(of => Course)
+@Resolver((of) => Course)
 export default class CourseResolvers {
-	constructor(private readonly courseMySqlService: CourseMySqlService){
-	}
-	@Query(returns => Course)
-	async findOne(
-    @Args("input") args: FindOneInput,
-	) {
-		return await this.courseMySqlService.findById(args.courseId)
+	constructor(
+    @InjectRepository(CourseMySqlEntity)
+    private readonly courseMySqlRepository: Repository<CourseMySqlEntity>,
+	) {}
+  @Query((returns) => Course)
+	async findOne(@Args("input") args: FindOneInput) {
+		return await this.courseMySqlRepository.findOneBy({
+			courseId: args.courseId,
+		})
 	}
 }

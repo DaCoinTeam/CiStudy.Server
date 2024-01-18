@@ -5,7 +5,7 @@ import {
 	ID,
 	ObjectType
 } from "@nestjs/graphql"
-import { VerifiedStatus } from "@shared"
+import { VerifiedStatus } from "@database"
 
 @ObjectType()
 export default class Course {

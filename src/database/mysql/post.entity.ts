@@ -6,7 +6,7 @@ import {
 	OneToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm"
-import CourseEntity from "./course/course.entity"
+import CourseEntity from "./course.entity"
 import PostCommentEntity from "./post-comment.entity"
 import PostContentEntity from "./post-content.entity"
 import PostLikeEntity from "./post-like.entity"
