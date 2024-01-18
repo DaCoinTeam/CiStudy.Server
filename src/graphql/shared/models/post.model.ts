@@ -6,18 +6,18 @@ import CourseModel from "./course.model"
 
 @ObjectType()
 export default class PostModel {
-  @Field((type) => ID)
+  @Field(() => ID)
   	postId: string
 
-  @Field((type) => String)
+  @Field(() => String)
   	title: string
 
-  @Field((type) => CourseModel)
+  @Field(() => CourseModel)
   	course: CourseModel
 
-  @Field((type) => [PostContent])
+  @Field(() => [PostContent])
   	postContents: PostContent[]
 
-  @Field((type) => UserModel)
+  @Field(() => UserModel)
   	creator: UserModel
 }

@@ -6,21 +6,21 @@ import { PostModel } from "../shared"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 
-@Resolver((of) => PostModel)
+@Resolver(() => PostModel)
 export default class PostResolvers {
 	constructor(
     @InjectRepository(PostMySqlEntity)
     private readonly postMySqlRepository: Repository<PostMySqlEntity>,
 	) {}
-  @Query((returns) => PostModel)
+  @Query(() => PostModel)
 	async findOnePost(@Args("input") args: FindOnePostInput) {
 		return await this.postMySqlRepository.findOneBy(args)
 	}
 
-  @Query((returns) => [PostModel])
-  async findManyPost(
+  @Query(() => [PostModel])
+  async findManyPosts(
     @Args("input") args: FindManyPostInput,
-  ) {
+  ) { 
   	const founds = await this.postMySqlRepository.findAndCount({
   		where: {
   			courseId : args.courseId
@@ -29,7 +29,8 @@ export default class PostResolvers {
   		skip: args.pageNumber * args.pageSize,
   		relations: {
   			postContents: true,
-  			creator: true
+  			creator: true,
+  			course: true
   		}
   	})
   	return founds[0]

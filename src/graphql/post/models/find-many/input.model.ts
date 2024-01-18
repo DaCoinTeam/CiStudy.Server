@@ -1,16 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Field, ID, InputType, Int } from "@nestjs/graphql"
+import { Field, InputType, Int } from "@nestjs/graphql"
 import { IsInt, IsUUID } from "class-validator"
 
 @InputType()
 export default class FindManyPostInput {
-  @Field((type) => Int)
-  @IsInt()
-  	pageNumber: number
-  @Field((type) => Int)
-  @IsInt()
-  	pageSize: number
-  @Field((type) => String)
+  @Field(() => String)
   @IsUUID()
   	courseId: string
+  @Field(() => Int)
+  @IsInt()
+  	pageNumber: number
+  @Field(() => Int)
+  @IsInt()
+  	pageSize: number
 }

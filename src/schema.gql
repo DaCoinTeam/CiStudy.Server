@@ -61,7 +61,7 @@ type PostModel {
 }
 
 type Query {
-  findManyPost(input: FindManyPostInput!): [PostModel!]!
+  findManyPosts(input: FindManyPostInput!): [PostModel!]!
   findOne(input: FindOneInput!): CourseModel!
   findOnePost(input: FindOnePostInput!): PostModel!
 }
