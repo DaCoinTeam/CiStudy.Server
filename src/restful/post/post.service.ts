@@ -1,17 +1,22 @@
 import { ConflictException, Injectable } from "@nestjs/common"
-import { PostLikeMySqlService, PostMySqlService, PostCommentMySqlService } from "@database"
+import { PostLikeMySqlEntity, ContentType, PostMySqlEntity, PostCommentMySqlEntity } from "@database"
 import { CreateRequestDto, LikeRequestDto, CommentRequestDto, ReplyCommentRequestDto } from "./dto"
-import { ContentType, PostMySqlDto, UserMySqlDto, PostCommentSqlDto } from "@shared"
+import { PostMySqlDto, UserMySqlDto, PostCommentSqlDto } from "@shared"
 import { FirebaseService } from "@global"
-import { DeepPartial } from "typeorm"
+import { DeepPartial, Repository } from "typeorm"
+import { InjectRepository } from "@nestjs/typeorm"
 
 @Injectable()
 export default class PostService {
 	constructor(
-    private readonly postMySqlService: PostMySqlService,
-    private readonly postLikeMySqlService: PostLikeMySqlService,
-    private readonly firebaseService: FirebaseService,
-	private readonly postCommentMySqlService: PostCommentMySqlService,
+		@InjectRepository(PostMySqlEntity)
+    private readonly postMySqlRepository: Repository<PostMySqlEntity>,
+	@InjectRepository(PostLikeMySqlEntity)
+    private readonly postLikeMySqlRepository: Repository<PostLikeMySqlEntity>,
+	@InjectRepository(PostCommentMySqlEntity)
+	private readonly postCommentMySqlRepository: Repository<PostCommentMySqlEntity>,
+
+	private readonly firebaseService: FirebaseService,
 	) {}
 
 	async create(
@@ -48,21 +53,20 @@ export default class PostService {
 			})),
 		}
 
-		const created = await this.postMySqlService.create(post)
-		console.log(created)
+		const created = await this.postMySqlRepository.save(post)
 		return `A post with id ${created.postId} has been created successfully.`
 	}
 
 	async like(user: UserMySqlDto, body: LikeRequestDto) {
-		const found = await this.postLikeMySqlService.findByUserIdAndPostId(
-			user.userId,
-			body.postId,
-		)
+		const found = await this.postLikeMySqlRepository.findOneBy({
+			userId: user.userId,
+			postId: body.postId,
+		})
 		if (found !== null && !found.isDeleted)
 			throw new ConflictException(
 				`The post with id ${body.postId} has already been liked.`,
 			)
-		await this.postLikeMySqlService.create({
+		await this.postCommentMySqlRepository.save({
 			userId: user.userId,
 			postId: body.postId
 		})
@@ -70,15 +74,15 @@ export default class PostService {
 	}
 
 	async unlike(user: UserMySqlDto, body: LikeRequestDto) {
-		const found = await this.postLikeMySqlService.findByUserIdAndPostId(
-			user.userId,
-			body.postId,
-		)
+		const found = await this.postLikeMySqlRepository.findOneBy({
+			userId: user.userId,
+			postId: body.postId,
+		}	)
 		if (found === null || found.isDeleted)
 			throw new ConflictException(
 				`The post with id ${body.postId} has already not been liked.`,
 			)
-		await this.postLikeMySqlService.create({
+		await this.postLikeMySqlRepository.save({
 			userId: user.userId,
 			postId: body.postId
 		})
@@ -120,10 +124,7 @@ export default class PostService {
 			})),
 		}
 
-		const created = await this.postCommentMySqlService.create(postComment)
-
-		console.log(created)
-	
+		const created = await this.postLikeMySqlRepository.save(postComment)
 		return `A comment with id ${created.postId} has been created successfully.`
 	}
 
@@ -135,7 +136,7 @@ export default class PostService {
 		const { postCommentContents } = data
 		const promises: Promise<void>[] = []
 
-		const fatherComment = await this.postCommentMySqlService.findOne({
+		const fatherComment = await this.postCommentMySqlRepository.findOneBy({
 			postCommentId: data.fatherCommentId
 		})
 
@@ -168,7 +169,7 @@ export default class PostService {
 			})),
 		}
 
-		const created = await this.postCommentMySqlService.create(postComment)
+		const created = await this.postCommentMySqlRepository.save(postComment)
 	
 		return `Comment with id ${created.postCommentId} reply successfully to comment with id ${created.fatherCommentId}.`
 	}

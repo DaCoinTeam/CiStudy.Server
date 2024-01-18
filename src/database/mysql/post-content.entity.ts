@@ -6,15 +6,8 @@ import {
 	PrimaryGeneratedColumn,
 } from "typeorm"
 
-import PostEntity from "../post/post.entity"
-
-export enum ContentType {
-  Text = "Text",
-  Video = "Video",
-  Code = "Code",
-  Image = "Image",
-  Label = "Label",
-}
+import PostEntity from "./post.entity"
+import { ContentType } from "./shared"
 
 @Entity("post_content")
 export default class PostContentEntity {

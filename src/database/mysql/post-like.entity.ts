@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import UserEntity from "../user/user.entity"
-import PostCommentEntity from "../post-comment/post-comment.entity"
+import UserEntity from "./user/user.entity"
+import PostEntity from "./post.entity"
 
-@Entity("post_comment_like")
-export default class PostCommentLikeEntity {
+@Entity("post_like")
+export default class PostLikeEntity {
   @PrimaryGeneratedColumn("uuid")
-  	postCommentLikeId: string
+  	postLikeId: string
 
   @Column({ type: "uuid", length: 36 })
   	userId: string
@@ -20,11 +20,17 @@ export default class PostCommentLikeEntity {
   })
   	createdAt: Date
 
-  @ManyToOne(() => UserEntity, (user) => user.postLikes)
-  @JoinColumn({ name: "userId" })
+    @Column({
+    	type: "boolean",
+    	default: false
+    })
+    	isDeleted: boolean
+
+      @ManyToOne(() => UserEntity, (user) => user.postLikes)
+      @JoinColumn({ name: "userId" })
       	user: UserEntity
 
-  @ManyToOne(() => PostCommentEntity, (postComment) => postComment.postCommentLikes)
+  @ManyToOne(() => PostEntity, (post) => post.postLikes)
   @JoinColumn({ name: "postId" })
-  	postComment: PostCommentEntity
+  	post: PostEntity
 }

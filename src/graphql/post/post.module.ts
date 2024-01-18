@@ -1,11 +1,10 @@
 import { Module } from "@nestjs/common"
-import PostController from "./post.controller"
-import PostService from "./post.service"
+import PostResolvers from "./post.resolvers"
 import { TypeOrmModule } from "@nestjs/typeorm"
 import {
 	PostMySqlEntity,
-	PostContentMySqlEntity,
 	PostLikeMySqlEntity,
+	PostContentMySqlEntity,
 	PostCommentMySqlEntity,
 	PostCommentContentMySqlEntity,
 	PostCommentLikeMySqlEntity,
@@ -22,7 +21,6 @@ import {
 			PostCommentLikeMySqlEntity,
 		]),
 	],
-	controllers: [PostController],
-	providers: [PostService],
+	providers: [PostResolvers],
 })
-export default class PostModule {}
+export default class PostGraphQLModule {}

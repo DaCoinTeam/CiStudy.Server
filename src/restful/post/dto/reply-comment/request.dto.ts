@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { ContentType } from "@shared"
+import { ContentType } from "@database"
 import { IsString, IsUUID } from "class-validator"
 
 export default class ReplyCommentRequestDto {

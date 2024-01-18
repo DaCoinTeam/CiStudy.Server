@@ -1,3 +1,5 @@
+import { ContentType } from "@database"
+
 export default interface PostCommentContentDto {
     postCommentContentId : string;
     index: number;
@@ -6,10 +8,3 @@ export default interface PostCommentContentDto {
     postCommentId: string;
   }
   
-enum ContentType {
-    Text = "Text",
-    Video = "Video",
-    Code = "Code",
-    Image = "Image",
-    Label = "Label"
-  }

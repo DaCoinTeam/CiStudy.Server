@@ -6,10 +6,21 @@ export * from "./section"
 export * from "./topic"
 export * from "./video"
 export * from "./session"
-export * from "./post"
-export * from "./post-comment"
-export * from "./post-comment-content"
-export * from "./post-comment-like"
-export * from "./post-content"
-export * from "./post-like"
+import PostMySqlEntity from "./post.entity"
+import PostLikeMySqlEntity from "./post-like.entity"
+import PostCommentMySqlEntity from "./post-comment.entity"
+import PostCommentLikeMySqlEntity from "./post-comment-like.entity"
+import PostContentMySqlEntity from "./post-content.entity"
+import PostCommentContentMySqlEntity from "./post-comment-content.entity"
 export * from "./enrolled-info"
+
+export {
+	PostMySqlEntity,
+	PostLikeMySqlEntity,
+	PostCommentMySqlEntity,
+	PostCommentLikeMySqlEntity,
+	PostContentMySqlEntity,
+	PostCommentContentMySqlEntity,
+}
+
+export * from "./shared"

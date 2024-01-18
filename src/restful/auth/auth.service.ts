@@ -65,7 +65,6 @@ export default class AuthService {
 		const decoded = await this.firebaseService.verifyGoogleAccessToken(token)
 		if (!decoded)
 			throw new UnauthorizedException("Invalid Google access token.")
-
 		let found = await this.userMySqlService.findOne({ externalId : decoded.uid })
 		if (!found) {
 			found = await this.userMySqlService.create({

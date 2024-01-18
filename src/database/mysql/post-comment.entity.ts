@@ -6,10 +6,10 @@ import {
 	OneToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm"
-import PostEntity from "../post/post.entity"
-import PostCommentContentEntity from "../post-comment-content/post-comment-content.entity"
-import UserEntity from "../user/user.entity"
-import PostCommentLikeEntity from "../post-comment-like/post-comment-like.entity"
+import PostEntity from "./post.entity"
+import PostCommentContentEntity from "./post-comment-content.entity"
+import UserEntity from "./user/user.entity"
+import PostCommentLikeEntity from "./post-comment-like.entity"
 
 @Entity("post_comment")
 export default class PostCommentEntity {

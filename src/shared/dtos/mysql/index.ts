@@ -6,6 +6,7 @@ export * from "./post-content.dto"
 export * from "./enrolled-info.dto"
 export * from "./post-comment.dto"
 export * from "./post-comment-content.dto"
+export * from "./post-content.dto"
 
 import UserMySqlDto from "./user.dto"
 import PostContentMySqlDto from "./post-content.dto"

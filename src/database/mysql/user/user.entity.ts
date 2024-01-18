@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm"
 import SessionEntity from "../session/session.entity"
-import PostCommentEntity from "../post-comment/post-comment.entity"
-import PostLikeEntity from "../post-like/post-like.entity"
+import PostCommentEntity from "../post-comment.entity"
+import PostLikeEntity from "../post-like.entity"
 import EnrolledEntity from "../enrolled-info/enrolled-info.entity"
 
 export enum UserRole {

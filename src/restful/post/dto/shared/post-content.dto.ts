@@ -1,13 +1,7 @@
+import { ContentType } from "@database"
 import { ApiProperty } from "@nestjs/swagger"
 import { IsInt, IsUUID, Length } from "class-validator"
 
-export enum ContentType {
-  Text = "Text",
-  Video = "Video",
-  Code = "Code",
-  Image = "Image",
-  Label = "Label",
-}
 
 export default class PostContent {
   @IsUUID()

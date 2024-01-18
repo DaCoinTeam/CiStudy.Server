@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CourseMySqlService } from "@database"
 import { Resolver, Query, Args } from "@nestjs/graphql"
-import { Course, FindOneInput } from "./models"
+import { FindOneInput } from "./models"
+import { Course } from "../shared"
 
 @Resolver(of => Course)
 export default class CourseResolvers {

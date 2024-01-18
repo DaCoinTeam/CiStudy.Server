@@ -1,16 +1,9 @@
-export enum ContentType {
-    Text = "Text",
-    Video = "Video",
-    Code = "Code",
-    Image = "Image",
-    Label = "Label"
-  }
+import { ContentType } from "@database"
 
 export default interface PostContentDto {
-    postContentId : string;
-    index: number;
-    content: string;
-    contentType: ContentType;
-    postId: string;
-  }
-  
+  postContentId: string;
+  index: number;
+  content: string;
+  contentType: ContentType;
+  postId: string;
+}

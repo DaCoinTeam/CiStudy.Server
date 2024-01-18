@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common"
-import { Repository } from "typeorm"
+import { FindOptionsWhere, Repository } from "typeorm"
 import UserEntity from "./user.entity"
 import { InjectRepository } from "@nestjs/typeorm"
 
@@ -16,7 +16,7 @@ export default class UserService {
 		return await this.userRepository.save(created)
 	}
 
-	async findOne(user: Partial<UserEntity>): Promise<UserEntity | null> {
+	async findOne(user: FindOptionsWhere<UserEntity>): Promise<UserEntity | null> {
 		return await this.userRepository.findOneBy(user)
 	}
 

@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+enum ContentType {
+  Code
+  Image
+  Label
+  Text
+  Video
+}
+
 type Course {
   courseId: ID!
   creatorId: String!
@@ -21,8 +29,30 @@ input FindOneInput {
   courseId: ID!
 }
 
+input FindOnePostInput {
+  postId: ID!
+}
+
+type Post {
+  courseId: String!
+  creatorId: String!
+  postContent: PostContent!
+  postId: ID!
+  title: String!
+}
+
+type PostContent {
+  content: String!
+  contentType: ContentType!
+  index: Int!
+  postContentId: ID!
+  postId: String!
+}
+
 type Query {
+  findManyPost(input: FindOnePostInput!): Post!
   findOne(input: FindOneInput!): Course!
+  findOnePost(input: FindOnePostInput!): Post!
 }
 
 enum VerifiedStatus {

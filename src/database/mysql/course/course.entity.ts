@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 
-import PostEntity from "../post/post.entity"
+import PostEntity from "../post.entity"
 import EnrolledEntity from "../enrolled-info/enrolled-info.entity"
 import SectionEntity from "../section/section.entity"
 
