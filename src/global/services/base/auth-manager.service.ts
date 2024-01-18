@@ -6,8 +6,7 @@ import {
 } from "@nestjs/common"
 import { JsonWebTokenError, JwtService } from "@nestjs/jwt"
 import { InjectRepository } from "@nestjs/typeorm"
-import { Payload, TokenType } from "@shared"
-import { AuthTokens, Response } from "../../shared"
+import { Payload, TokenType, AuthTokens, Response  } from "@shared"
 import { Repository } from "typeorm"
 
 @Injectable()

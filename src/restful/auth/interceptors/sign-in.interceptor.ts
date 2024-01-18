@@ -4,7 +4,8 @@ import {
 	ExecutionContext,
 	CallHandler,
 } from "@nestjs/common"
-import { Response, AuthManagerService } from "@global"
+import { AuthManagerService } from "@global"
+import { Response } from "@shared"
 import { Observable, mergeMap } from "rxjs"
 import { SignInResponseDto } from "../dto"
 

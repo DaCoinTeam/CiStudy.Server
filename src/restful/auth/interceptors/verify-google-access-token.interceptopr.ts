@@ -4,7 +4,8 @@ import {
 	ExecutionContext,
 	CallHandler,
 } from "@nestjs/common"
-import { AuthTokens, AuthManagerService } from "@global"
+import { AuthManagerService } from "@global"
+import { AuthTokens } from "@shared"
 import { Observable, mergeMap } from "rxjs"
 
 @Injectable()
