@@ -65,7 +65,7 @@ export default class VideoStreamerService {
 	}
 }
 
-export interface ReadStreamOptions {
+interface ReadStreamOptions {
   start: number;
   end: number;
 }

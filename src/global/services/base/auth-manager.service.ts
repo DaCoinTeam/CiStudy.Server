@@ -7,6 +7,7 @@ import {
 import { JsonWebTokenError, JwtService } from "@nestjs/jwt"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Payload, TokenType } from "@shared"
+import { AuthTokens, Response } from "../../shared"
 import { Repository } from "typeorm"
 
 @Injectable()
@@ -109,17 +110,7 @@ export default class AuthManagerService {
 		}
 	}
 }
-
-export interface Response<T extends object> {
-  data: T;
-  tokens?: AuthTokens;
-}
-
-export interface PayloadLike {
-  userId: string;
-}
-
-export interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-}
+interface PayloadLike {
+	userId: string;
+  }
+  
