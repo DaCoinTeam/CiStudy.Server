@@ -32,9 +32,9 @@ export default class PostService {
 					const { buffer, filename } = files.at(indexFile)
 					const url = await this.firebaseService.uploadFile(buffer, filename)
 					postContent.content = url
-					indexFile++
 				}
 			}
+			indexFile++
 			promises.push(promise())
 		}
 		await Promise.all(promises)
@@ -104,9 +104,9 @@ export default class PostService {
 					const url = await this.firebaseService.uploadFile(buffer, filename)
 					
 					postCommentContent.content = url
-					indexFile++
 				}
 			}
+			indexFile++
 			promises.push(promise())
 		}
 		await Promise.all(promises)
@@ -150,9 +150,9 @@ export default class PostService {
 					const url = await this.firebaseService.uploadFile(buffer, filename)
 					
 					postCommentContent.content = url
-					indexFile++
 				}
 			}
+			indexFile++
 			promises.push(promise())
 		}
 		await Promise.all(promises)

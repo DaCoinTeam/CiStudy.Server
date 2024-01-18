@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Get, UseGuards, Query, UseInterceptors } from "@nestjs/common"
-import { ApiTags } from "@nestjs/swagger"
+import { ApiBearerAuth, ApiQuery, ApiTags } from "@nestjs/swagger"
 import { SignInRequestDto, SignUpRequestDto } from "./dto"
 import UserService from "./auth.service"
 import { SignUpGuard } from "./guards"
@@ -33,6 +33,10 @@ export default class AuthController {
   }
 
   //post - sign-in
+  @ApiQuery({
+  	name: "clientId",
+  	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935",
+  })
   @Post("sign-in")
   @UseInterceptors(SignInInterceptor)
   async signIn(@Body() body: SignInRequestDto) {
@@ -40,6 +44,11 @@ export default class AuthController {
   }
 
   //get - init
+  @ApiQuery({
+  	name: "clientId",
+  	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935",
+  })
+  @ApiBearerAuth()
   @Get("init")
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(AuthInterceptor)

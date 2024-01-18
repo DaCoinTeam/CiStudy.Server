@@ -20,12 +20,12 @@ implements NestInterceptor<T, Response<T>>
 	): Promise<Observable<Response<T>>> {
 		const request = context.switchToHttp().getRequest()
 		const query = request.query
-
+		
 		const { user, type } = request.user as ValidatedInfo
 
 		const clientId = query.clientId as string | undefined
 		const refresh = type === TokenType.Refresh
-
+		console.log(refresh)
 		if (refresh) {
 			await this.authManagerService.validateSession(
 				user.userId,
