@@ -10,7 +10,7 @@ enum ContentType {
   Video
 }
 
-type Course {
+type CourseModel {
   courseId: ID!
   creatorId: String!
   description: String!
@@ -25,6 +25,17 @@ type Course {
   verifiedStatus: VerifiedStatus
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input FindManyPostInput {
+  courseId: String!
+  pageNumber: Int!
+  pageSize: Int!
+}
+
 input FindOneInput {
   courseId: ID!
 }
@@ -33,15 +44,7 @@ input FindOnePostInput {
   postId: ID!
 }
 
-type Post {
-  courseId: String!
-  creatorId: String!
-  postContent: PostContent!
-  postId: ID!
-  title: String!
-}
-
-type PostContent {
+type PostContentModel {
   content: String!
   contentType: ContentType!
   index: Int!
@@ -49,10 +52,47 @@ type PostContent {
   postId: String!
 }
 
+type PostModel {
+  course: CourseModel!
+  creator: UserModel!
+  postContents: [PostContentModel!]!
+  postId: ID!
+  title: String!
+}
+
 type Query {
-  findManyPost(input: FindOnePostInput!): Post!
-  findOne(input: FindOneInput!): Course!
-  findOnePost(input: FindOnePostInput!): Post!
+  findManyPost(input: FindManyPostInput!): [PostModel!]!
+  findOne(input: FindOneInput!): CourseModel!
+  findOnePost(input: FindOnePostInput!): PostModel!
+}
+
+enum UserKind {
+  Facebook
+  Google
+  Local
+}
+
+type UserModel {
+  avatarUrl: String
+  balance: Float
+  birthdate: DateTime
+  email: String!
+  externalId: String
+  firstName: String
+  kind: UserKind!
+  lastName: String
+  password: String
+  phoneNumber: String
+  role: UserRole!
+  userId: ID!
+  verified: Boolean!
+  walletId: String
+}
+
+enum UserRole {
+  Administrator
+  Moderator
+  User
 }
 
 enum VerifiedStatus {

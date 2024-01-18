@@ -3,7 +3,7 @@ import { ContentType } from "@database"
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql"
 
 @ObjectType()
-export default class PostContent {
+export default class PostContentModel {
   @Field((type) => ID)
   	postContentId: string
 

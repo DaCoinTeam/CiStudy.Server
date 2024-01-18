@@ -10,6 +10,7 @@ import CourseEntity from "./course.entity"
 import PostCommentEntity from "./post-comment.entity"
 import PostContentEntity from "./post-content.entity"
 import PostLikeEntity from "./post-like.entity"
+import UserEntity from "./user.entity"
 
 @Entity("post")
 export default class PostEntity {
@@ -28,6 +29,10 @@ export default class PostEntity {
   @ManyToOne(() => CourseEntity, (course) => course.posts)
   @JoinColumn({ name: "courseId" })
   	course: CourseEntity
+
+	  @ManyToOne(() => UserEntity, (user) => user.posts)
+	  @JoinColumn({ name: "creatorId" })
+		  creator: UserEntity
 
   @OneToMany(() => PostContentEntity, (postContent) => postContent.post, { cascade: true })
   	postContents: Partial<PostContentEntity>[]

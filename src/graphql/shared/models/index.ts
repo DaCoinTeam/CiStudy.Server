@@ -1,5 +1,6 @@
-import PostContent from "./post-content.model"
-import Post from "./post.model"
-import Course from "./course.model"
+import PostContentModel from "./post-content.model"
+import PostModel from "./post.model"
+import CourseModel from "./course.model"
+import UserModel from "./user.model"
 
-export { Post, PostContent, Course }
+export { PostModel, PostContentModel, CourseModel, UserModel }

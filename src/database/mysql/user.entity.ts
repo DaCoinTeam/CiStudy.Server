@@ -4,7 +4,7 @@ import PostCommentEntity from "./post-comment.entity"
 import PostLikeEntity from "./post-like.entity"
 import EnrolledEntity from "./enrolled-info.entity"
 import { UserKind, UserRole } from "./shared"
-
+import PostEntity from "./post.entity"
 
 @Entity("user")
 export default class UserEntity {
@@ -68,9 +68,12 @@ export default class UserEntity {
   @OneToMany(() => PostCommentEntity, (postComment) => postComment.user)
   	postComments: PostCommentEntity[]
 
-    @OneToMany(() => PostLikeEntity, (postLike) => postLike.user)
+  @OneToMany(() => PostLikeEntity, (postLike) => postLike.user)
   	postLikes: PostLikeEntity[]
 
-    @OneToMany(() => EnrolledEntity, (enrolled) => enrolled.user)
+  @OneToMany(() => EnrolledEntity, (enrolled) => enrolled.user)
   	enrolledInfos: EnrolledEntity[]
+
+  @OneToMany(() => PostEntity, (post) => post.creator)
+  	posts: PostEntity[]
 }

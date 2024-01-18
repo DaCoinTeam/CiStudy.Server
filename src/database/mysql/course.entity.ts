@@ -2,7 +2,6 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 
 import PostEntity from "./post.entity"
 import EnrolledEntity from "./enrolled-info.entity"
-import SectionEntity from "./section.entity"
 import { VerifiedStatus } from "./shared"
 
 interface CourseIncludes {

@@ -2,7 +2,6 @@ import { jwtConfig } from "@config"
 import { SessionMySqlEntity } from "@database"
 import {
 	Injectable,
-	InternalServerErrorException,
 	UnauthorizedException,
 } from "@nestjs/common"
 import { JsonWebTokenError, JwtService } from "@nestjs/jwt"
@@ -71,18 +70,21 @@ export default class AuthManagerService {
 		const refreshToken = await this.generateToken(data, TokenType.Refresh)
 
 		if (clientId) {
-			const createOrUpdateResult = await this.sessionMySqlRepository.update(
-				{
+			let found = await this.sessionMySqlRepository.findOneBy({
+				clientId,
+				userId: data.userId,
+			})
+			if (!found) {
+				found = await this.sessionMySqlRepository.save({
 					clientId,
 					userId: data.userId,
-				},
-				{}
-			)
-
-			if (!createOrUpdateResult)
-				throw new InternalServerErrorException(
-					"Cannot create or update refresh token.",
-				)
+				})
+			}
+			await this.sessionMySqlRepository.save({
+				sessionId: found.sessionId,
+				userId: found.userId,
+				clientId: found.clientId,
+			})
 		}
 
 		return {

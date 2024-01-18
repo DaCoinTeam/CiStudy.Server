@@ -8,7 +8,7 @@ import {
 import { VerifiedStatus } from "@database"
 
 @ObjectType()
-export default class Course {
+export default class CourseModel {
   @Field(type => ID)
   	courseId: string
 
