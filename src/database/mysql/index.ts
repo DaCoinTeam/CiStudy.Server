@@ -9,6 +9,7 @@ import PostContentMySqlEntity from "./post-content.entity"
 import PostCommentContentMySqlEntity from "./post-comment-content.entity"
 import EnrolledInfoMySqlEntity from "./enrolled-info.entity"
 import SectionMySqlEnitiy from "./section.entity"
+import LectureMysqlEntity from "./lecture.entity"
 
 export {
 	UserMySqlEntity,
@@ -21,7 +22,8 @@ export {
 	EnrolledInfoMySqlEntity,
 	CourseMySqlEntity,
 	SessionMySqlEntity,
-	SectionMySqlEnitiy
+	SectionMySqlEnitiy,
+	LectureMysqlEntity
 }
 
 export * from "./shared"

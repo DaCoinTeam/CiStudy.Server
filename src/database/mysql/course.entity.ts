@@ -3,6 +3,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import PostEntity from "./post.entity"
 import EnrolledEntity from "./enrolled-info.entity"
 import { VerifiedStatus } from "./shared"
+import SectionEntity from "./section.entity"
 
 interface CourseIncludes {
   time: number;
@@ -54,38 +55,16 @@ export default class CourseEntity {
   @Column({ type: "json", default: null })
   	includes: CourseIncludes
 
+  // --- relations ---
   @OneToMany(() => PostEntity, (post) => post.course)
   	posts: PostEntity[]
 
   @OneToMany(() => EnrolledEntity, (enrolled) => enrolled.course)
   	enrolledInfos: EnrolledEntity[]
 
-  // --- relations ---
-
-  // material
-  //   @OneToMany(() => MaterialEntity, (material) => material.course, {
-  //   	onDelete: "CASCADE",
-  //   })
-  //   	materials: MaterialEntity[]
-
   //section
-//   @OneToMany(() => SectionEntity, (section) => section.course, {
-//   	onDelete: "CASCADE",
-//   })
-//   	sections: SectionEntity[]
-
-	// topic
-	//   @ManyToMany(() => TopicEntity, (topicEntity) => topicEntity.courses)
-	//   @JoinTable({
-	//   	name: "course_topic_mapping",
-	//   	joinColumn: {
-	//   		name: "courseId",
-	//   		referencedColumnName: "id",
-	//   	},
-	//   	2inverseJoinColumn: {
-	//   		name: "topicId",
-	//   		referencedColumnName: "id",
-	//   	},
-	//   })
-	//   	topics: TopicEntity[]
+  @OneToMany(() => SectionEntity, (section) => section.course, {
+  	onDelete: "CASCADE",
+  })
+  	sections: SectionEntity[]
 }

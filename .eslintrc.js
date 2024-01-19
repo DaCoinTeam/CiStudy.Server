@@ -19,10 +19,10 @@ module.exports = {
 		"@typescript-eslint"
 	],
 	"rules": {
-		"indent": [
-			"error",
-			"tab"
-		],
+		// "indent": [
+		// 	"error",
+		// 	"tab"
+		// ],
 		"no-mixed-spaces-and-tabs": "off",
 		"linebreak-style": "off",
 		"quotes": [
