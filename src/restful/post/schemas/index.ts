@@ -1,4 +1,5 @@
 import createSchema from "./create.schema"
 import commentSchema from "./comment.schema"
 import replyCommentSchema from "./reply-comment.schema"
-export { createSchema, commentSchema, replyCommentSchema }
+import updateSchema from "./update.schema"
+export { createSchema, commentSchema, replyCommentSchema, updateSchema }

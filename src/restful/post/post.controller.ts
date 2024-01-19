@@ -13,13 +13,13 @@ import {
 	ApiQuery,
 	ApiTags,
 } from "@nestjs/swagger"
-import { CreateRequestDto, LikeRequestDto, UnlikeRequestDto, CommentRequestDto, ReplyCommentRequestDto } from "./dto"
+import { CreateRequestDto, LikeRequestDto, UnlikeRequestDto, CommentRequestDto, ReplyCommentRequestDto, UpdateRequestDto } from "./dto"
 import { AuthInterceptor, DataFromBody, User } from "../shared"
 import { Files } from "@shared"
 import PostService from "./post.service"
 import { FileFieldsInterceptor } from "@nestjs/platform-express"
 import { JwtAuthGuard } from "src/graphql/shared"
-import { createSchema, commentSchema, replyCommentSchema } from "./schemas"
+import { createSchema, commentSchema, replyCommentSchema, updateSchema } from "./schemas"
 import { MustEnrolledGuard } from "./guards"
 import { UserMySqlEntity } from "@database"
 
@@ -47,8 +47,31 @@ export default class PostController {
     @DataFromBody() data: CreateRequestDto,
     @UploadedFiles() { files }: Files,
 	) {
+    
 		return await this.postService.create(user, data, files)
 	}
+
+  	// post - update
+    @ApiQuery({
+    	name: "clientId",
+    	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935",
+    })
+    @ApiConsumes("multipart/form-data")
+    @ApiBody({ schema: updateSchema })
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard, MustEnrolledGuard)
+    @UseInterceptors(
+    	AuthInterceptor,
+    	FileFieldsInterceptor([{ name: "files", maxCount: 5 }]),
+    )
+    @Post("/update")
+  async update(
+      @User() user: UserMySqlEntity,
+      @DataFromBody() data: UpdateRequestDto,
+      @UploadedFiles() { files }: Files,
+  ) {
+  	return await this.postService.update(user, data, files)
+  }
 
   //post - like
   @ApiQuery({
@@ -63,9 +86,9 @@ export default class PostController {
   @UseGuards(JwtAuthGuard, MustEnrolledGuard)
   @UseInterceptors(AuthInterceptor)
   @Post("like")
-  async like(@User() user: UserMySqlEntity, @Body() body: LikeRequestDto) {
+    async like(@User() user: UserMySqlEntity, @Body() body: LikeRequestDto) {
   	return await this.postService.like(user, body)
-  }
+    }
 
   //post - unlike
   @ApiQuery({

@@ -5,16 +5,19 @@ import {
 	PostMySqlEntity,
 	PostCommentMySqlEntity,
 	UserMySqlEntity,
+	PostContentMySqlEntity,
 } from "@database"
 import {
 	CreateRequestDto,
 	LikeRequestDto,
 	CommentRequestDto,
 	ReplyCommentRequestDto,
+	UpdateRequestDto,
 } from "./dto"
 import { FirebaseService } from "@global"
 import { DeepPartial, Repository } from "typeorm"
 import { InjectRepository } from "@nestjs/typeorm"
+import c from "config"
 
 @Injectable()
 export default class PostService {
@@ -25,6 +28,8 @@ export default class PostService {
     private readonly postLikeMySqlRepository: Repository<PostLikeMySqlEntity>,
     @InjectRepository(PostCommentMySqlEntity)
     private readonly postCommentMySqlRepository: Repository<PostCommentMySqlEntity>,
+	@InjectRepository(PostContentMySqlEntity)
+	private readonly postContentsRepository: Repository<PostContentMySqlEntity>,
 
     private readonly firebaseService: FirebaseService,
 	) {}
@@ -37,21 +42,25 @@ export default class PostService {
 		const { postContents } = data
 		const promises: Promise<void>[] = []
 
-		let indexFile = 0
-		for (const postContent of postContents) {
-			const promise = async () => {
-				if (
-					postContent.contentType === ContentType.Image ||
-          postContent.contentType === ContentType.Video
-				) {
-					const { buffer, filename } = files.at(indexFile)
-					const url = await this.firebaseService.uploadFile(buffer, filename)
-					postContent.content = url
+		for (let contentIndex = 0; contentIndex < postContents.length; contentIndex++) {
+			const postContent = postContents[contentIndex]
+		  
+			if (
+			  postContent.contentType === ContentType.Image ||
+			  postContent.contentType === ContentType.Video
+			) {
+				for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
+			  // Push the promise directly into the array without executing it immediately
+			  promises.push(
+						(async () => {
+				  const { buffer, filename } = await files[fileIndex]
+				  const url = await this.firebaseService.uploadFile(buffer, filename)
+				  postContent.content = url
+						})()
+			  )
 				}
 			}
-			indexFile++
-			promises.push(promise())
-		}
+		  }
 		await Promise.all(promises)
 
 		const post: DeepPartial<PostMySqlEntity> = {
@@ -65,6 +74,55 @@ export default class PostService {
 
 		const created = await this.postMySqlRepository.save(post)
 		return `A post with id ${created.postId} has been created successfully.`
+	}
+
+	// update post
+	async update(
+		user: UserMySqlEntity,
+		data: UpdateRequestDto,
+		files: Express.Multer.File[],
+	): Promise<string> {
+		const found = await this.postMySqlRepository.findOneBy({
+			postId: data.postId, 
+			creatorId: user.userId 
+		})
+
+		if (found === null) {
+			throw new ConflictException(`The post with id ${data.postId} does not exist.`)
+		}
+
+		await this.postContentsRepository.delete({ postId: data.postId })
+
+		const promises: Promise<void>[] = []
+		for (let contentIndex = 0; contentIndex < data.postContents.length; contentIndex++) {
+			const postContent = data.postContents[contentIndex]
+		  
+			if (
+			  postContent.contentType === ContentType.Image ||
+			  postContent.contentType === ContentType.Video
+			) {
+				for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
+			  // Push the promise directly into the array without executing it immediately
+			  promises.push(
+						(async () => {
+				  const { buffer, filename } = await files[fileIndex]
+				  const url = await this.firebaseService.uploadFile(buffer, filename)
+				  postContent.content = url
+						})()
+			  )
+				}
+			}
+		  }
+		await Promise.all(promises)
+
+		found.title = data.title
+		found.postContents = data.postContents.map((postContent, index) => ({
+			...postContent,
+			index,
+		}))
+
+		const updated = await this.postMySqlRepository.save(found)
+		return `A post with id ${updated.postId} has been updated successfully.`
 	}
 
 	async like(user: UserMySqlEntity, body: LikeRequestDto) {
