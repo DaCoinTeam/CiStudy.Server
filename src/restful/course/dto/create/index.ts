@@ -1,4 +1,4 @@
-import CreateRequestDto from "./request.dto"
+import CourseDto from "./course.dto"
 import CreateReponseDto from "./response.dto"
 
-export { CreateRequestDto, CreateReponseDto}
+export { CourseDto, CreateReponseDto}

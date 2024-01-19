@@ -18,7 +18,9 @@ import { AuthGraphQLModule, CourseGraphQLModule, PostGraphQLModule } from "@grap
 import {
 	AuthRestfulModule,
 	CourseRestfulModule,
+	LectureRestfulModule,
 	PostRestfulModule,
+	SectionRestfulModule,
 } from "@restful"
 import {
 	SetBearerTokenMiddleware,
@@ -40,7 +42,7 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 			password: databaseConfig().mysql.password,
 			database: databaseConfig().mysql.schema,
 			autoLoadEntities: true,
-			synchronize: true,
+			// synchronize: true,
 			entities: ["dist/**/*.entity.ts"],
 		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -58,6 +60,8 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		AuthRestfulModule,
 		CourseRestfulModule,
 		PostRestfulModule,
+		LectureRestfulModule,
+		SectionRestfulModule,
 
 		//global
 		GlobalServicesModule,

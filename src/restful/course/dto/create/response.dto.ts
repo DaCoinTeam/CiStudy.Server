@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { Exclude, Expose } from "class-transformer"
 
 export enum VerifiedStatus {
   Pending = "Pending",
@@ -23,10 +22,6 @@ export default class CreateReponseDto {
   @ApiProperty()
   	price: number
   
-  @Exclude()
-  @ApiProperty()
-  	verifiedStatus: VerifiedStatus
-
   @ApiProperty()
   	creatorId: string
 

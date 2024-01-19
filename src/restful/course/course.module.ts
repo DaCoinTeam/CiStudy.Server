@@ -10,5 +10,6 @@ import { EnrolledInfoMySqlEntity, CourseMySqlEntity } from "@database"
 	],
 	controllers: [CourseController],
 	providers: [CourseService],
+	exports: [CourseService]
 })
 export default class CourseModule {}
