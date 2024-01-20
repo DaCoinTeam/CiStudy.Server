@@ -25,12 +25,12 @@ export default class PostResolvers {
   		where: {
   			courseId : args.courseId
   		},
-  		take: args.pageSize,
-  		skip: args.pageNumber * args.pageSize,
+  		take: args.take,
+  		skip: args.skip,
   		relations: {
   			postContents: true,
   			creator: true,
-  			course: true
+  			course: true,
   		}
   	})
   	return founds[0]

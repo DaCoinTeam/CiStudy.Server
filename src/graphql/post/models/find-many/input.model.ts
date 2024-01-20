@@ -8,8 +8,8 @@ export default class FindManyPostInput {
   	courseId: string
   @Field(() => Int)
   @IsInt()
-  	pageNumber: number
+  	take: number
   @Field(() => Int)
   @IsInt()
-  	pageSize: number
+  	skip: number
 }

@@ -32,8 +32,8 @@ scalar DateTime
 
 input FindManyPostInput {
   courseId: String!
-  pageNumber: Int!
-  pageSize: Int!
+  skip: Int!
+  take: Int!
 }
 
 input FindOneInput {
