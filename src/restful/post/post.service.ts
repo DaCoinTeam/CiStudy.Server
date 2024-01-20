@@ -63,39 +63,35 @@ export default class PostService {
     const { postContents } = data
     const promises: Promise<void>[] = []
 
-	//sửa postContents ban đầu thành phiên bản có index file, nghĩa là gắn thứ tự file vào 
-	// trong post content
+    //sửa postContents ban đầu thành phiên bản có index file, nghĩa là gắn thứ tự file vào
+    // trong post content
     const appendedPostContents = this.appendIndexFile(postContents)
 
-	// chạy vòng for để up hình lên firebase
+    // chạy vòng for để up hình lên firebase
     for (const appendedPostContent of appendedPostContents) {
       if (
         appendedPostContent.contentType === ContentType.Image ||
         appendedPostContent.contentType === ContentType.Video
       ) {
         // Push the promise directly into the array without executing it immediately
-        promises.push(
-          (async () => {
-            const { buffer, filename } =
-              files[appendedPostContent.indexFile]
-            const url = await this.firebaseService.uploadFile(buffer, filename)
-            appendedPostContent.content = url
-          })(),
-        )
+        const promise = async () => {
+          const { buffer, filename } = files[appendedPostContent.indexFile]
+          const url = await this.firebaseService.uploadFile(buffer, filename)
+          appendedPostContent.content = url
+        }
+        promises.push(promise())
       }
     }
     await Promise.all(promises)
 
-	// đơn giản là add vô
+    // đơn giản là add vô
     const post: DeepPartial<PostMySqlEntity> = {
       ...data,
       creatorId: user.userId,
-      postContents: appendedPostContents.map(
-        (appendedPostContent, index) => ({
-          ...appendedPostContent,
-          index,
-        }),
-      ),
+      postContents: appendedPostContents.map((appendedPostContent, index) => ({
+        ...appendedPostContent,
+        index,
+      })),
     }
 
     const created = await this.postMySqlRepository.save(post)
