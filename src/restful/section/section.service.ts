@@ -26,13 +26,37 @@ export default class SectionService {
   }
 
   async delete(sectionId: string) {
-    const foundSection = await this.sectionMysqlRepository.findOne({ where: { sectionId } })
+    const foundSection = await this.sectionMysqlRepository.findOne({
+      where: { sectionId },
+    })
     if (!foundSection) throw new NotFoundException("Section not exist!")
     await this.sectionMysqlRepository.delete(sectionId)
   }
 
   async find(courseId: string): Promise<SectionDto[]> {
-    const listSection = this.sectionMysqlRepository.find({ where: { courseId } })
+    const listSection = this.sectionMysqlRepository.find({
+      where: { courseId },
+    })
+    return listSection
+  }
+
+  async findById(sectionId: string): Promise<SectionDto> {
+    const foundSection = await this.sectionMysqlRepository.findOne({
+      where: { sectionId },
+    })
+    if (!foundSection) throw new NotFoundException("Section not exist!")
+    return foundSection
+  }
+
+  async getAllSectionByCourseId(courseId: string): Promise<SectionDto[]> {
+    const listSection = await this.sectionMysqlRepository.find({
+      where: { courseId },
+      relations: {
+        lecture: {
+          resource: true,
+        },
+      },
+    })
     return listSection
   }
 }

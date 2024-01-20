@@ -25,7 +25,7 @@ implements NestInterceptor<T, Response<T>>
 
 		const clientId = query.clientId as string | undefined
 		const refresh = type === TokenType.Refresh
-		console.log(refresh)
+		// console.log(refresh)
 		if (refresh) {
 			await this.authManagerService.validateSession(
 				user.userId,

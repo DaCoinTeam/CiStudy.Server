@@ -6,6 +6,7 @@ enum ContentType {
   Code = "Code",
   Image = "Image",
   Label = "Label",
+  Application = "Application",
 }
 
 //for graphql
