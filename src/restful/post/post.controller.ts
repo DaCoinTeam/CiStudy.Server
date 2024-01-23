@@ -1,6 +1,9 @@
 import {
 	Body,
 	Controller,
+	Delete,
+	Param,
+	ParseUUIDPipe,
 	Post,
 	UploadedFiles,
 	UseGuards,
@@ -13,7 +16,7 @@ import {
 	ApiQuery,
 	ApiTags,
 } from "@nestjs/swagger"
-import { CreateRequestDto, LikeRequestDto, UnlikeRequestDto, CommentRequestDto, ReplyCommentRequestDto, UpdateRequestDto } from "./dto"
+import { CreateRequestDto, LikeRequestDto, UnlikeRequestDto, CommentRequestDto, ReplyCommentRequestDto, UpdateRequestDto, UpdateCommentDto } from "./dto"
 import { AuthInterceptor, DataFromBody, User } from "../shared"
 import { Files } from "@shared"
 import PostService from "./post.service"
@@ -150,4 +153,43 @@ export default class PostController {
   ) {
 	  return await this.postService.replyComment(user, data, files)
   }
+
+  // update comment
+  @ApiQuery({
+  	name: "clientId",
+  	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935",
+  })
+@ApiConsumes("multipart/form-data")
+@ApiBody({ schema: commentSchema})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, MustEnrolledGuard)
+@UseInterceptors(
+	AuthInterceptor,
+	FileFieldsInterceptor([{ name: "files", maxCount: 5 }]),
+)
+@Post("updateComment")
+  async updateComment(
+  @User() user: UserMySqlEntity,
+  @DataFromBody() data: UpdateCommentDto,
+  @UploadedFiles() { files }: Files,
+  ) {
+	  return await this.postService.updateComment(user, data, files)
+  }
+
+  //delete comment
+  @ApiQuery({
+  	name: "clientId",
+  	example: "4e2fa8d7-1f75-4fad-b500-454a93c78935",
+  })
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, MustEnrolledGuard)
+@UseInterceptors(AuthInterceptor)
+@Delete("deleteComment/:id")
+  async deleteComment(
+  @User() user: UserMySqlEntity,
+  @Param("id", new ParseUUIDPipe()) id: string,
+  ) {
+    return await this.postService.deleteComment(user, id)
+  }
+
 }
