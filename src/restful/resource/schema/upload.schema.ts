@@ -3,10 +3,11 @@ import { SchemaObject } from "@nestjs/swagger/dist/interfaces/open-api-spec.inte
 const createSchema: SchemaObject = {
   type: "object",
   properties: {
-    lectureTitle: {
+    lectureId: {
       type: "string",
+      format: "uuid",
     },
-    videoFile: {
+    resourceLink: {
       type: "string",
       format: "binary",
     },

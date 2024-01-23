@@ -20,6 +20,7 @@ import {
 	CourseRestfulModule,
 	LectureRestfulModule,
 	PostRestfulModule,
+	ResourceRestfulModule,
 	SectionRestfulModule,
 } from "@restful"
 import {
@@ -59,12 +60,14 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		//restful
 		AuthRestfulModule,
 		CourseRestfulModule,
-		PostRestfulModule,
-		LectureRestfulModule,
 		SectionRestfulModule,
+		LectureRestfulModule,
+		ResourceRestfulModule,
+		PostRestfulModule,
 
 		//global
 		GlobalServicesModule,
+
 	],
 	controllers: [],
 	providers: [],
