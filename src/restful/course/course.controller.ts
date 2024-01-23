@@ -84,14 +84,15 @@ export default class CourseController {
   }
 
   @Get("stream-preview")
-  @UseGuards(JwtAuthGuard)
+ // @UseGuards(JwtAuthGuard)
   async getFile(
     @Headers("range") range: string,
-    @Body() body: StreamPreviewRequestDto,
+    // @Body() body: StreamPreviewRequestDto,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<StreamableFile> {
+  ) {
     if (range) {
-      return await this.courseService.streamPreview(body.courseId, range, res)
+      console.log(range)
+      return await this.courseService.streamPreview(range, res)
     }
     throw new BadRequestException(
       "Invalid request. Video streaming requires a 'Range' header.",

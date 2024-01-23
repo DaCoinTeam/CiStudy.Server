@@ -1,10 +1,11 @@
 import { Global, Module } from "@nestjs/common"
-import { MailerService, Sha256Service, AuthManagerService, VideoStreamerService } from "./base"
+import { MailerService, Sha256Service, AuthManagerService, VideoManagerService } from "./base"
 import { FirebaseService } from "./3rd"
 import { JwtService } from "@nestjs/jwt"
 import { SessionMySqlEntity } from "@database"
 import { MetamaskService } from "./blockchain"
 import { TypeOrmModule } from "@nestjs/typeorm"
+import Bento4Service from "./base/bento4.service"
 
 @Global()
 @Module({
@@ -19,7 +20,8 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		MailerService,
 		AuthManagerService,
 		JwtService,
-		VideoStreamerService,
+		Bento4Service,
+		VideoManagerService,
 
 		//blockchain
 		MetamaskService
@@ -32,7 +34,8 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		MailerService,
 		AuthManagerService,
 		JwtService,
-		VideoStreamerService,
+		Bento4Service,
+		VideoManagerService,
 
 		//blockchian
 		MetamaskService

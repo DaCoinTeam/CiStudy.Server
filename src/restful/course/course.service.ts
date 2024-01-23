@@ -6,10 +6,11 @@ import {
 } from "@database"
 import { Injectable, StreamableFile } from "@nestjs/common"
 import { CourseDto, EnrollRequestDto } from "./dto"
-import { FirebaseService, VideoStreamerService } from "@global"
+import { FirebaseService, VideoManagerService } from "@global"
 import { Response } from "express"
 import { InjectRepository } from "@nestjs/typeorm"
 import { plainToInstance } from "class-transformer"
+import { join } from "path"
 
 @Injectable()
 export default class CourseService {
@@ -17,7 +18,7 @@ export default class CourseService {
     @InjectRepository(CourseMySqlEntity) private readonly courseMySqlRepository: Repository<CourseMySqlEntity>,
     @InjectRepository(EnrolledInfoMySqlEntity) private readonly enrolledInfoMySqlRepository: Repository<EnrolledInfoMySqlEntity>,
     private readonly firebaseSerive: FirebaseService,
-    private readonly videoStreamerService: VideoStreamerService,
+    private readonly videoManagerService: VideoManagerService,
   ) {}
 
   async create(
@@ -41,11 +42,11 @@ export default class CourseService {
     promises.push(thumbnailPromise())
     const previewVideoUrlPromise = async () => {
       if (files.previewVideoUrl && files.previewVideoUrl[0]) {
-        const url = await this.firebaseSerive.uploadFile(
-          files.previewVideoUrl[0].buffer,
-          files.previewVideoUrl[0].mimetype.split("/")[1],
+        const url = await this.videoManagerService.uploadVideo(
+          files.previewVideoUrl[0]
         )
-        body.previewVideoUrl = url
+        body.previewVideoUrl = url.videoName
+        await this.videoManagerService.processVideo(url)
       }
     }
     promises.push(previewVideoUrlPromise())
@@ -70,13 +71,13 @@ export default class CourseService {
   }
 
   async streamPreview(
-    courseId: string,
+    //courseId: string,
     range: string,
     res: Response,
   ): Promise<StreamableFile> {
-    const course = await this.courseMySqlRepository.findOneBy({ courseId })
-    return this.videoStreamerService.getStreamableVideo(
-      course.previewVideoUrl,
+    //const course = await this.courseMySqlRepository.findOneBy({ courseId })
+    return this.videoManagerService.getStreamableVideo(
+      join(process.cwd(), "assets", "videos", "2fcec2eb-13fa-4840-a2a2-f37f8be9328f", "baked", "manifest.mpd"),
       range,
       res,
     )

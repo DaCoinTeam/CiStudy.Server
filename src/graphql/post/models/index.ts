@@ -1,2 +1,2 @@
-export * from "./find-one"
-export * from "./find-many"
+export * from "./find-one-post"
+export * from "./find-many-posts"

@@ -6,6 +6,7 @@ import {
 	ObjectType
 } from "@nestjs/graphql"
 import { VerifiedStatus } from "@database"
+import UserModel from "./user.model"
 
 @ObjectType()
 export default class CourseModel {
@@ -30,8 +31,8 @@ export default class CourseModel {
   @Field(type => Boolean, { defaultValue: true})
   	isDraft: boolean
 
-  @Field(type => String)
-  	creatorId: string
+  @Field(() => UserModel)
+  	creator: UserModel
 
   @Field(type => Boolean, { defaultValue: false})
   	isDeleted: boolean

@@ -11,9 +11,13 @@ enum ContentType {
   Video
 }
 
+input CourseFilterModel {
+  category: String
+}
+
 type CourseModel {
   courseId: ID!
-  creatorId: String!
+  creator: UserModel!
   description: String!
   includes: String
   isDeleted: Boolean!
@@ -31,13 +35,17 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input FindManyCoursesInput {
+  filter: CourseFilterModel
+}
+
 input FindManyPostInput {
   courseId: String!
   skip: Int!
   take: Int!
 }
 
-input FindOneInput {
+input FindOneCourseInput {
   courseId: ID!
 }
 
@@ -62,8 +70,9 @@ type PostModel {
 }
 
 type Query {
+  findManyCourses(input: FindManyCoursesInput): [CourseModel!]!
   findManyPosts(input: FindManyPostInput!): [PostModel!]!
-  findOne(input: FindOneInput!): CourseModel!
+  findOneCourse(input: FindOneCourseInput!): CourseModel!
   findOnePost(input: FindOnePostInput!): PostModel!
 }
 

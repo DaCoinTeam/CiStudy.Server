@@ -5,6 +5,6 @@ export * from "./auth-manager.service"
 import MailerService from "./mailer.service"
 import Sha256Service from "./sha256.service"
 import AuthManagerService from "./auth-manager.service"
-import VideoStreamerService from "./video-streamer.service"
+import VideoManagerService from "./video-manager.service"
 
-export { MailerService, Sha256Service, AuthManagerService, VideoStreamerService }
+export { MailerService, Sha256Service, AuthManagerService, VideoManagerService }

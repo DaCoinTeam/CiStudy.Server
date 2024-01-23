@@ -1,1 +1,2 @@
-export * from "./find-one"
+export * from "./find-one-course"
+export  * from "./find-many-courses"

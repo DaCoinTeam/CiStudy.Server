@@ -11,7 +11,6 @@ export default class CourseDto {
   @ApiProperty()
   	title: string
 
-  @IsNotEmpty()
   @Expose()
   @ApiProperty({ type: "string",  format: "binary" })
   	thumbnailUrl: string
@@ -30,7 +29,6 @@ export default class CourseDto {
   // @ApiProperty()
   creatorId: string
 
-  @IsNotEmpty()
   @Expose()
   @ApiProperty({format: "binary"})
   	previewVideoUrl: string
