@@ -43,7 +43,7 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 			password: databaseConfig().mysql.password,
 			database: databaseConfig().mysql.schema,
 			autoLoadEntities: true,
-			// synchronize: true,
+			synchronize: true,
 			entities: ["dist/**/*.entity.ts"],
 		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({

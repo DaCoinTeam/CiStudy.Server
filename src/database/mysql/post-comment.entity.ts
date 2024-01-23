@@ -43,7 +43,7 @@ export default class PostCommentEntity {
   	(postCommentContent) => postCommentContent.postComment,
   	{ cascade: true },
   )
-  	postCommentContents: PostCommentContentEntity[]
+  	postCommentContents: Partial<PostCommentContentEntity>[]
 
   @OneToMany(
   	() => PostCommentLikeEntity,
