@@ -7,6 +7,7 @@ import Sha256Service from "./sha256.service"
 import AuthManagerService from "./auth-manager.service"
 import VideoManagerService from "./video-manager.service"
 import AssetManagerService from "./asset-manager.service"
+import FfmpegService from "./ffmpeg.service"
 
 export {
   MailerService,
@@ -14,4 +15,5 @@ export {
   AuthManagerService,
   VideoManagerService,
   AssetManagerService,
+  FfmpegService
 }

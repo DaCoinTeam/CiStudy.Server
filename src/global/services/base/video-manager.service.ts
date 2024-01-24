@@ -12,12 +12,14 @@ import AssetManagerService from "./asset-manager.service"
 import { assetConfig } from "@config"
 import { join } from "path"
 import { AssetMetadata } from "@shared"
+import FfmpegService from "./ffmpeg.service"
 
 @Injectable()
 export default class VideoManagerService {
   constructor(
     private readonly assetManagerService: AssetManagerService,
     private readonly bento4Service: Bento4Service,
+    private readonly ffmpegService: FfmpegService,
   ) {}
 
   private isValidVideoExtension(fileName: string): boolean {
@@ -48,22 +50,21 @@ export default class VideoManagerService {
   }
 
   private async processVideo(assetId: string, videoName: string) {
-    console.info("🔰 1/5 | Video Health")
-    // await ffmpeg.checkVideoHealth();
-    console.info("🔰 2/5 | Checking Video")
-    const fragmentationRequired = await this.bento4Service.checkFragments(
-      assetId,
-      videoName,
-    )
-    console.info("🔰 3/5 | Fragmenting Video")
-    if (fragmentationRequired) {
-      await this.bento4Service.fragmentVideo(assetId, videoName)
-    }
-    console.info("🔰 4/5 | Processing Video")
-    await this.bento4Service.processVideo(assetId, videoName)
-    console.info("🔰 5/5 | Clean Up & Relocate & Create Metadata")
-    await this.cleanUp(assetId)
+    await this.ffmpegService.encodeAtMultipleBitrates(assetId, videoName)
 
+    const encodedNames = ["720.mp4", "480.mp4", "360.mp4", "240.mp4"]
+    for (const encodedName of encodedNames) {
+      const fragmentationRequired = await this.bento4Service.checkFragments(
+        assetId,
+        encodedName,
+      )
+      if (fragmentationRequired) {
+        await this.bento4Service.fragmentVideo(assetId, encodedName)
+      }
+    }
+
+    await this.bento4Service.processVideo(assetId, encodedNames)
+    await this.cleanUp(assetId)
     await this.createMetadata(assetId)
   }
 
@@ -73,12 +74,19 @@ export default class VideoManagerService {
 
     await Promise.all(
       files
-        .filter((file) => file !== "manifest.mpd")
+        .filter(
+          (file) =>
+            file !== "manifest.mpd" && file !== "audio" && file !== "video",
+        )
         .map(async (file) => {
           const filePath = join(assetDir, file)
           const fileStat = await promises.stat(filePath)
 
-          if (!fileStat.isDirectory()) await promises.unlink(filePath)
+          if (fileStat.isDirectory()) {
+            await promises.rmdir(filePath)
+          } else {
+            await promises.unlink(filePath)
+          }
         }),
     )
   }

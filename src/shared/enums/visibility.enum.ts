@@ -3,6 +3,7 @@ enum Visibility {
     Public,
     //restricted to a course owned by you
     Restricted,
+    //...............
 }
 
 export default Visibility
