@@ -20,7 +20,8 @@ export default class AssetService {
   getPublic(metadata: AssetMetadata, rest: string) {
     try {
       const { assetId, fileName, extension } = metadata
-      const filePath = join(assetConfig().path, assetId, rest)
+      const relativePath = rest || fileName
+      const filePath = join(assetConfig().path, assetId, relativePath)
       const stream = createReadStream(filePath)
 
       return new StreamableFile(stream, {

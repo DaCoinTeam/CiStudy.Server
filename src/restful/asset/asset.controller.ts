@@ -19,10 +19,10 @@ export default class AssetController {
     name: "assetId",
     example: "62d552b3-67fc-41c3-bd0b-ca4f7e8719fa",
   })
-
+  @ApiParam({ name: "0", example: "Ignore me please", required: false })
   @UseGuards(PublicGuard)
   @Get("public/:assetId*")
-  async getPublicBasedOnRelativePath(
+  async getPublic(
     @Metadata() metadata: AssetMetadata,
     @Param("0") rest: string,
   ) {
