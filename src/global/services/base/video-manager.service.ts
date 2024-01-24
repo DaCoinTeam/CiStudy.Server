@@ -65,7 +65,7 @@ export default class VideoManagerService {
     await this.cleanUp(assetId)
     await this.relocate(assetId)
     await this.createMetadata(assetId)
-    
+    await this.removeOutputDir(assetId)
   }
 
   private async cleanUp(assetId: string) {
@@ -114,6 +114,11 @@ export default class VideoManagerService {
       join(assetDir, "metadata.json"),
       JSON.stringify(metadata),
     )
+  }
+
+  private async removeOutputDir(assetId: string) {
+    const assetDir = join(assetConfig().path, assetId)
+    await promises.rmdir(join(assetDir, "output"))
   }
 
   getStreamableVideo(mpdFilePath: string, res: Response) {

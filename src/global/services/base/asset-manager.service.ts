@@ -18,7 +18,7 @@ export default class AssetManagerService {
     const metadata: AssetMetadata = {
       assetId,
       fileName: file.originalname,
-      extension: file.originalname.split(".")[1],
+      extension: file.originalname.split(".").at(-1),
       fileSize: file.size,
     }
 

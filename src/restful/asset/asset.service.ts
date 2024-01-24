@@ -1,5 +1,5 @@
 import { assetConfig } from "@config"
-import { Injectable, StreamableFile } from "@nestjs/common"
+import { Injectable, NotFoundException, StreamableFile } from "@nestjs/common"
 import { AssetMetadata } from "@shared"
 import { createReadStream } from "fs"
 import { join } from "path"
@@ -14,17 +14,21 @@ export default class AssetService {
       bmp: "image/bmp",
     }
     const lowercasedExtension = extension.toLowerCase()
-    return extensionToContentType[lowercasedExtension] || "text/plain"
+    return extensionToContentType[lowercasedExtension]
   }
 
-  async getPublic(metadata: AssetMetadata) {
-    const fileName = metadata.fileName
-    const filePath = join(assetConfig().path, metadata.assetId, fileName)
+  getPublic(metadata: AssetMetadata, rest: string) {
+    try {
+      const { assetId, fileName, extension } = metadata
+      const filePath = join(assetConfig().path, assetId, rest)
+      const stream = createReadStream(filePath)
 
-    const stream = createReadStream(filePath)
-    return new StreamableFile(stream, {
-      disposition: `file attach; filename="${fileName}"`,
-      type: this.getContentType(metadata.extension),
-    })
+      return new StreamableFile(stream, {
+        disposition: `attachment; filename="${fileName}"`,
+        type: this.getContentType(extension),
+      })
+    } catch (ex) {
+      throw new NotFoundException("")
+    }
   }
 }

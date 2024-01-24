@@ -1,3 +1,3 @@
-import PublicAssetGuard from "./asset.guard"
+import PublicGuard from "./public.guard"
 
-export { PublicAssetGuard }
+export { PublicGuard }
