@@ -4,5 +4,14 @@ import databaseConfig from "./database.config"
 import jwtConfig from "./jwt.config"
 import thirdPartyConfig from "./third-party.config"
 import blockchainConfig from "./blockchain.config"
+import assetConfig from "./asset.config"
 
-export { paymentConfig, appConfig, databaseConfig, jwtConfig, thirdPartyConfig, blockchainConfig }
+export {
+  paymentConfig,
+  appConfig,
+  databaseConfig,
+  jwtConfig,
+  thirdPartyConfig,
+  blockchainConfig,
+  assetConfig,
+}

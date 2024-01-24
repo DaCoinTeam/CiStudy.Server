@@ -29,6 +29,7 @@ import {
 	GlobalServicesModule,
 } from "@global"
 import { TypeOrmModule } from "@nestjs/typeorm"
+import AssetModule from "./restful/asset/asset.module"
 
 @Module({
 	imports: [
@@ -64,6 +65,7 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		LectureRestfulModule,
 		ResourceRestfulModule,
 		PostRestfulModule,
+		AssetModule,
 
 		//global
 		GlobalServicesModule,

@@ -2,22 +2,21 @@ import {
   BadRequestException,
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
   StreamableFile,
 } from "@nestjs/common"
 import { Response } from "express"
-import { FirebaseService } from "../3rd"
-import { v4 as uuidv4 } from "uuid"
-import path, { join } from "path"
-import { createReadStream, promises, statSync } from "fs"
-import Bento4Service, { VideoMetadata } from "./bento4.service"
+import { createReadStream, promises } from "fs"
+import Bento4Service from "./bento4.service"
 
-const VIDEO_STORAGE_PATH = join(process.cwd(), "assets", "videos")
+import AssetManagerService from "./asset-manager.service"
+import { assetConfig } from "@config"
+import { join } from "path"
+import { AssetMetadata } from "@shared"
 
 @Injectable()
 export default class VideoManagerService {
   constructor(
-    private readonly firebaseService: FirebaseService,
+    private readonly assetManagerService: AssetManagerService,
     private readonly bento4Service: Bento4Service,
   ) {}
 
@@ -35,92 +34,95 @@ export default class VideoManagerService {
     return supportedExtensions.includes(lowerCaseExtension)
   }
 
-  async uploadVideo(file: Express.Multer.File): Promise<VideoMetadata> {
+  async uploadVideo(file: Express.Multer.File): Promise<string> {
     if (!this.isValidVideoExtension(file.originalname))
       throw new BadRequestException("Video extension not supported.")
 
-    const folderName = uuidv4()
-    const folderPath = path.join(VIDEO_STORAGE_PATH, folderName)
+    const { assetId, fileName } = await this.assetManagerService.uploadAsset(
+      file,
+      true
+    )
+    await this.processVideo(assetId, fileName)
 
-    try {
-      await promises.mkdir(folderPath, { recursive: true })
-      const videoFilePath = path.join(folderPath, file.originalname)
-      await promises.writeFile(videoFilePath, file.buffer)
-      return {
-        folderName,
-        videoName: file.originalname,
-      }
-    } catch (ex) {
-      console.error(ex)
-      throw new InternalServerErrorException("Failed to upload video.")
-    }
+    return assetId
   }
 
-  getStreamableVideo(mpdFilePath: string, range: string, res: Response) {
-    const stat = statSync(mpdFilePath)
-    const fileSize = stat.size
+  private async processVideo(assetId: string, videoName: string) {
+    console.info("🔰 1/5 | Video Health")
+    // await ffmpeg.checkVideoHealth();
+    console.info("🔰 2/5 | Checking Video")
+    const fragmentationRequired = await this.bento4Service.checkFragments(
+      assetId,
+      videoName,
+    )
+    console.info("🔰 3/5 | Fragmenting Video")
+    if (fragmentationRequired) {
+      await this.bento4Service.fragmentVideo(assetId, videoName)
+    }
+    console.info("🔰 4/5 | Processing Video")
+    await this.bento4Service.processVideo(assetId, videoName)
+    console.info("🔰 5/5 | Clean Up & Relocate & Create Metadata")
+    await this.cleanUp(assetId)
+    await this.relocate(assetId)
+    await this.createMetadata(assetId)
+    
+  }
 
-    const parts = range.replace(/bytes=/, "").split("-")
-    const start = parseInt(parts[0], 10)
-    const end = Math.min(start + 10 ** 6, fileSize - 1)
-    const contentLength = end - start + 1
+  private async cleanUp(assetId: string) {
+    const assetDir = join(assetConfig().path, assetId)
+    const files = await promises.readdir(assetDir)
 
-    res.status(HttpStatus.PARTIAL_CONTENT)
-    res.set({
-      "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-      "Accept-Ranges": "bytes",
-      "Content-Length": `${contentLength}`,
-      "Content-Type": "video/mp4",
-    })
+    await Promise.all(
+      files
+        .filter((file) => file !== "output")
+        .map(async (file) => {
+          const filePath = join(assetDir, file)
+          const fileStat = await promises.stat(filePath)
 
-    const readable = createReadStream(mpdFilePath, {
-      start,
-      end,
-    })
+          if (fileStat.isDirectory()) {
+            await promises.rmdir(filePath, { recursive: true })
+          } else {
+            await promises.unlink(filePath)
+          }
+        }),
+    )
+  }
+
+  private async relocate(assetId: string) {
+    const assetDir = join(assetConfig().path, assetId)
+    const outputFilesPath = join(assetDir, "output")
+    const outputFiles = await promises.readdir(outputFilesPath)
+    await Promise.all(
+      outputFiles.map(async (file) => {
+        const sourcePath = join(outputFilesPath, file)
+        const destinationPath = join(assetDir, file)
+        await promises.rename(sourcePath, destinationPath)
+      }),
+    )
+  }
+
+  private async createMetadata(assetId: string) {
+    const assetDir = join(assetConfig().path, assetId)
+    const stats = await promises.stat(join(assetDir, "manifest.mpd"))
+    const metadata: AssetMetadata = {
+      assetId,
+      extension: "mpd",
+      fileName: "manifest.mpd",
+      fileSize: stats.size
+    }
+    await promises.writeFile(
+      join(assetDir, "metadata.json"),
+      JSON.stringify(metadata),
+    )
+  }
+
+  getStreamableVideo(mpdFilePath: string, res: Response) {
+    res.status(HttpStatus.OK)
+    const readable = createReadStream(mpdFilePath)
     console.log(readable)
-    return new StreamableFile(readable)
-  }
-
-  async processVideo(metadata: VideoMetadata) {
-    try {
-      console.info("🔰 1/5 | Video Health")
-      // await ffmpeg.checkVideoHealth();
-
-      console.info("🔰 2/5 | Checking Video")
-      const fragmentationRequired = await this.bento4Service.checkFragments(
-        metadata,
-      )
-
-      console.info("🔰 3/5 | Fragmenting Video")
-      console.log(fragmentationRequired)
-      if (fragmentationRequired) {
-        await this.bento4Service.fragmentVideo(metadata)
-      } else {
-        // const oldFileName = path.join(__dirname, `../uploads/${sessionObj.session}/${sessionObj.contentId}${fileExt}`)
-        // const newFileName = path.join(__dirname, `../uploads/${sessionObj.session}/${sessionObj.contentId}_fragmented${fileExt}`)
-        // await fsPromise.rename(oldFileName, newFileName)
-      }
-      // await session.updateSession(currentSession)
-
-      console.info("🔰 4/5 | Processing Video")
-      await this.bento4Service.processVideo(metadata)
-
-      // console.info("🔰 4/5 | Uploading Video")
-      // const url = await firebaseService.upload(sessionObj)
-      // jobs["uploading"] = "success"
-      // currentSession["publicURL"] = url
-      // await session.updateSession(currentSession)
-
-      // console.info("🔰 5/5 | Cleaning Up")
-      // const dirPath = path.join(__dirname, `../uploads/${sessionObj.session}`)
-      // await videoManager.postCleanUp(dirPath)
-      // jobs["cleaning"] = "success"
-      // currentSession["data"]["status"] = "complete"
-      // await session.updateSession(currentSession)
-
-      //scheduleJobs()
-    } catch (ex) {
-      throw new InternalServerErrorException(ex)
-    }
+    return new StreamableFile(readable, {
+      disposition: "attachment; filename=manifest.mpd",
+      type: "application/dash+xml",
+    })
   }
 }

@@ -42,11 +42,11 @@ export default class CourseService {
     promises.push(thumbnailPromise())
     const previewVideoUrlPromise = async () => {
       if (files.previewVideoUrl && files.previewVideoUrl[0]) {
-        const url = await this.videoManagerService.uploadVideo(
+        const assetId = await this.videoManagerService.uploadVideo(
           files.previewVideoUrl[0]
         )
-        body.previewVideoUrl = url.videoName
-        await this.videoManagerService.processVideo(url)
+        body.previewVideoUrl = assetId
+        //await this.videoManagerService.processVideo(url)
       }
     }
     promises.push(previewVideoUrlPromise())
@@ -72,13 +72,13 @@ export default class CourseService {
 
   async streamPreview(
     //courseId: string,
-    range: string,
+   // range: string,
     res: Response,
   ): Promise<StreamableFile> {
     //const course = await this.courseMySqlRepository.findOneBy({ courseId })
     return this.videoManagerService.getStreamableVideo(
       join(process.cwd(), "assets", "videos", "2fcec2eb-13fa-4840-a2a2-f37f8be9328f", "baked", "manifest.mpd"),
-      range,
+      //range,
       res,
     )
   }
