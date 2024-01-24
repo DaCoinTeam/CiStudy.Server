@@ -52,16 +52,29 @@ export default class VideoManagerService {
   private async processVideo(assetId: string, videoName: string) {
     await this.ffmpegService.encodeAtMultipleBitrates(assetId, videoName)
 
-    const encodedNames = ["720.mp4", "480.mp4", "360.mp4", "240.mp4"]
+    const promises: Promise<void>[] = []
+
+    const encodedNames = [
+      "1080.mp4",
+      "720.mp4",
+      "480.mp4",
+      "360.mp4",
+      "240.mp4",
+    ]
+
     for (const encodedName of encodedNames) {
-      const fragmentationRequired = await this.bento4Service.checkFragments(
-        assetId,
-        encodedName,
-      )
-      if (fragmentationRequired) {
-        await this.bento4Service.fragmentVideo(assetId, encodedName)
+      const promise = async () => {
+        const fragmentationRequired = await this.bento4Service.checkFragments(
+          assetId,
+          encodedName,
+        )
+        if (fragmentationRequired) {
+          await this.bento4Service.fragmentVideo(assetId, encodedName)
+        }
       }
+      promises.push(promise())
     }
+    await Promise.all(promises)
 
     await this.bento4Service.processVideo(assetId, encodedNames)
     await this.cleanUp(assetId)
