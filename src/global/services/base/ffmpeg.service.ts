@@ -14,7 +14,7 @@ export default class FfmpegService {
         .audioCodec("aac")
         .format("mp4")
         .audioBitrate(profile.audioBitrate)
-        .audioFrequency(profile.audioFreq)
+        .audioFrequency(profile.audioFrequency)
         .audioChannels(profile.audioChannels)
         .addOutputOptions([
           "-profile:v main",
@@ -45,7 +45,7 @@ export default class FfmpegService {
         outputPath: join(output, "1080.mp4"),
         resolution: "1920x1080",
         audioBitrate: "128k",
-        audioFreq: 44100,
+        audioFrequency: 44100,
         audioChannels: 2,
         maxRate: "5000k",
         bufSize: "10000k"
@@ -55,7 +55,7 @@ export default class FfmpegService {
         outputPath: join(output, "720.mp4"),
         resolution: "1280x720",
         audioBitrate: "128k",
-        audioFreq: 44100,
+        audioFrequency: 44100,
         audioChannels: 2,
         maxRate: "2500k",
         bufSize: "5000k"
@@ -65,7 +65,7 @@ export default class FfmpegService {
         outputPath: join(output, "480.mp4"),
         resolution: "854x480",
         audioBitrate: "96k",
-        audioFreq: 44100,
+        audioFrequency: 44100,
         audioChannels: 2,
         maxRate: "1250k",
         bufSize: "2500k"
@@ -75,7 +75,7 @@ export default class FfmpegService {
         outputPath: join(output, "360.mp4"),
         resolution: "640x360",
         audioBitrate: "96k",
-        audioFreq: 44100,
+        audioFrequency: 44100,
         audioChannels: 2,
         maxRate: "900k",
         bufSize: "1800k"
@@ -85,7 +85,7 @@ export default class FfmpegService {
         outputPath: join(output, "240.mp4"),
         resolution: "320x240",
         audioBitrate: "64k",
-        audioFreq: 22050,
+        audioFrequency: 22050,
         audioChannels: 1,
         maxRate: "625k",
         bufSize: "1250k"
@@ -109,7 +109,7 @@ interface EncodeProfile {
   outputPath: string;
   resolution: string;
   audioBitrate: string;
-  audioFreq: number;
+  audioFrequency: number;
   audioChannels: number;
   maxRate: string,
   bufSize: string,
