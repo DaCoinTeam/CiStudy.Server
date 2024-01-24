@@ -40,7 +40,7 @@ export default class VideoManagerService {
 
     const { assetId, fileName } = await this.assetManagerService.uploadAsset(
       file,
-      true
+      true,
     )
     await this.processVideo(assetId, fileName)
 
@@ -63,7 +63,7 @@ export default class VideoManagerService {
     await this.bento4Service.processVideo(assetId, videoName)
     console.info("🔰 5/5 | Clean Up & Relocate & Create Metadata")
     await this.cleanUp(assetId)
-    await this.relocate(assetId)
+
     await this.createMetadata(assetId)
   }
 
@@ -73,32 +73,14 @@ export default class VideoManagerService {
 
     await Promise.all(
       files
-        .filter((file) => file !== "output")
+        .filter((file) => file !== "manifest.mpd")
         .map(async (file) => {
           const filePath = join(assetDir, file)
           const fileStat = await promises.stat(filePath)
 
-          if (fileStat.isDirectory()) {
-            await promises.rmdir(filePath, { recursive: true })
-          } else {
-            await promises.unlink(filePath)
-          }
+          if (!fileStat.isDirectory()) await promises.unlink(filePath)
         }),
     )
-  }
-
-  private async relocate(assetId: string) {
-    const assetDir = join(assetConfig().path, assetId)
-    const outputFilesPath = join(assetDir, "output")
-    const outputFiles = await promises.readdir(outputFilesPath)
-    await Promise.all(
-      outputFiles.map(async (file) => {
-        const sourcePath = join(outputFilesPath, file)
-        const destinationPath = join(assetDir, file)
-        await promises.rename(sourcePath, destinationPath)
-      }),
-    )
-    await promises.rmdir(join(assetDir, "output"))
   }
 
   private async createMetadata(assetId: string) {
@@ -108,7 +90,7 @@ export default class VideoManagerService {
       assetId,
       extension: "mpd",
       fileName: "manifest.mpd",
-      fileSize: stats.size
+      fileSize: stats.size,
     }
     await promises.writeFile(
       join(assetDir, "metadata.json"),

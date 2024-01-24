@@ -78,9 +78,9 @@ export default class Bento4Service {
     )
 
     //output same file
-    const outputDir = join(assetConfig().path, assetId, "output")
+    const outputDir = join(assetConfig().path, assetId)
     const execResult = await this.execute(
-      `mp4dash.bat  --mpd-name manifest.mpd "${fragmentedPath}" -o "${outputDir}" --use-segment-timeline`,
+      `mp4dash.bat  --mpd-name manifest.mpd "${fragmentedPath}" -o "${outputDir}" --use-segment-timeline  --subtitles --force`,
     )
     const lines = execResult.split("\n")
 
