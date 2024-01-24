@@ -50,6 +50,7 @@ export default class VideoManagerService {
   }
 
   private async processVideo(assetId: string, videoName: string) {
+    console.info("🥦1/5. Encoding")
     await this.ffmpegService.encodeAtMultipleBitrates(assetId, videoName)
 
     const promises: Promise<void>[] = []
@@ -62,6 +63,7 @@ export default class VideoManagerService {
       "240.mp4",
     ]
 
+    console.info("🥦2/5. Fragmenting")
     for (const encodedName of encodedNames) {
       const promise = async () => {
         const fragmentationRequired = await this.bento4Service.checkFragments(
@@ -76,8 +78,11 @@ export default class VideoManagerService {
     }
     await Promise.all(promises)
 
+    console.info("🥦3/5. Processing")
     await this.bento4Service.processVideo(assetId, encodedNames)
+    console.info("🥦4/5. Cleaning up")
     await this.cleanUp(assetId)
+    console.info("🥦5/5. Creating metadata")
     await this.createMetadata(assetId)
   }
 
