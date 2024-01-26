@@ -52,7 +52,7 @@ export default class MpegDashService {
   }
 
   private async generateStream(assetId: string, videoName: string) {
-    Logger.log("2/5. Encoding")
+    Logger.log("1/5. Encoding")
     await this.ffmpegService.encodeAtMultipleBitrates(assetId, videoName)
 
     const promises: Promise<void>[] = []
