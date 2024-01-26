@@ -111,12 +111,12 @@ export default class  MpegDashManagerService {
 
   private async createMetadata(assetId: string) {
     const assetDir = join(assetConfig().path, assetId)
-    const stats = await promises.stat(join(assetDir, "manifest.mpd"))
+    const stat = await promises.stat(join(assetDir, "manifest.mpd"))
     const metadata: AssetMetadata = {
       assetId,
       extension: "mpd",
       fileName: "manifest.mpd",
-      fileSize: stats.size,
+      fileSize: stat.size,
     }
     await promises.writeFile(
       join(assetDir, "metadata.json"),
