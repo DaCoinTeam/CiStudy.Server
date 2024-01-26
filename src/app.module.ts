@@ -45,8 +45,7 @@ import { ChatWebsocketModule } from "@websocket"
 			password: databaseConfig().mysql.password,
 			database: databaseConfig().mysql.schema,
 			autoLoadEntities: true,
-			synchronize: true,
-			entities: ["dist/**/*.entity.ts"],
+			synchronize: true
 		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
