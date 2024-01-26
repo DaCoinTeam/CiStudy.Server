@@ -45,7 +45,7 @@ export default class MpegDashService {
 
     const { assetId, fileName } = await this.assetManagerService.uploadAsset(
       file,
-      true,
+      false,
     )
     await this.generateStream(assetId, fileName)
     return assetId
