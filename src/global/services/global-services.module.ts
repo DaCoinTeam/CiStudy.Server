@@ -1,5 +1,12 @@
 import { Global, Module } from "@nestjs/common"
-import { MailerService, Sha256Service, AuthManagerService,  MpegDashService, AssetManagerService, FfmpegService } from "./base"
+import {
+  MailerService,
+  Sha256Service,
+  AuthManagerService,
+  MpegDashService,
+  AssetManagerService,
+  FfmpegService,
+} from "./base"
 import { FirebaseService } from "./3rd"
 import { JwtService } from "@nestjs/jwt"
 import { SessionMySqlEntity } from "@database"
@@ -9,40 +16,38 @@ import Bento4Service from "./base/bento4.service"
 
 @Global()
 @Module({
-	imports: [
-		TypeOrmModule.forFeature([SessionMySqlEntity])
-	],
-	exports: [
-		//3rd
-		FirebaseService,
-		//base
-		Sha256Service,
-		MailerService,
-		AuthManagerService,
-		JwtService,
-		Bento4Service,
-		 MpegDashService,
-		AssetManagerService,
-		FfmpegService,
+  imports: [TypeOrmModule.forFeature([SessionMySqlEntity])],
+  exports: [
+    //3rd
+    FirebaseService,
+    //base
+    Sha256Service,
+    MailerService,
+    AuthManagerService,
+    JwtService,
+    Bento4Service,
+    MpegDashService,
+    AssetManagerService,
+    FfmpegService,
 
-		//blockchain
-		MetamaskService
-	],
-	providers: [
-		//3rd
-		FirebaseService,
-		//base
-		Sha256Service,
-		MailerService,
-		AuthManagerService,
-		JwtService,
-		Bento4Service,
-		 MpegDashService,
-		AssetManagerService,
-		FfmpegService,
-		
-		//blockchian
-		MetamaskService
-	],
+    //blockchain
+    MetamaskService,
+  ],
+  providers: [
+    //3rd
+    FirebaseService,
+    //base
+    Sha256Service,
+    MailerService,
+    AuthManagerService,
+    JwtService,
+    Bento4Service,
+    MpegDashService,
+    AssetManagerService,
+    FfmpegService,
+
+    //blockchian
+    MetamaskService,
+  ],
 })
 export default class GlobalServicesModule {}

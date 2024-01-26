@@ -2,7 +2,7 @@ import {
   BadRequestException,
   HttpStatus,
   Injectable,
-  LoggerService,
+  Logger,
   StreamableFile,
 } from "@nestjs/common"
 import { Response } from "express"
@@ -20,8 +20,7 @@ export default class MpegDashService {
   constructor(
     private readonly assetManagerService: AssetManagerService,
     private readonly bento4Service: Bento4Service,
-    private readonly ffmpegService: FfmpegService,
-    private readonly loggerService : LoggerService
+    private readonly ffmpegService: FfmpegService
   ) {}
 
   private isValidVideoExtension(fileName: string): boolean {
@@ -53,7 +52,7 @@ export default class MpegDashService {
   }
 
   private async generateStream(assetId: string, videoName: string) {
-    this.loggerService.log("2/5. Encoding")
+    Logger.log("2/5. Encoding")
     await this.ffmpegService.encodeAtMultipleBitrates(assetId, videoName)
 
     const promises: Promise<void>[] = []
@@ -66,7 +65,7 @@ export default class MpegDashService {
       "240.mp4",
     ]
 
-    this.loggerService.log("2/5. Fragmenting")
+    Logger.log("2/5. Fragmenting")
     for (const encodedName of encodedNames) {
       const promise = async () => {
         const fragmentationRequired = await this.bento4Service.checkFragments(
@@ -81,12 +80,14 @@ export default class MpegDashService {
     }
     await Promise.all(promises)
 
-    this.loggerService.log("3/5. Processing")
+    Logger.log("3/5. Processing")
     await this.bento4Service.processVideo(assetId, encodedNames)
-    this.loggerService.log("4/5. Cleaning up")
+
+    Logger.log("4/5. Cleaning up")
     await this.cleanUp(assetId)
-    this.loggerService.log("5/5. Creating metadata")
-    await this.createMetadata(assetId)
+
+    Logger.log("5/5. Creating manifest metadata")
+    await this.createManifestMetadata(assetId)
   }
 
   private async cleanUp(assetId: string) {
@@ -112,7 +113,7 @@ export default class MpegDashService {
     )
   }
 
-  private async createMetadata(assetId: string) {
+  private async createManifestMetadata(assetId: string) {
     const assetDir = join(assetConfig().path, assetId)
     const stat = await promises.stat(join(assetDir, "manifest.mpd"))
     const metadata: AssetMetadata = {
