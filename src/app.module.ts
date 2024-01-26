@@ -22,6 +22,7 @@ import {
 	PostRestfulModule,
 	ResourceRestfulModule,
 	SectionRestfulModule,
+	AssetRestfulModule
 } from "@restful"
 import {
 	SetBearerTokenMiddleware,
@@ -29,7 +30,7 @@ import {
 	GlobalServicesModule,
 } from "@global"
 import { TypeOrmModule } from "@nestjs/typeorm"
-import AssetModule from "./restful/asset/asset.module"
+import { ChatWebsocketModule } from "@websocket"
 
 @Module({
 	imports: [
@@ -65,7 +66,10 @@ import AssetModule from "./restful/asset/asset.module"
 		LectureRestfulModule,
 		ResourceRestfulModule,
 		PostRestfulModule,
-		AssetModule,
+		AssetRestfulModule,
+
+		//websocket
+		ChatWebsocketModule,
 
 		//global
 		GlobalServicesModule,

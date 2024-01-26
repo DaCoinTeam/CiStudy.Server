@@ -21,6 +21,7 @@
       "@shared" : ["src/shared"],
       "@graphql": ["src/graphql"],
       "@global": ["src/global"],
+      "@websocket": ["src/websocket"]
     },
     "incremental": true,
     "skipLibCheck": true,
