@@ -55,8 +55,8 @@ export default class MpegDashService {
     Logger.log("1/5. Encoding")
     await this.ffmpegService.encodeAtMultipleBitrates(assetId, videoName)
 
+    Logger.log("2/5. Fragmenting")
     const promises: Promise<void>[] = []
-
     const encodedNames = [
       "1080.mp4",
       "720.mp4",
@@ -64,8 +64,6 @@ export default class MpegDashService {
       "360.mp4",
       "240.mp4",
     ]
-
-    Logger.log("2/5. Fragmenting")
     for (const encodedName of encodedNames) {
       const promise = async () => {
         const fragmentationRequired = await this.bento4Service.checkFragments(
