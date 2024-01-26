@@ -17,7 +17,7 @@ export default class AssetManagerService {
 
   async uploadAsset(
     file: Express.Multer.File,
-    writeMetadata: boolean = true,
+    createMetadata: boolean = true,
   ): Promise<AssetMetadata> {
     const assetId = uuidv4()
     const assetDir = path.join(assetConfig().path, assetId)
@@ -33,7 +33,7 @@ export default class AssetManagerService {
       fileSize: file.size,
     }
 
-    if (writeMetadata) {
+    if (createMetadata) {
       this.createMetadata(metadata)
     }
 
