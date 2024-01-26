@@ -15,7 +15,7 @@ import { AssetMetadata } from "@shared"
 import FfmpegService from "./ffmpeg.service"
 
 @Injectable()
-export default class  MpegDashManagerService {
+export default class MpegDashService {
   constructor(
     private readonly assetManagerService: AssetManagerService,
     private readonly bento4Service: Bento4Service,
@@ -36,7 +36,9 @@ export default class  MpegDashManagerService {
     return supportedExtensions.includes(lowerCaseExtension)
   }
 
-  async uploadVideoAndGenerateMpegDashStream(file: Express.Multer.File): Promise<string> {
+  async uploadVideoAndGenerateStream(
+    file: Express.Multer.File,
+  ): Promise<string> {
     if (!this.isValidVideoExtension(file.originalname))
       throw new BadRequestException("Video extension not supported.")
 
