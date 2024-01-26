@@ -7,7 +7,18 @@ import { v4 as uuidv4 } from "uuid"
 
 @Injectable()
 export default class AssetManagerService {
-  async uploadAsset(file: Express.Multer.File, noManifest: boolean = false): Promise<AssetMetadata> {
+  async createMetadata(metadata: AssetMetadata) {
+    const assetDir = path.join(assetConfig().path, metadata.assetId)
+    await promises.writeFile(
+      join(assetDir, "metadata.json"),
+      JSON.stringify(metadata),
+    )
+  }
+
+  async uploadAsset(
+    file: Express.Multer.File,
+    noManifest: boolean = false,
+  ): Promise<AssetMetadata> {
     const assetId = uuidv4()
     const assetDir = path.join(assetConfig().path, assetId)
 
@@ -22,14 +33,10 @@ export default class AssetManagerService {
       fileSize: file.size,
     }
 
-    if (!noManifest){
-      await promises.writeFile(
-        join(assetDir, "metadata.json"),
-        JSON.stringify(metadata),
-      )
+    if (!noManifest) {
+      this.createMetadata(metadata)
     }
 
     return metadata
   }
 }
-

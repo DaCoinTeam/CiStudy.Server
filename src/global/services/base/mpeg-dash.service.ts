@@ -2,6 +2,7 @@ import {
   BadRequestException,
   HttpStatus,
   Injectable,
+  LoggerService,
   StreamableFile,
 } from "@nestjs/common"
 import { Response } from "express"
@@ -20,6 +21,7 @@ export default class MpegDashService {
     private readonly assetManagerService: AssetManagerService,
     private readonly bento4Service: Bento4Service,
     private readonly ffmpegService: FfmpegService,
+    private readonly loggerService : LoggerService
   ) {}
 
   private isValidVideoExtension(fileName: string): boolean {
@@ -46,13 +48,12 @@ export default class MpegDashService {
       file,
       true,
     )
-    await this.processVideo(assetId, fileName)
-
+    await this.generateStream(assetId, fileName)
     return assetId
   }
 
-  private async processVideo(assetId: string, videoName: string) {
-    console.info("🥦1/5. Encoding")
+  private async generateStream(assetId: string, videoName: string) {
+    this.loggerService.log("2/5. Encoding")
     await this.ffmpegService.encodeAtMultipleBitrates(assetId, videoName)
 
     const promises: Promise<void>[] = []
@@ -65,7 +66,7 @@ export default class MpegDashService {
       "240.mp4",
     ]
 
-    console.info("🥦2/5. Fragmenting")
+    this.loggerService.log("2/5. Fragmenting")
     for (const encodedName of encodedNames) {
       const promise = async () => {
         const fragmentationRequired = await this.bento4Service.checkFragments(
@@ -80,11 +81,11 @@ export default class MpegDashService {
     }
     await Promise.all(promises)
 
-    console.info("🥦3/5. Processing")
+    this.loggerService.log("3/5. Processing")
     await this.bento4Service.processVideo(assetId, encodedNames)
-    console.info("🥦4/5. Cleaning up")
+    this.loggerService.log("4/5. Cleaning up")
     await this.cleanUp(assetId)
-    console.info("🥦5/5. Creating metadata")
+    this.loggerService.log("5/5. Creating metadata")
     await this.createMetadata(assetId)
   }
 
@@ -120,10 +121,7 @@ export default class MpegDashService {
       fileName: "manifest.mpd",
       fileSize: stat.size,
     }
-    await promises.writeFile(
-      join(assetDir, "metadata.json"),
-      JSON.stringify(metadata),
-    )
+    await this.assetManagerService.createMetadata(metadata)
   }
 
   getStreamableVideo(mpdFilePath: string, res: Response) {
