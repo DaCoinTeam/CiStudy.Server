@@ -33,9 +33,7 @@ export default class AssetManagerService {
       fileSize: file.size,
     }
 
-    if (createMetadata) {
-      this.createMetadata(metadata)
-    }
+    if (createMetadata) this.createMetadata(metadata)
 
     return metadata
   }
