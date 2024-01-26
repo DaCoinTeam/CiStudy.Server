@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common"
-import { MailerService, Sha256Service, AuthManagerService, VideoManagerService, AssetManagerService, FfmpegService } from "./base"
+import { MailerService, Sha256Service, AuthManagerService,  MpegDashManagerService, AssetManagerService, FfmpegService } from "./base"
 import { FirebaseService } from "./3rd"
 import { JwtService } from "@nestjs/jwt"
 import { SessionMySqlEntity } from "@database"
@@ -21,7 +21,7 @@ import Bento4Service from "./base/bento4.service"
 		AuthManagerService,
 		JwtService,
 		Bento4Service,
-		VideoManagerService,
+		 MpegDashManagerService,
 		AssetManagerService,
 		FfmpegService,
 
@@ -37,7 +37,7 @@ import Bento4Service from "./base/bento4.service"
 		AuthManagerService,
 		JwtService,
 		Bento4Service,
-		VideoManagerService,
+		 MpegDashManagerService,
 		AssetManagerService,
 		FfmpegService,
 		

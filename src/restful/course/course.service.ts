@@ -6,7 +6,7 @@ import {
 } from "@database"
 import { Injectable, StreamableFile } from "@nestjs/common"
 import { CourseDto, EnrollRequestDto } from "./dto"
-import { FirebaseService, VideoManagerService } from "@global"
+import { FirebaseService,  MpegDashManagerService } from "@global"
 import { Response } from "express"
 import { InjectRepository } from "@nestjs/typeorm"
 import { plainToInstance } from "class-transformer"
@@ -18,7 +18,7 @@ export default class CourseService {
     @InjectRepository(CourseMySqlEntity) private readonly courseMySqlRepository: Repository<CourseMySqlEntity>,
     @InjectRepository(EnrolledInfoMySqlEntity) private readonly enrolledInfoMySqlRepository: Repository<EnrolledInfoMySqlEntity>,
     private readonly firebaseSerive: FirebaseService,
-    private readonly videoManagerService: VideoManagerService,
+    private readonly videoManagerService:  MpegDashManagerService,
   ) {}
 
   async create(
@@ -42,7 +42,7 @@ export default class CourseService {
     promises.push(thumbnailPromise())
     const previewVideoUrlPromise = async () => {
       if (files.previewVideoUrl && files.previewVideoUrl[0]) {
-        const assetId = await this.videoManagerService.uploadVideo(
+        const assetId = await this.videoManagerService.uploadVideoAndGenerateMpegDashStream(
           files.previewVideoUrl[0]
         )
         body.previewVideoUrl = assetId
